@@ -22,10 +22,15 @@ fun MainNavHost(
         composable(route = MovieList.route) {
             MoviesList(
                 onClickMovieListItem = {
+                    navController.navigate(MovieDetails.route)
 
                 },
                 viewModel = viewModel,
             )
+        }
+
+        composable(route = MovieDetails.route) {
+            MovieDetails()
         }
 
     }

@@ -23,7 +23,7 @@ import com.example.movienight20.ui.theme.PopularMoviesViewModel
 
 @Composable
 fun MoviesList(
-    onClickMovieListItem: () -> Unit = {},
+    onClickMovieListItem: () -> Unit,
     viewModel: PopularMoviesViewModel
 ) {
     val viewStates by viewModel.viewState.collectAsState()
@@ -41,7 +41,7 @@ fun MoviesList(
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         items(items = viewStates) {
-            MovieListItem(viewState = it)
+            MovieListItem(viewState = it, onClickMovieListItem = onClickMovieListItem)
 
         }
     }

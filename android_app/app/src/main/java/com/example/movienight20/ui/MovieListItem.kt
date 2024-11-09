@@ -1,6 +1,7 @@
 package com.example.movienight20.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,9 +22,12 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 
 @Composable
-fun MovieListItem(viewState: MovieListItemViewState) {
+fun MovieListItem(
+    viewState: MovieListItemViewState,
+    onClickMovieListItem: () -> Unit,
+) {
     Column (modifier = Modifier.height(370.dp).fillMaxWidth().background(Color.White)) {
-        MoviePoster(url = viewState.url)
+        MoviePoster(url = viewState.url, onClickMovieListItem)
         Title(title = viewState.title)
         Row {
             YearLabel(year = viewState.year, modifier = Modifier.weight(1f))
@@ -33,11 +37,16 @@ fun MovieListItem(viewState: MovieListItemViewState) {
 }
 
 @Composable
-private fun MoviePoster(url: String) {
+private fun MoviePoster(
+    url: String,
+    onClickMovieListItem: () -> Unit,
+) {
     AsyncImage(
         model = ImageRequest.Builder(context = LocalContext.current).data(url).build(),
         contentDescription = null,
-        modifier = Modifier.fillMaxWidth().height(300.dp),
+        modifier = Modifier.fillMaxWidth().height(300.dp).clickable {
+            onClickMovieListItem()
+        },
         contentScale = ContentScale.FillWidth
     )
 }
@@ -76,5 +85,6 @@ fun Preview() {
             title = "Some Random Movie Title",
             url = "",
             year = "1999",
-            rating = "21"))
+            rating = "21"),
+        onClickMovieListItem = {})
 }
