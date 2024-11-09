@@ -18,6 +18,7 @@ class MovieRepositoryImpl @Inject constructor(
                 id = it.id!!,
                 title = it.title!!,
                 backdropPath = it.backdropPath!!,
+                posterPath = it.posterPath!!,
                 year = it.releaseDate!!,
                 rating = it.voteAverage!!.toString()
             )

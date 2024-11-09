@@ -3,7 +3,6 @@ package com.example.movienight20.data
 import com.google.gson.annotations.SerializedName
 
 class PopularMoviesNetworkResponse (
-    // Where is page needed?
     @SerializedName("page")
     val page: Int?,
     @SerializedName("results")
@@ -16,6 +15,8 @@ class PopularMoviesNetworkResponse (
         val title: String?,
         @SerializedName("backdrop_path")
         val backdropPath: String?,
+        @SerializedName("poster_path")
+        val posterPath: String?,
         @SerializedName("vote_average")
         val voteAverage: Double?,
         @SerializedName("release_date")

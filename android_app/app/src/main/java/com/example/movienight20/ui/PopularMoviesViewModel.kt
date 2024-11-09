@@ -22,7 +22,7 @@ class PopularMoviesViewModel @Inject constructor(
         viewModelScope.launch {
             val result = movieRepo.getMovies()
             val viewStates = result.map {
-                val url = "http://image.tmdb.org/t/p/" + "w300" + it.backdropPath
+                val url = "http://image.tmdb.org/t/p/" + "w300" + it.posterPath
                 MovieListItemViewState(title = it.title, url = url, year = it.year, rating = it.rating)
             }
             mutableViewState.emit(viewStates)
