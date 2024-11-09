@@ -1,5 +1,6 @@
 package com.example.movienight20.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
@@ -20,7 +22,7 @@ import coil.request.ImageRequest
 
 @Composable
 fun MovieListItem(viewState: MovieListItemViewState) {
-    Column (modifier = Modifier.height(370.dp).fillMaxWidth()) {
+    Column (modifier = Modifier.height(370.dp).fillMaxWidth().background(Color.White)) {
         MoviePoster(url = viewState.url)
         Title(title = viewState.title)
         Row {
