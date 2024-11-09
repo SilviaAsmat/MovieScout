@@ -11,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -19,7 +20,7 @@ import coil.request.ImageRequest
 
 @Composable
 fun MovieListItem(viewState: MovieListItemViewState) {
-    Column (modifier = Modifier.height(200.dp).fillMaxWidth()) {
+    Column (modifier = Modifier.height(350.dp).fillMaxWidth()) {
         MoviePoster(url = viewState.url)
         Title(title = viewState.title)
         Row {
@@ -34,8 +35,8 @@ private fun MoviePoster(url: String) {
     AsyncImage(
         model = ImageRequest.Builder(context = LocalContext.current).data(url).build(),
         contentDescription = null,
-        modifier = Modifier.fillMaxWidth().height(150.dp),
-        contentScale = ContentScale.Fit
+        modifier = Modifier.fillMaxWidth().height(300.dp),
+        contentScale = ContentScale.FillWidth
     )
 }
 @Composable
@@ -51,9 +52,16 @@ private fun RatingLabel(rating: String, modifier: Modifier = Modifier) {
 
 @Composable
 private fun Title(title: String, modifier: Modifier = Modifier) {
-    Text(text = title, modifier = modifier
-        .fillMaxWidth()
-        .padding(5.dp), fontSize = 20.sp)
+    Text(
+        text = title,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(5.dp),
+        fontSize = 17.sp,
+        maxLines = 1,
+        overflow = TextOverflow.Ellipsis
+    )
+
 }
 
 @Preview(showBackground = true)

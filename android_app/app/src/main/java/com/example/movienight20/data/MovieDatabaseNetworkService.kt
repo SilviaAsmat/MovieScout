@@ -7,6 +7,5 @@ import retrofit2.http.GET
 interface MovieDatabaseNetworkService {
     @GET("/3/movie/popular")
     suspend fun getPopularMovies(): Response<PopularMoviesNetworkResponse>
-    // would I gather all network responses here
 }
 
