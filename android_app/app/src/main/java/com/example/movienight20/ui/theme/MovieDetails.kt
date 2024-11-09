@@ -22,8 +22,7 @@ import com.example.movienight20.ui.theme.MovieNight20Theme
 import com.example.movienight20.ui.theme.PopularMoviesViewModel
 
 @Composable
-fun MoviesList(
-    onClickMovieListItem: () -> Unit = {},
+fun MovieDetails(
     viewModel: PopularMoviesViewModel
 ) {
     val viewStates by viewModel.viewState.collectAsState()
@@ -47,12 +46,12 @@ fun MoviesList(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MovieNight20Theme {
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview() {
+//    MovieNight20Theme {
+//    }
+//}
 
 
 

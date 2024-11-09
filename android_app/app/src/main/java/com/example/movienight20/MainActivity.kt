@@ -15,6 +15,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
+import com.example.movienight20.ui.MainNavHost
 import com.example.movienight20.ui.MoviesList
 import com.example.movienight20.ui.theme.MovieNight20Theme
 import com.example.movienight20.ui.theme.PopularMoviesViewModel
@@ -33,7 +35,11 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    MoviesList(viewModel = viewModel)
+                    val navController = rememberNavController()
+                    MainNavHost(
+                        navController = navController,
+                        viewModel = viewModel,
+                        )
                 }
             }
         }
