@@ -23,7 +23,6 @@ fun MainNavHost(
             MoviesList(
                 onClickMovieListItem = {
                     navController.navigate(MovieDetails.route)
-
                 },
                 viewModel = viewModel,
             )

@@ -8,7 +8,7 @@ class PopularMoviesNetworkResponse (
     @SerializedName("results")
     val results: List<Item>?,
 ) {
-    class Item (
+    data class Item (
         @SerializedName("id")
         val id: Int?,
         @SerializedName("title")

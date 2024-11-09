@@ -1,5 +1,7 @@
 package com.example.movienight20.data
 
+import android.util.Log
+import com.example.movienight20.domain.MovieDetails
 import com.example.movienight20.domain.MovieInfo
 import com.example.movienight20.domain.MoviesRepository
 import javax.inject.Inject
@@ -13,6 +15,7 @@ class MovieRepositoryImpl @Inject constructor(
         // through separation of concerns
         val results = networkResponse.body()?.results
         val mapped = results!!.map {
+            Log.v(TAG, it.toString())
             // Get info from networkResponse and store into MovieInfo
             MovieInfo(
                 id = it.id!!,
@@ -25,5 +28,20 @@ class MovieRepositoryImpl @Inject constructor(
         }
         // Is returning mapped needed if MovieInfo has the info?
         return mapped
+    }
+
+    override suspend fun getMovieDetails(movieId: Int): MovieDetails {
+        val networkResponse = networkService.getMovieDetails(movieId = movieId)
+        // results will get the List<Item> from @results from PopularMoviesNetworkResponse
+        // through separation of concerns
+        val results = networkResponse.body()
+        // TODO map from JSON to domain
+
+        // Is returning mapped needed if MovieInfo has the info?
+        return MovieDetails()
+    }
+
+    private companion object {
+        private const val TAG = "MovieRepositoryImpl"
     }
 }
