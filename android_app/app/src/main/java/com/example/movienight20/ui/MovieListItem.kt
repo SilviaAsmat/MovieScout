@@ -2,7 +2,6 @@ package com.example.movienight20.ui
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,11 +19,11 @@ import coil.request.ImageRequest
 
 @Composable
 fun MovieListItem(viewState: MovieListItemViewState) {
-    Column (modifier = Modifier.height(350.dp).fillMaxWidth()) {
+    Column (modifier = Modifier.height(370.dp).fillMaxWidth()) {
         MoviePoster(url = viewState.url)
         Title(title = viewState.title)
         Row {
-            YearLabel(year = viewState.year)
+            YearLabel(year = viewState.year, modifier = Modifier.weight(1f))
             RatingLabel(rating = viewState.rating)
         }
     }
@@ -42,12 +41,13 @@ private fun MoviePoster(url: String) {
 @Composable
 private fun YearLabel(year: String, modifier: Modifier = Modifier) {
     Text(text = year, modifier = modifier
-        .padding(5.dp), fontSize = 12.sp)
+        .padding(5.dp), fontSize = 14.sp)
 }
 @Composable
 private fun RatingLabel(rating: String, modifier: Modifier = Modifier) {
     Text(text = rating, modifier = modifier
-        .padding(5.dp), fontSize = 12.sp)
+        .padding(5.dp), fontSize = 14.sp)
+
 }
 
 @Composable

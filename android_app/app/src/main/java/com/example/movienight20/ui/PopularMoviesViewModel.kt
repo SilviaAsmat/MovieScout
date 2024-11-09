@@ -23,7 +23,7 @@ class PopularMoviesViewModel @Inject constructor(
             val result = movieRepo.getMovies()
             val viewStates = result.map {
                 val url = "http://image.tmdb.org/t/p/" + "w300" + it.posterPath
-                MovieListItemViewState(title = it.title, url = url, year = it.year, rating = it.rating)
+                MovieListItemViewState(title = it.title, url = url, year = it.releaseDate, rating = it.rating)
             }
             mutableViewState.emit(viewStates)
         }

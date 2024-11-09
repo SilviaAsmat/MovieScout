@@ -6,6 +6,6 @@ data class MovieInfo (
     val title: String,
     val backdropPath: String,
     val posterPath: String,
-    val year: String,
+    val releaseDate: String,
     val rating: String
 )
