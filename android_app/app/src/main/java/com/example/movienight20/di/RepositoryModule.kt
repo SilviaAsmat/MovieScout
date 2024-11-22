@@ -14,8 +14,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Singleton
 
-
-// function?
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
