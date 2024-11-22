@@ -1,1 +1,1 @@
-# MovieNight2.0
+# MovieScout
