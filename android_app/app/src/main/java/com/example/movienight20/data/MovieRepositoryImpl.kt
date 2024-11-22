@@ -26,18 +26,15 @@ class MovieRepositoryImpl @Inject constructor(
                 rating = it.voteAverage!!.toString()
             )
         }
-        // Is returning mapped needed if MovieInfo has the info?
         return mapped
     }
 
     override suspend fun getMovieDetails(movieId: Int): MovieDetails {
         val networkResponse = networkService.getMovieDetails(movieId = movieId)
-        // results will get the List<Item> from @results from PopularMoviesNetworkResponse
-        // through separation of concerns
+
         val results = networkResponse.body()
         // TODO map from JSON to domain
 
-        // Is returning mapped needed if MovieInfo has the info?
         return MovieDetails()
     }
 
