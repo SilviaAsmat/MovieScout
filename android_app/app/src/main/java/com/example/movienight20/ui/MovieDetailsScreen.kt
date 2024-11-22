@@ -23,16 +23,16 @@ import coil.request.ImageRequest
 
 @Composable
 fun MovieDetailsScreen(
-    viewState: MovieListItemViewState,
-    onClickMovieListItem: () -> Unit,
+    viewState: MovieDetailsScreenViewState,
+    onClickMovieDetailsScreen: () -> Unit,
 ) {
     Column (modifier = Modifier.height(370.dp).fillMaxWidth().background(Color.White)) {
-        MoviePoster(url = viewState.url, onClickMovieListItem)
+        MoviePoster(url = viewState.backdropPath, onClickMovieDetailsScreen)
         Title(title = viewState.title)
-        Row {
-            YearLabel(year = viewState.year, modifier = Modifier.weight(1f))
-            RatingLabel(rating = viewState.rating)
-        }
+//        Row {
+//            YearLabel(year = viewState.year, modifier = Modifier.weight(1f))
+//            RatingLabel(rating = viewState.rating)
+//        }
     }
 }
 
@@ -79,10 +79,15 @@ private fun Title(title: String, modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun Preview() {
-    MovieDetailsScreen { }(
+fun PreviewMovieDetailsScreen() {
+    MovieDetailsScreen(
         viewState = MovieDetailsScreenViewState(
-
-            ),
-        onClickMovieListItem = {})
+            id = 12345,
+            title = "SomeMovieThatIsOkay",
+            backdropPath = "Poster",
+            overview = "blahblahblahblahblahblahblahblahblahblahblahblahblahblahblahb\nlahblahblahblahblahblahblahblahblahblahblahblahblahblahblah",
+            runtime = 90,
+            status = "released",
+            genres = "horror,comedy,romance"),
+        onClickMovieDetailsScreen ={})
 }
