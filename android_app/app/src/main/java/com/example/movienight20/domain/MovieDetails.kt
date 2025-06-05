@@ -1,7 +1,5 @@
 package com.example.movienight20.domain
 
-import com.google.gson.annotations.SerializedName
-
 data class MovieDetails (
     val id: Int,
     val title: String,
@@ -11,9 +9,8 @@ data class MovieDetails (
     val status: String,
     val genres: List<Genre>
 )
+
 data class Genre(
-    @SerializedName("id")
     val id: Int?,
-    @SerializedName("genre")
     val title: String?
 )

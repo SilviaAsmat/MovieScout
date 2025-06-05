@@ -29,7 +29,7 @@ fun MainNavHost(
         }
 
         composable(route = MovieDetails.route) {
-            MovieDetails()
+            //MovieDetails()
         }
 
     }
