@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.toRoute
 import com.example.movienight20.ui.theme.MovieDetailsViewModel
 import com.example.movienight20.ui.theme.PopularMoviesViewModel
 import kotlinx.serialization.Serializable
@@ -13,7 +14,7 @@ import kotlinx.serialization.Serializable
 object PopularMoviesList
 
 @Serializable
-object MovieDetails
+data class MovieDetails(val id: Int)
 
 @Composable
 fun MainNavHost(
@@ -30,12 +31,17 @@ fun MainNavHost(
         composable<PopularMoviesList> {
             MoviesListScreen(
                 viewModel = popularMoviesViewModel,
-                onClickMovieListItem = {navController.navigate(route = MovieDetails)}
-            )
+                onClickMovieListItem = { id: Int ->
+                    navController.navigate(MovieDetails(id))
+
+                } )
         }
 
-        composable<MovieDetails>{
+        composable<MovieDetails>{ backStackEntry ->
+            val movieDetails: MovieDetails = backStackEntry.toRoute()
+            detailsViewModel.initWithID(movieDetails.id)
             MovieDetailsScreen(
+                id = movieDetails.id,
                 onClickMovieListItem = {},
                 viewModel = detailsViewModel,
                 navController = navController

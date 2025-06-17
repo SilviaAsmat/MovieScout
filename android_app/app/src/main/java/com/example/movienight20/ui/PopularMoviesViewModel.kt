@@ -1,5 +1,6 @@
 package com.example.movienight20.ui.theme
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movienight20.domain.MoviesRepository
@@ -17,14 +18,13 @@ class PopularMoviesViewModel @Inject constructor(
     private val mutableViewState = MutableStateFlow<List<MovieListItemViewState>>(emptyList())
     val viewState: StateFlow<List<MovieListItemViewState>> = mutableViewState
 
-
     init {
         viewModelScope.launch {
             val result = movieRepo.getMovies()
             val viewStates = result.map {
                 val releaseYear = it.releaseDate.substringBefore("-")
                 val url = "http://image.tmdb.org/t/p/" + "w300" + it.posterPath
-                MovieListItemViewState(title = it.title, url = url, year = releaseYear, rating = it.rating)
+                MovieListItemViewState(id = it.id, title = it.title, url = url, year = releaseYear, rating = it.rating)
             }
             mutableViewState.emit(viewStates)
         }

@@ -18,7 +18,7 @@ import com.example.movienight20.ui.theme.PopularMoviesViewModel
 
 @Composable
 fun MoviesListScreen(
-    onClickMovieListItem: () -> Unit,
+    onClickMovieListItem: (Int) -> Unit,
     viewModel: PopularMoviesViewModel
 ) {
     val viewStates by viewModel.viewState.collectAsState()

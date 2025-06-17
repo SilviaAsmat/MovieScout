@@ -21,7 +21,7 @@ class MovieDetailsNetworkResponse (
     data class Genre(
         @SerializedName("id")
         val id: Int?,
-        @SerializedName("genre")
+        @SerializedName("name")
         val title: String?
     )
 }

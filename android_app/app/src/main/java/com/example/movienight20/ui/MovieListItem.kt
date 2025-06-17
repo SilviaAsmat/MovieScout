@@ -24,10 +24,10 @@ import coil.request.ImageRequest
 @Composable
 fun MovieListItem(
     viewState: MovieListItemViewState,
-    onClickMovieListItem: () -> Unit,
+    onClickMovieListItem: (Int) -> Unit,
 ) {
     Column (modifier = Modifier.height(370.dp).fillMaxWidth().background(Color.White)) {
-        MoviePoster(url = viewState.url, onClickMovieListItem)
+        MoviePoster(id = viewState.id, url = viewState.url, onClickMovieListItem)
         Title(title = viewState.title)
         Row {
             YearLabel(year = viewState.year, modifier = Modifier.weight(1f))
@@ -38,14 +38,15 @@ fun MovieListItem(
 
 @Composable
 private fun MoviePoster(
+    id: Int,
     url: String,
-    onClickMovieListItem: () -> Unit,
+    onClickMovieListItem: (Int) -> Unit,
 ) {
     AsyncImage(
         model = ImageRequest.Builder(context = LocalContext.current).data(url).build(),
         contentDescription = null,
         modifier = Modifier.fillMaxWidth().height(300.dp).clickable {
-            onClickMovieListItem()
+            onClickMovieListItem(id)
         },
         contentScale = ContentScale.FillWidth
     )
@@ -82,6 +83,7 @@ private fun Title(title: String, modifier: Modifier = Modifier) {
 fun Preview() {
     MovieListItem(
         viewState = MovieListItemViewState(
+            id = 2314,
             title = "Some Random Movie Title",
             url = "",
             year = "1999",

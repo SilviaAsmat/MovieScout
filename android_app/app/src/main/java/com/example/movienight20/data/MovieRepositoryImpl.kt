@@ -1,6 +1,7 @@
 package com.example.movienight20.data
 
 import android.util.Log
+import com.example.movienight20.domain.Genre
 import com.example.movienight20.domain.MovieDetails
 import com.example.movienight20.domain.MovieInfo
 import com.example.movienight20.domain.MoviesRepository
@@ -36,9 +37,17 @@ class MovieRepositoryImpl @Inject constructor(
         val results = networkResponse.body()
         // TODO map from JSON to domain
 
-        return MovieDetails(552524, results!!.title!!, "/7Zx3wDG5bBtcfk8lcnCWDOLM4Y4.jpg",
-            "The wildly funny and touching story of a lonely Hawaiian girl and the fugitive alien who helps to mend her broken family.",
-            108, "Released", listOf() )
+        return MovieDetails(
+            id = results!!.id!!,
+            title = results!!.title!!,
+            backdropPath = results!!.backdropPath!!,
+            overview = results!!.overview!!,
+            runtime = results!!.runtime!!,
+            status = results!!.status!!,
+            genres = results!!.genres!!.map {
+                Genre(id = it.id!!, title = it.title!!)
+            }
+        )
     }
 
     private companion object {

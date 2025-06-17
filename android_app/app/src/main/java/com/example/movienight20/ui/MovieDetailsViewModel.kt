@@ -17,23 +17,21 @@ class MovieDetailsViewModel @Inject constructor(
     private val mutableViewState = MutableStateFlow<MovieDetailsScreenViewState>(MovieDetailsScreenViewState.NONE)
     val viewState: StateFlow<MovieDetailsScreenViewState> = mutableViewState
 
-    init {
+    fun initWithID(id: Int){
         viewModelScope.launch {
-            val id = 552524 // dummy
             val result = movieRepo.getMovieDetails(id)
             val newState = MovieDetailsScreenViewState(
-                    id = result.id,
-                    title = result.title,
-                    backdropPath = "http://image.tmdb.org/t/p/" + "w300" + result.backdropPath,
-                    overview = result.overview,
-                    runtime = result.runtime,
-                    status = result.status,
-                    genres = result.genres,
-                )
+                id = result.id,
+                title = result.title,
+                backdropPath = "http://image.tmdb.org/t/p/" + "w300" + result.backdropPath,
+                overview = result.overview,
+                runtime = result.runtime,
+                status = result.status,
+                genres = result.genres,
+            )
 
             mutableViewState.emit(newState)
         }
-
     }
 }
 

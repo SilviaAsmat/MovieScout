@@ -27,6 +27,7 @@ import com.example.movienight20.ui.theme.MovieDetailsViewModel
 
 @Composable
 fun MovieDetailsScreen(
+    id: Int,
     onClickMovieListItem: () -> Unit,
     viewModel:MovieDetailsViewModel,
     navController: NavController
