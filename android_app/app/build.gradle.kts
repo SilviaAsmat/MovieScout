@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
+    id("org.jetbrains.kotlin.plugin.serialization")
 }
 
 android {
@@ -54,6 +55,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     packaging {
         resources {
@@ -89,6 +91,7 @@ dependencies {
     implementation("com.google.dagger:hilt-android:$hilt")
     ksp("com.google.dagger:hilt-compiler:$hilt")
     val nav_version = "2.8.3"
-
     implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
 }
