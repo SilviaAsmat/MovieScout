@@ -12,11 +12,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import com.example.movienight20.ui.theme.MovieNight20Theme
 import com.example.movienight20.ui.theme.PopularMoviesViewModel
 
 @Composable
-fun MoviesList(
+fun MoviesListScreen(
     onClickMovieListItem: () -> Unit,
     viewModel: PopularMoviesViewModel
 ) {
@@ -26,8 +27,6 @@ fun MoviesList(
 //            MovieListItem(viewState = it)
 //        }
 //    }
-
-
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(5.dp),
@@ -35,7 +34,7 @@ fun MoviesList(
         verticalArrangement = Arrangement.spacedBy(5.dp)
     ) {
         items(items = viewStates) {
-            MovieListItem(viewState = it, onClickMovieListItem = onClickMovieListItem)
+            MovieListItem(viewState = it, onClickMovieListItem = onClickMovieListItem )
 
         }
     }

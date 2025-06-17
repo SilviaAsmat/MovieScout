@@ -17,7 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.example.movienight20.ui.MainNavHost
-import com.example.movienight20.ui.MoviesList
+import com.example.movienight20.ui.theme.MovieDetailsViewModel
 import com.example.movienight20.ui.theme.MovieNight20Theme
 import com.example.movienight20.ui.theme.PopularMoviesViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -25,6 +25,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private val viewModel: PopularMoviesViewModel by viewModels()
+    private val detailsViewModel: MovieDetailsViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +39,8 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     MainNavHost(
                         navController = navController,
-                        viewModel = viewModel,
+                        popularMoviesViewModel = viewModel,
+                        detailsViewModel = detailsViewModel
                         )
                 }
             }

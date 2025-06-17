@@ -1,7 +1,6 @@
 package com.example.movienight20.data
 
 import android.util.Log
-import com.example.movienight20.domain.Genre
 import com.example.movienight20.domain.MovieDetails
 import com.example.movienight20.domain.MovieInfo
 import com.example.movienight20.domain.MoviesRepository
@@ -12,6 +11,7 @@ class MovieRepositoryImpl @Inject constructor(
 ): MoviesRepository {
     override suspend fun getMovies(): List<MovieInfo> {
         val networkResponse = networkService.getPopularMovies()
+
         // results will get the List<Item> from @results from PopularMoviesNetworkResponse
         // through separation of concerns
         val results = networkResponse.body()?.results
