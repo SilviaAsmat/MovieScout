@@ -14,25 +14,24 @@ import javax.inject.Inject
 class MovieDetailsViewModel @Inject constructor(
     private val movieRepo: MoviesRepository
 ): ViewModel() {
-    private val mutableViewState = MutableStateFlow<List<MovieDetailsScreenViewState>>(emptyList())
-    val viewState: StateFlow<List<MovieDetailsScreenViewState>> = mutableViewState
+    private val mutableViewState = MutableStateFlow<MovieDetailsScreenViewState>(MovieDetailsScreenViewState.NONE)
+    val viewState: StateFlow<MovieDetailsScreenViewState> = mutableViewState
+
     init {
         viewModelScope.launch {
             val id = 552524 // dummy
-            val result = arrayOf(movieRepo.getMovieDetails(id))
-            val viewState = result.map {
-                val url = "http://image.tmdb.org/t/p/" + "w300" + it.backdropPath
-                MovieDetailsScreenViewState(
-                    id = TODO(),
-                    title = TODO(),
-                    backdropPath = TODO(),
-                    overview = TODO(),
-                    runtime = TODO(),
-                    status = TODO(),
-                    genres = TODO(),
+            val result = movieRepo.getMovieDetails(id)
+            val newState = MovieDetailsScreenViewState(
+                    id = result.id,
+                    title = result.title,
+                    backdropPath = "http://image.tmdb.org/t/p/" + "w300" + result.backdropPath,
+                    overview = result.overview,
+                    runtime = result.runtime,
+                    status = result.status,
+                    genres = result.genres,
                 )
-            }
-            mutableViewState.emit(viewState)
+
+            mutableViewState.emit(newState)
         }
 
     }
