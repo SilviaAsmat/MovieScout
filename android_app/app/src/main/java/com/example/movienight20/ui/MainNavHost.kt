@@ -41,7 +41,6 @@ fun MainNavHost(
             val movieDetails: MovieDetails = backStackEntry.toRoute()
             detailsViewModel.initWithID(movieDetails.id)
             MovieDetailsScreen(
-                id = movieDetails.id,
                 onClickMovieListItem = {},
                 viewModel = detailsViewModel,
                 navController = navController
