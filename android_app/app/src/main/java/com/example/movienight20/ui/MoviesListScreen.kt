@@ -2,6 +2,8 @@ package com.example.movienight20.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -29,13 +31,14 @@ fun MoviesListScreen(
 //    }
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        horizontalArrangement = Arrangement.spacedBy(5.dp),
-        modifier = Modifier.background(Color.Blue),
-        verticalArrangement = Arrangement.spacedBy(5.dp)
-    ) {
+        modifier = Modifier
+            .background(Color.Black),
+        verticalArrangement = Arrangement.spacedBy(8.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    )
+    {
         items(items = viewStates) {
             MovieListItem(viewState = it, onClickMovieListItem = onClickMovieListItem )
-
         }
     }
 }

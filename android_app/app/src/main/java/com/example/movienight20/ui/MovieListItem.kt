@@ -30,7 +30,7 @@ fun MovieListItem(
         MoviePoster(id = viewState.id, url = viewState.url, onClickMovieListItem)
         Title(title = viewState.title)
         Row {
-            YearLabel(year = viewState.year, modifier = Modifier.weight(1f))
+            ReleaseDateLabel(year = viewState.year, modifier = Modifier.weight(1f))
             RatingLabel(rating = viewState.rating)
         }
     }
@@ -52,14 +52,22 @@ private fun MoviePoster(
     )
 }
 @Composable
-private fun YearLabel(year: String, modifier: Modifier = Modifier) {
-    Text(text = year, modifier = modifier
-        .padding(5.dp), fontSize = 14.sp)
+private fun ReleaseDateLabel(year: String, modifier: Modifier = Modifier) {
+    Text(text = year,
+        modifier = modifier
+            .padding(5.dp),
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Bold
+    )
 }
 @Composable
 private fun RatingLabel(rating: String, modifier: Modifier = Modifier) {
-    Text(text = rating, modifier = modifier
-        .padding(5.dp), fontSize = 14.sp)
+    Text(text = rating,
+        modifier = modifier
+            .padding(5.dp),
+        fontSize = 14.sp,
+        fontWeight = FontWeight.Bold
+    )
 
 }
 
