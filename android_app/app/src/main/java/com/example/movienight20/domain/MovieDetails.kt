@@ -7,7 +7,12 @@ data class MovieDetails (
     val overview: String,
     val runtime: Int,
     val status: String,
-    val genres: List<Genre>
+    val genres: List<Genre>,
+    val releaseDate: String,
+    val voteAvg: Number,
+    val voteCount: Int,
+    val tagline: String
+
 )
 
 data class Genre(

@@ -3,14 +3,14 @@ package com.example.movienight20.data
 import android.util.Log
 import com.example.movienight20.domain.Genre
 import com.example.movienight20.domain.MovieDetails
-import com.example.movienight20.domain.MovieInfo
+import com.example.movienight20.domain.PopularMoviesInfo
 import com.example.movienight20.domain.MoviesRepository
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
     private val networkService: MovieDatabaseNetworkService
 ): MoviesRepository {
-    override suspend fun getMovies(): List<MovieInfo> {
+    override suspend fun getMovies(): List<PopularMoviesInfo> {
         val networkResponse = networkService.getPopularMovies()
 
         // results will get the List<Item> from @results from PopularMoviesNetworkResponse
@@ -19,7 +19,7 @@ class MovieRepositoryImpl @Inject constructor(
         val mapped = results!!.map {
             Log.v(TAG, it.toString())
             // Get info from networkResponse and store into MovieInfo
-            MovieInfo(
+            PopularMoviesInfo(
                 id = it.id!!,
                 title = it.title!!,
                 backdropPath = it.backdropPath!!,
@@ -46,7 +46,11 @@ class MovieRepositoryImpl @Inject constructor(
             status = results!!.status!!,
             genres = results!!.genres!!.map {
                 Genre(id = it.id!!, title = it.title!!)
-            }
+            },
+            releaseDate = results!!.releaseDate!!,
+            voteAvg = results!!.voteAvg!!,
+            voteCount = results!!.voteCount!!,
+            tagline = results!!.tagline!!
         )
     }
 

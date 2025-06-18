@@ -103,6 +103,11 @@ fun PreviewMovieDetailsScreen() {
             overview = "blahblahblahblahblahblahblahblahblahblahblahblahblahblahblahb\nlahblahblahblahblahblahblahblahblahblahblahblahblahblahblah",
             runtime = 90,
             status = "released",
-            genres = listOf()),
+            genres = listOf(),
+            releaseDate = "132435",
+            voteAvg = 1,
+            voteCount = 1,
+            tagline = "this epic movie is about to get more epic"
+        ),
         onClickMovieDetailsScreen ={})
 }

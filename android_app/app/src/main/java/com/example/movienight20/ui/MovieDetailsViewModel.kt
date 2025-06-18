@@ -28,6 +28,10 @@ class MovieDetailsViewModel @Inject constructor(
                 runtime = result.runtime,
                 status = result.status,
                 genres = result.genres,
+                releaseDate = result.releaseDate,
+                voteAvg = result.voteAvg,
+                voteCount = result.voteCount,
+                tagline = result.tagline
             )
 
             mutableViewState.emit(newState)
