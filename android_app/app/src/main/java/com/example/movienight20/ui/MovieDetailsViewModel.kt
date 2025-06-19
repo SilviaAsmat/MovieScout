@@ -17,6 +17,9 @@ class MovieDetailsViewModel @Inject constructor(
     private val mutableViewState = MutableStateFlow<MovieDetailsScreenViewState>(MovieDetailsScreenViewState.NONE)
     val viewState: StateFlow<MovieDetailsScreenViewState> = mutableViewState
 
+    private val _errorToastViewState = MutableStateFlow<String>("")
+    val errorToastViewState: StateFlow<String> = _errorToastViewState
+
     fun initWithID(id: Int){
         viewModelScope.launch {
             val result = movieRepo.getMovieDetails(id)

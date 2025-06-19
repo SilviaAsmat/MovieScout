@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -26,7 +27,7 @@ fun MovieListItem(
     viewState: MovieListItemViewState,
     onClickMovieListItem: (Int) -> Unit,
 ) {
-    Column (modifier = Modifier.height(370.dp).fillMaxWidth().background(Color.White)) {
+    Column (modifier = Modifier.height(330.dp).fillMaxWidth().background(Color.White)) {
         MoviePoster(id = viewState.id, url = viewState.url, onClickMovieListItem)
         Title(title = viewState.title)
         Row {
@@ -45,10 +46,14 @@ private fun MoviePoster(
     AsyncImage(
         model = ImageRequest.Builder(context = LocalContext.current).data(url).build(),
         contentDescription = null,
-        modifier = Modifier.fillMaxWidth().height(300.dp).clickable {
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(270.dp)
+            .clickable {
             onClickMovieListItem(id)
         },
-        contentScale = ContentScale.FillWidth
+        contentScale = ContentScale.FillWidth,
+        alignment = Alignment.TopStart
     )
 }
 @Composable
@@ -57,7 +62,8 @@ private fun ReleaseDateLabel(year: String, modifier: Modifier = Modifier) {
         modifier = modifier
             .padding(5.dp),
         fontSize = 14.sp,
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.Bold,
+        color = Color.Black
     )
 }
 @Composable
@@ -66,7 +72,8 @@ private fun RatingLabel(rating: String, modifier: Modifier = Modifier) {
         modifier = modifier
             .padding(5.dp),
         fontSize = 14.sp,
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.Bold,
+        color = Color.Black
     )
 
 }
@@ -76,12 +83,13 @@ private fun Title(title: String, modifier: Modifier = Modifier) {
     Text(
         text = title,
         modifier = modifier
-            .fillMaxWidth()
-            .padding(5.dp),
-        fontSize = 17.sp,
+            .fillMaxWidth(),
+            //.padding(5.dp),
+        fontSize = 18.sp,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
-        fontWeight = FontWeight.Bold
+        fontWeight = FontWeight.Bold,
+        color = Color.Black
     )
 
 }
