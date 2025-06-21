@@ -94,4 +94,12 @@ dependencies {
     implementation("androidx.navigation:navigation-compose:$nav_version")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.3.3")
+    implementation(platform("androidx.compose:compose-bom:2025.05.00"))
+    // Material3
+    implementation("androidx.compose.material3:material3:1.3.2")
+    implementation("androidx.compose.material3:material3-window-size-class:1.3.2")
+    implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.4.0-alpha16")
+    implementation("androidx.compose.material:material:1.8.3")
+
+
 }
