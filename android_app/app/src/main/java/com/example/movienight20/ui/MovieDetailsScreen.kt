@@ -43,6 +43,8 @@ import com.example.movienight20.R
 import com.example.movienight20.domain.Genre
 import com.example.movienight20.ui.theme.MovieDetailsViewModel
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.draw.clip
 
 @Composable
 fun MovieDetailsScreen(
@@ -65,7 +67,7 @@ private fun MovieDetailsScreen(
     Column (modifier = Modifier
         .fillMaxHeight()
         .fillMaxWidth()
-        .background(Color.LightGray)) {
+        .background(Color.White)) {
         MovieDetailsTopAppBar()
         MoviePoster(url = viewState.backdropPath, onClickMovieDetailsScreen)
         Title(title = viewState.title)
@@ -89,13 +91,14 @@ private fun MoviePoster(
         model = ImageRequest.Builder(context = LocalContext.current).data(url).build(),
         contentDescription = null,
         modifier = Modifier
+            .padding(16.dp)
             .fillMaxWidth()
             .height(250.dp)
-            .padding(16.dp, 0.dp, 16.dp, 0.dp)
+            .clip(RoundedCornerShape(32.dp))
             .clickable {
                 onClickMovieListItem()
             },
-        contentScale = ContentScale.FillWidth
+        contentScale = ContentScale.Crop
     )
 }
 

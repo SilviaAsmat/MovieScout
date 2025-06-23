@@ -7,10 +7,12 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -47,8 +49,9 @@ private fun MoviePoster(
         model = ImageRequest.Builder(context = LocalContext.current).data(url).build(),
         contentDescription = null,
         modifier = Modifier
+            .padding(8.dp)
             .fillMaxWidth()
-            .height(270.dp)
+            .clip(RoundedCornerShape(16.dp))
             .clickable {
             onClickMovieListItem(id)
         },
@@ -60,7 +63,7 @@ private fun MoviePoster(
 private fun ReleaseDateLabel(year: String, modifier: Modifier = Modifier) {
     Text(text = year,
         modifier = modifier
-            .padding(5.dp),
+            .padding(8.dp, 0.dp),
         fontSize = 14.sp,
         fontWeight = FontWeight.Bold,
         color = Color.Black
@@ -70,7 +73,7 @@ private fun ReleaseDateLabel(year: String, modifier: Modifier = Modifier) {
 private fun RatingLabel(rating: String, modifier: Modifier = Modifier) {
     Text(text = rating,
         modifier = modifier
-            .padding(5.dp),
+            .padding(8.dp, 0.dp),
         fontSize = 14.sp,
         fontWeight = FontWeight.Bold,
         color = Color.Black
@@ -83,8 +86,8 @@ private fun Title(title: String, modifier: Modifier = Modifier) {
     Text(
         text = title,
         modifier = modifier
-            .fillMaxWidth(),
-            //.padding(5.dp),
+            //.fillMaxWidth(),
+            .padding(8.dp, 0.dp),
         fontSize = 18.sp,
         maxLines = 1,
         overflow = TextOverflow.Ellipsis,
