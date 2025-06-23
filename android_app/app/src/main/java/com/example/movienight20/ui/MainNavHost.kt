@@ -34,7 +34,8 @@ fun MainNavHost(
                 onClickMovieListItem = { id: Int ->
                     navController.navigate(MovieDetails(id))
 
-                } )
+                },
+                navController = navController)
         }
 
         composable<MovieDetails>{ backStackEntry ->

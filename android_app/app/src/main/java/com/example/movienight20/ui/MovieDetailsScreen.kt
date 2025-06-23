@@ -42,6 +42,7 @@ import coil.request.ImageRequest
 import com.example.movienight20.R
 import com.example.movienight20.domain.Genre
 import com.example.movienight20.ui.theme.MovieDetailsViewModel
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 
 @Composable
 fun MovieDetailsScreen(
@@ -59,10 +60,13 @@ fun MovieDetailsScreen(
 @Composable
 private fun MovieDetailsScreen(
     viewState: MovieDetailsScreenViewState,
-    onClickMovieDetailsScreen: () -> Unit,
+    onClickMovieDetailsScreen: () -> Unit
 ) {
-    MovieDetailsTopAppBar()
-    Column (modifier = Modifier.fillMaxHeight().fillMaxWidth().background(Color.LightGray)) {
+    Column (modifier = Modifier
+        .fillMaxHeight()
+        .fillMaxWidth()
+        .background(Color.LightGray)) {
+        MovieDetailsTopAppBar()
         MoviePoster(url = viewState.backdropPath, onClickMovieDetailsScreen)
         Title(title = viewState.title)
         Tagline(tagline = viewState.tagline)
@@ -87,13 +91,30 @@ private fun MoviePoster(
         modifier = Modifier
             .fillMaxWidth()
             .height(250.dp)
-            .padding(16.dp, 20.dp, 16.dp, 0.dp)
+            .padding(16.dp, 0.dp, 16.dp, 0.dp)
             .clickable {
-            onClickMovieListItem()
-        },
+                onClickMovieListItem()
+            },
         contentScale = ContentScale.FillWidth
     )
 }
+
+@Composable
+private fun Title(title: String, modifier: Modifier = Modifier) {
+    Text(
+        text = title,
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp, 0.dp, 16.dp, 0.dp),
+        fontSize = 22.sp,
+        maxLines = 2,
+        overflow = TextOverflow.Visible,
+        fontWeight = FontWeight.Bold,
+        color = Color.Black
+    )
+
+}
+
 @Composable
 private fun ReleaseDateLabel(releaseDate: String, modifier: Modifier = Modifier) {
     Text(
@@ -137,22 +158,6 @@ private fun Overview(overview: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun Title(title: String, modifier: Modifier = Modifier) {
-    Text(
-        text = title,
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp, 0.dp, 10.dp, 0.dp),
-        fontSize = 22.sp,
-        maxLines = 1,
-        overflow = TextOverflow.Ellipsis,
-        fontWeight = FontWeight.Bold,
-        color = Color.Black
-    )
-
-}
-
-@Composable
 private fun Genres(genres: List<Genre>, modifier: Modifier = Modifier) {
     LazyHorizontalGrid(
         rows = GridCells.Fixed(1)
@@ -168,8 +173,36 @@ private fun Genres(genres: List<Genre>, modifier: Modifier = Modifier) {
             )
         }
     }
-
 }
+
+@ExperimentalMaterial3Api
+@Composable
+fun MovieDetailsTopAppBar() {
+    val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    CenterAlignedTopAppBar(
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primaryContainer
+        ),
+        title = {
+            Text(
+                "Movie Details",
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )},
+        navigationIcon = {
+            IconButton(onClick = {
+                backDispatcher?.onBackPressed()
+            }) {
+                Image(
+                painter = painterResource(id = R.drawable.baseline_arrow_back_24),
+                contentDescription = "back arrow"
+            )}
+        })
+}
+
+
 
 @Composable
 private fun Tagline(tagline: String, modifier: Modifier = Modifier) {
