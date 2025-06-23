@@ -71,7 +71,9 @@ private fun MovieDetailsScreen(
         MovieDetailsTopAppBar()
         MoviePoster(url = viewState.backdropPath, onClickMovieDetailsScreen)
         Title(title = viewState.title)
-        Tagline(tagline = viewState.tagline)
+        if (!viewState.tagline.isNullOrBlank()) {
+            Tagline(tagline = viewState.tagline)
+        }
         Row {
             ReleaseDateLabel(releaseDate = viewState.releaseDate, modifier = Modifier.weight(1f))
             VoteAvgLabel(voteAvg = viewState.voteAvg)
@@ -119,11 +121,23 @@ private fun Title(title: String, modifier: Modifier = Modifier) {
 }
 
 @Composable
+private fun Tagline(tagline: String, modifier: Modifier = Modifier) {
+    Text(
+        text = tagline,
+        fontSize = 16.sp,
+        modifier = modifier
+            .padding(16.dp, 6.dp, 16.dp, 0.dp),
+        color = Color.Black,
+        fontStyle = FontStyle.Italic
+    )
+}
+
+@Composable
 private fun ReleaseDateLabel(releaseDate: String, modifier: Modifier = Modifier) {
     Text(
         text = releaseDate,
         modifier = modifier
-            .padding(16.dp, 0.dp, 10.dp, 0.dp),
+            .padding(16.dp, 6.dp),
         fontSize = 16.sp,
         color = Color.Black
     )
@@ -133,6 +147,8 @@ private fun VoteAvgLabel(voteAvg: Number, modifier: Modifier = Modifier) {
     Text(
         text = voteAvg.toString(),
         fontSize = 16.sp,
+        modifier = modifier
+            .padding(0.dp, 6.dp, 0.dp, 0.dp),
         color = Color.Black
     )
 
@@ -143,7 +159,7 @@ private fun VoteCountLabel(voteCount: Int, modifier: Modifier = Modifier) {
         text = "($voteCount)",
         fontSize = 16.sp,
         modifier = modifier
-            .padding(3.dp, 0.dp, 16.dp, 0.dp),
+            .padding(6.dp, 6.dp, 16.dp, 0.dp),
         color = Color.Black
     )
 
@@ -206,19 +222,6 @@ fun MovieDetailsTopAppBar() {
 }
 
 
-
-@Composable
-private fun Tagline(tagline: String, modifier: Modifier = Modifier) {
-    Text(
-        text = tagline,
-        fontSize = 16.sp,
-        modifier = modifier
-            .padding(16.dp, 8.dp, 16.dp, 4.dp),
-        color = Color.Black,
-        fontStyle = FontStyle.Italic
-    )
-}
-
 @Preview(showBackground = true)
 @Composable
 fun PreviewMovieDetailsScreen() {
@@ -232,7 +235,7 @@ fun PreviewMovieDetailsScreen() {
             status = "released",
             genres = listOf(),
             releaseDate = "11-11-1111",
-            voteAvg = 198,
+            voteAvg = 8.0,
             voteCount = 111,
             tagline = "this epic movie is about to get more epic"
         ),
