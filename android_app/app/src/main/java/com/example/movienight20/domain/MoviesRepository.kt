@@ -3,4 +3,5 @@ package com.example.movienight20.domain
 interface MoviesRepository {
     suspend fun getMovies(): List<PopularMoviesInfo>
     suspend fun getMovieDetails(movieId: Int): MovieDetails
+    suspend fun getMovieCredits(movieId: Int): MovieCredits
 }

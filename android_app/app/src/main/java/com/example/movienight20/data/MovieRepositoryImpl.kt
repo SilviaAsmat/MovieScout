@@ -1,7 +1,9 @@
 package com.example.movienight20.data
 
 import android.util.Log
+import com.example.movienight20.domain.Cast
 import com.example.movienight20.domain.Genre
+import com.example.movienight20.domain.MovieCredits
 import com.example.movienight20.domain.MovieDetails
 import com.example.movienight20.domain.PopularMoviesInfo
 import com.example.movienight20.domain.MoviesRepository
@@ -12,9 +14,6 @@ class MovieRepositoryImpl @Inject constructor(
 ): MoviesRepository {
     override suspend fun getMovies(): List<PopularMoviesInfo> {
         val networkResponse = networkService.getPopularMovies()
-
-        // results will get the List<Item> from @results from PopularMoviesNetworkResponse
-        // through separation of concerns
         val results = networkResponse.body()?.results
         val mapped = results!!.map {
             Log.v(TAG, it.toString())
@@ -33,10 +32,7 @@ class MovieRepositoryImpl @Inject constructor(
 
     override suspend fun getMovieDetails(movieId: Int): MovieDetails {
         val networkResponse = networkService.getMovieDetails(movieId = movieId)
-
         val results = networkResponse.body()
-        // TODO map from JSON to domain
-
         return MovieDetails(
             id = results!!.id!!,
             title = results!!.title!!,
@@ -56,5 +52,21 @@ class MovieRepositoryImpl @Inject constructor(
 
     private companion object {
         private const val TAG = "MovieRepositoryImpl"
+    }
+
+    override suspend fun getMovieCredits(movieId: Int): MovieCredits {
+        val networkResponse = networkService.getMovieCredits(movieId = movieId)
+        val results = networkResponse.body()
+        return MovieCredits(
+            movieId = results!!.movieId!!,
+            cast = results!!.cast!!.map {
+                Cast(
+                    castId = it!!.castId!!,
+                    name = it!!.name!!,
+                    //picturePath = it!!.picturePath!!,
+                    character = it!!.character!!
+                )
+            }
+        )
     }
 }

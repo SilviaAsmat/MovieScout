@@ -43,8 +43,10 @@ import com.example.movienight20.R
 import com.example.movienight20.domain.Genre
 import com.example.movienight20.ui.theme.MovieDetailsViewModel
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.ui.draw.clip
+import com.example.movienight20.domain.Cast
 
 @Composable
 fun MovieDetailsScreen(
@@ -81,6 +83,7 @@ private fun MovieDetailsScreen(
         }
         Overview(overview = viewState.overview)
         Genres(genres = viewState.genres)
+        MovieCast(cast = viewState.cast)
     }
 }
 
@@ -170,7 +173,7 @@ private fun Overview(overview: String, modifier: Modifier = Modifier) {
         text = overview,
         fontSize = 16.sp,
         modifier = modifier
-            .padding(16.dp, 8.dp, 16.dp, 4.dp),
+            .padding(16.dp, 0.dp),
         color = Color.Black
     )
 
@@ -179,14 +182,36 @@ private fun Overview(overview: String, modifier: Modifier = Modifier) {
 @Composable
 private fun Genres(genres: List<Genre>, modifier: Modifier = Modifier) {
     LazyHorizontalGrid(
-        rows = GridCells.Fixed(1)
+        rows = GridCells.Fixed(1),
+        modifier = modifier.heightIn(max = 40.dp)
     ) {
         items(items = genres) {
             Text(
                 text = it.title.toString(),
                 fontSize = 16.sp,
                 modifier = modifier
-                    .padding(16.dp, 8.dp, 16.dp, 4.dp),
+                    .padding(16.dp, 8.dp, 16.dp, 4.dp)
+                    .background(color = Color.LightGray),
+                color = Color.Black,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+    }
+}
+
+@Composable
+private fun MovieCast(cast: List<Cast>, modifier: Modifier = Modifier) {
+    LazyHorizontalGrid(
+        rows = GridCells.Fixed(1),
+        modifier = modifier.heightIn(max = 40.dp)
+    ) {
+        items(items = cast) {
+            Text(
+                text = it.name.toString(),
+                fontSize = 16.sp,
+                modifier = modifier
+                    .padding(16.dp, 8.dp, 16.dp, 4.dp)
+                    .background(color = Color.LightGray),
                 color = Color.Black,
                 fontWeight = FontWeight.SemiBold
             )
@@ -237,7 +262,8 @@ fun PreviewMovieDetailsScreen() {
             releaseDate = "11-11-1111",
             voteAvg = 8.0,
             voteCount = 111,
-            tagline = "this epic movie is about to get more epic"
+            tagline = "this epic movie is about to get more epic",
+            cast = listOf()
         ),
         onClickMovieDetailsScreen ={})
 }

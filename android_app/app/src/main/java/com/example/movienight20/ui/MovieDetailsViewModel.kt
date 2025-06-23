@@ -22,19 +22,21 @@ class MovieDetailsViewModel @Inject constructor(
 
     fun initWithID(id: Int){
         viewModelScope.launch {
-            val result = movieRepo.getMovieDetails(id)
+            val detailsResult = movieRepo.getMovieDetails(id)
+            val creditsResult = movieRepo.getMovieCredits(id)
             val newState = MovieDetailsScreenViewState(
-                id = result.id,
-                title = result.title,
-                backdropPath = "http://image.tmdb.org/t/p/" + "w300" + result.backdropPath,
-                overview = result.overview,
-                runtime = result.runtime,
-                status = result.status,
-                genres = result.genres,
-                releaseDate = result.releaseDate,
-                voteAvg = result.voteAvg,
-                voteCount = result.voteCount,
-                tagline = result.tagline
+                id = detailsResult.id,
+                title = detailsResult.title,
+                backdropPath = "http://image.tmdb.org/t/p/" + "w300" + detailsResult.backdropPath,
+                overview = detailsResult.overview,
+                runtime = detailsResult.runtime,
+                status = detailsResult.status,
+                genres = detailsResult.genres,
+                releaseDate = detailsResult.releaseDate,
+                voteAvg = detailsResult.voteAvg,
+                voteCount = detailsResult.voteCount,
+                tagline = detailsResult.tagline,
+                cast = creditsResult.cast
             )
 
             mutableViewState.emit(newState)

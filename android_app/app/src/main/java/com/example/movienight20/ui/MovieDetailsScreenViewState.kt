@@ -1,5 +1,6 @@
 package com.example.movienight20.ui
 
+import com.example.movienight20.domain.Cast
 import com.example.movienight20.domain.Genre
 
 data class MovieDetailsScreenViewState(
@@ -13,7 +14,8 @@ data class MovieDetailsScreenViewState(
     val releaseDate: String,
     val voteAvg: Number,
     val voteCount: Int,
-    val tagline: String
+    val tagline: String,
+    val cast: List<Cast>
 ) {
     companion object {
         val NONE = MovieDetailsScreenViewState(
@@ -27,7 +29,8 @@ data class MovieDetailsScreenViewState(
             releaseDate = "",
             voteAvg = 0,
             voteCount = 1,
-            tagline = ""
+            tagline = "",
+            cast = listOf()
         )
     }
 }
