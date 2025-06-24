@@ -8,6 +8,6 @@ data class MovieCredits (
 data class Cast (
     val castId: Int?,
     val name: String?,
-    //val picturePath: String?,
+    val picturePath: String?,
     val character: String?
 )

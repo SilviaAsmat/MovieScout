@@ -3,19 +3,18 @@ package com.example.movienight20.ui
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -30,7 +29,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.material.Icon
 import androidx.compose.ui.res.painterResource
 
 import androidx.compose.ui.tooling.preview.Preview
@@ -42,21 +40,35 @@ import coil.request.ImageRequest
 import com.example.movienight20.R
 import com.example.movienight20.domain.Genre
 import com.example.movienight20.ui.theme.MovieDetailsViewModel
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.text.style.TextAlign
 import com.example.movienight20.domain.Cast
 
 @Composable
 fun MovieDetailsScreen(
     onClickMovieListItem: () -> Unit,
     viewModel:MovieDetailsViewModel,
-    navController: NavController
+    navController: NavController,
+    onBackClick: () -> Unit,
 ) {
     val viewState by viewModel.viewState.collectAsState()
     val errorToastViewState by viewModel.errorToastViewState.collectAsState()
-    MovieDetailsScreen(viewState = viewState, onClickMovieDetailsScreen = onClickMovieListItem)
+    MovieDetailsScreen(viewState = viewState, onClickMovieDetailsScreen = onClickMovieListItem, onBackClick = onBackClick)
 
 }
 
@@ -64,13 +76,18 @@ fun MovieDetailsScreen(
 @Composable
 private fun MovieDetailsScreen(
     viewState: MovieDetailsScreenViewState,
-    onClickMovieDetailsScreen: () -> Unit
+    onClickMovieDetailsScreen: () -> Unit,
+    onBackClick: () -> Unit,
 ) {
-    Column (modifier = Modifier
-        .fillMaxHeight()
-        .fillMaxWidth()
-        .background(Color.White)) {
-        MovieDetailsTopAppBar()
+    val scrollState = rememberScrollState()
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(scrollState)
+            .background(Color.White)
+    ){
+        MovieDetailsTopAppBar(onBackClick = onBackClick)
         MoviePoster(url = viewState.backdropPath, onClickMovieDetailsScreen)
         Title(title = viewState.title)
         if (!viewState.tagline.isNullOrBlank()) {
@@ -183,16 +200,21 @@ private fun Overview(overview: String, modifier: Modifier = Modifier) {
 private fun Genres(genres: List<Genre>, modifier: Modifier = Modifier) {
     LazyHorizontalGrid(
         rows = GridCells.Fixed(1),
-        modifier = modifier.heightIn(max = 40.dp)
+        modifier = modifier
+            .heightIn(max = 38.dp)
+            .padding(16.dp, 8.dp, 16.dp, 0.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         items(items = genres) {
             Text(
                 text = it.title.toString(),
                 fontSize = 16.sp,
                 modifier = modifier
-                    .padding(16.dp, 8.dp, 16.dp, 4.dp)
-                    .background(color = Color.LightGray),
-                color = Color.Black,
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(Color(android.graphics.Color.parseColor("#e46827")))
+                    .padding(8.dp, 4.dp),
+
+                color = Color.White,
                 fontWeight = FontWeight.SemiBold
             )
         }
@@ -203,26 +225,58 @@ private fun Genres(genres: List<Genre>, modifier: Modifier = Modifier) {
 private fun MovieCast(cast: List<Cast>, modifier: Modifier = Modifier) {
     LazyHorizontalGrid(
         rows = GridCells.Fixed(1),
-        modifier = modifier.heightIn(max = 40.dp)
+        modifier = modifier.heightIn(max = 220.dp).padding(6.dp),
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         items(items = cast) {
-            Text(
-                text = it.name.toString(),
-                fontSize = 16.sp,
-                modifier = modifier
-                    .padding(16.dp, 8.dp, 16.dp, 4.dp)
-                    .background(color = Color.LightGray),
-                color = Color.Black,
-                fontWeight = FontWeight.SemiBold
-            )
+            Card (
+                colors = CardDefaults.cardColors(containerColor = Color.Transparent)
+            ) {
+                Box(
+                    modifier = modifier
+                        .height(220.dp)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    AsyncImage(
+                        model = ImageRequest.Builder(context = LocalContext.current).data("http://image.tmdb.org/t/p/" + "w1280" + it.picturePath).build(),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .clip(RoundedCornerShape(16.dp)),
+                        contentScale = ContentScale.Crop
+                    )
+                    Text(
+                        text = it.name.toString(),
+                        fontSize = 16.sp,
+                        modifier = Modifier
+                            .padding(0.dp, 6.dp)
+                            .offset(0.dp,94.dp)
+                            .background(Color.Transparent)
+                        ,
+                        color = Color.White
+                    )
+                    Text(
+                        text = it.character.toString(),
+                        modifier = Modifier
+                            .padding(0.dp, 6.dp)
+                            .offset(0.dp,78.dp)
+                            .background(Color.Transparent)
+                        ,
+                        fontSize = 16.sp,
+                        color = Color.White,
+                    )
+                }
+            }
         }
     }
 }
 
 @ExperimentalMaterial3Api
 @Composable
-fun MovieDetailsTopAppBar() {
-    val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+fun MovieDetailsTopAppBar(
+    onBackClick: () -> Unit
+) {
     CenterAlignedTopAppBar(
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer
@@ -236,9 +290,7 @@ fun MovieDetailsTopAppBar() {
                 color = Color.White
             )},
         navigationIcon = {
-            IconButton(onClick = {
-                backDispatcher?.onBackPressed()
-            }) {
+            IconButton(onClick = onBackClick) {
                 Image(
                 painter = painterResource(id = R.drawable.baseline_arrow_back_24),
                 contentDescription = "back arrow"
@@ -258,12 +310,15 @@ fun PreviewMovieDetailsScreen() {
             overview = "blahblahblahblahblahblahblahblahblahblahblahblahblahblahblahb\nlahblahblahblahblahblahblahblahblahblahblahblahblahblahblah",
             runtime = 90,
             status = "released",
-            genres = listOf(),
+            genres = listOf(Genre(id = 1, title = "Comedy"),Genre(id = 2, title = "Horror"),Genre(id = 2, title = "Action")),
             releaseDate = "11-11-1111",
             voteAvg = 8.0,
             voteCount = 111,
             tagline = "this epic movie is about to get more epic",
-            cast = listOf()
+            cast = listOf(Cast(castId = 0, name = "Famous Actor", picturePath = "http://image.tmdb.org/t/p/" + "w1280" + "/ewr46CGOdsx5NzAJdIzEBz2yIQh.jpg", character = "character"),
+                Cast(castId = 0, name = "Famous Actor", picturePath = "http://image.tmdb.org/t/p/" + "w1280" + "/1f9NK43gWrXN2uMmYMlennB7jCC.jpg", character = "character"))
         ),
-        onClickMovieDetailsScreen ={})
+        onClickMovieDetailsScreen = {},
+        onBackClick = {},
+        )
 }

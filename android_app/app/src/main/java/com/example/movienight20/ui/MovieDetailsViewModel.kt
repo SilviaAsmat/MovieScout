@@ -27,7 +27,7 @@ class MovieDetailsViewModel @Inject constructor(
             val newState = MovieDetailsScreenViewState(
                 id = detailsResult.id,
                 title = detailsResult.title,
-                backdropPath = "http://image.tmdb.org/t/p/" + "w300" + detailsResult.backdropPath,
+                backdropPath = "http://image.tmdb.org/t/p/" + "w1280" + detailsResult.backdropPath,
                 overview = detailsResult.overview,
                 runtime = detailsResult.runtime,
                 status = detailsResult.status,
