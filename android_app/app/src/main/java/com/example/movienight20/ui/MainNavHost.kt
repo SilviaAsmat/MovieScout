@@ -44,7 +44,10 @@ fun MainNavHost(
             MovieDetailsScreen(
                 onClickMovieListItem = {},
                 viewModel = detailsViewModel,
-                navController = navController
+                navController = navController,
+                onBackClick = {
+                    navController.popBackStack()
+                }
             )
         }
 
