@@ -61,10 +61,10 @@ class MovieRepositoryImpl @Inject constructor(
             movieId = results!!.movieId!!,
             cast = results!!.cast!!.map {
                 Cast(
-                    castId = it!!.castId!!,
-                    name = it!!.name!!,
-                    //picturePath = it!!.picturePath!!,
-                    character = it!!.character!!
+                    castId = it.castId,
+                    name = it.name,
+                    picturePath = it.picturePath,
+                    character = it.character
                 )
             }
         )
