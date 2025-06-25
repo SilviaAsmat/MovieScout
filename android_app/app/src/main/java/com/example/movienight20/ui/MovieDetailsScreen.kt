@@ -239,7 +239,7 @@ private fun MovieCast(cast: List<Cast>, modifier: Modifier = Modifier, onClickCa
                     contentDescription = null,
                     modifier = Modifier
                         .height(180.dp)
-                        .fillMaxWidth()
+                        .width(120.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .clickable{onClickCastPhoto(it.castId)},
                     contentScale = ContentScale.Crop
