@@ -222,8 +222,7 @@ private fun Genres(genres: List<Genre>, modifier: Modifier = Modifier) {
                 color = Color.White,
                 fontWeight = FontWeight.SemiBold
             )
-        }
-    }
+        } }
 }
 
 @Composable
@@ -234,61 +233,36 @@ private fun MovieCast(cast: List<Cast>, modifier: Modifier = Modifier, onClickCa
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         items(items = cast) {
-            Card (
-                colors = CardDefaults.cardColors(containerColor = Color.Transparent)
-            ) {
-                Box(
-                    modifier = modifier
-                        .height(220.dp)
-                        .width(120.dp)
-                        //.fillMaxWidth()
-                        .background(Color("#581845".toColorInt())),
-                    contentAlignment = Alignment.Center
-                ) {
-                    AsyncImage(
-                        model = ImageRequest.Builder(context = LocalContext.current).data("http://image.tmdb.org/t/p/" + "w1280" + it.picturePath).build(),
-                        contentDescription = null,
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .clip(RoundedCornerShape(8.dp))
-                            .clickable{onClickCastPhoto(it.castId)},
-                        contentScale = ContentScale.Crop
-                    )
-                    Text(
-                        text = it.name.toString(),
-                        maxLines = 1,
-                        modifier = Modifier
-                            .padding(0.dp, 6.dp)
-                            .offset(0.dp,92.dp)
-                            .background(Color.Transparent)
-                            .width(100.dp),
-                        overflow = TextOverflow.Ellipsis,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White
-                    )
-                    Text(
-                        text = it.character.toString(),
-                        maxLines = 1,
-                        modifier = Modifier
-                            .padding(0.dp, 6.dp)
-                            .offset(0.dp, 74.dp)
-                            .background(Color.Transparent)
-                            .width(100.dp),
-                        overflow = TextOverflow.Ellipsis,
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                    )
-                }
-            }
-        }
-    }
+            Column(modifier = modifier.background(Color.White).height(220.dp)) {
+                AsyncImage(
+                    model = ImageRequest.Builder(context = LocalContext.current).data("http://image.tmdb.org/t/p/" + "w1280" + it.picturePath).build(),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .height(180.dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable{onClickCastPhoto(it.castId)},
+                    contentScale = ContentScale.Crop
+                )
+                Text(
+                    text = it.name.toString(),
+                    maxLines = 1,
+                    modifier = Modifier
+                        .padding(2.dp, 0.dp)
+                        .width(100.dp),
+                    color = Color.Black,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    overflow = TextOverflow.Ellipsis,
+
+                )
+            } } }// End of LHG
 }
+
 
 @ExperimentalMaterial3Api
 @Composable
-fun MovieDetailsTopAppBar(
+private fun MovieDetailsTopAppBar(
     onBackClick: () -> Unit
 ) {
     CenterAlignedTopAppBar(
