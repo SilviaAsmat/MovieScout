@@ -2,15 +2,28 @@ package com.example.movienight20.ui
 
 import com.example.movienight20.domain.ActorRoleMovie
 import com.example.movienight20.domain.CrewRoleMovie
+import kotlin.String
 
 data class PeopleDetailsScreenViewState (
     val actorRoleMovie: List<ActorRoleMovie>,
-    val crewRoleMovie: List<CrewRoleMovie>
+    val crewRoleMovie: List<CrewRoleMovie>,
+    val bio: String,
+    val birthday: String,
+    val deathday: String,
+    val name: String,
+    val birthPlace: String,
+    val profilePath: String
 ) {
     companion object {
         val NONE = PeopleDetailsScreenViewState(
             actorRoleMovie = listOf(),
-            crewRoleMovie = listOf()
+            crewRoleMovie = listOf(),
+            bio = "",
+            birthday = "",
+            deathday = "",
+            name = "",
+            birthPlace = "",
+            profilePath = "",
         )
     }
 }

@@ -18,10 +18,17 @@ class PeopleDetailsViewModel @Inject constructor(
 
     fun initWithID(id: Int){
         viewModelScope.launch {
-            val result = movieRepo.getPeopleMovieCredits(id)
+            val movieCreditsResult = movieRepo.getPeopleMovieCredits(id)
+            val peopleDetailsResult = movieRepo.getPeopleDetails(id)
             val newState = PeopleDetailsScreenViewState(
-                actorRoleMovie = result.actorRoleMovie,
-                crewRoleMovie = result.crewRoleMovie
+                actorRoleMovie = movieCreditsResult.actorRoleMovie,
+                crewRoleMovie = movieCreditsResult.crewRoleMovie,
+                bio = peopleDetailsResult.bio,
+                birthday = peopleDetailsResult.birthday,
+                deathday = peopleDetailsResult.deathday,
+                name = peopleDetailsResult.name,
+                birthPlace = peopleDetailsResult.birthPlace,
+                profilePath = peopleDetailsResult.profilePath
             )
             mutableViewState.emit(newState)
         }
