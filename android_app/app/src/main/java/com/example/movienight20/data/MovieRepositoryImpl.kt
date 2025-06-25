@@ -9,6 +9,7 @@ import com.example.movienight20.domain.MovieCredits
 import com.example.movienight20.domain.MovieDetails
 import com.example.movienight20.domain.PopularMoviesInfo
 import com.example.movienight20.domain.MoviesRepository
+import com.example.movienight20.domain.PeopleDetails
 import com.example.movienight20.domain.PeopleMovieCredits
 import javax.inject.Inject
 
@@ -37,17 +38,17 @@ class MovieRepositoryImpl @Inject constructor(
         return MovieDetails(
             id = results!!.id!!,
             title = results!!.title!!,
-            backdropPath = results!!.backdropPath!!,
-            overview = results!!.overview!!,
-            runtime = results!!.runtime!!,
-            status = results!!.status!!,
-            genres = results!!.genres!!.map {
+            backdropPath = results.backdropPath!!,
+            overview = results.overview!!,
+            runtime = results.runtime!!,
+            status = results.status!!,
+            genres = results.genres!!.map {
                 Genre(id = it.id!!, title = it.title!!)
             },
-            releaseDate = results!!.releaseDate!!,
-            voteAvg = results!!.voteAvg!!,
-            voteCount = results!!.voteCount!!,
-            tagline = results!!.tagline!!
+            releaseDate = results.releaseDate!!,
+            voteAvg = results.voteAvg!!,
+            voteCount = results.voteCount!!,
+            tagline = results.tagline!!
         )
     }
 
@@ -60,7 +61,7 @@ class MovieRepositoryImpl @Inject constructor(
         val results = networkResponse.body()
         return MovieCredits(
             movieId = results!!.movieId!!,
-            cast = results!!.cast!!.map {
+            cast = results.cast!!.map {
                 Cast(
                     castId = it.castId!!,
                     name = it.name,
@@ -74,7 +75,7 @@ class MovieRepositoryImpl @Inject constructor(
         val networkResponse = networkService.getPeopleMovieCredits(personId = personId)
         val results = networkResponse.body()
         return PeopleMovieCredits(
-            actorRoleMovie = results!!.actorRoleMovie!!.map{
+            actorRoleMovie = results!!.actorRoleMovie.map{
                 ActorRoleMovie(
                     id = it.id,
                     posterPath = it.posterPath,
@@ -82,7 +83,7 @@ class MovieRepositoryImpl @Inject constructor(
                     releaseDate = it.releaseDate,
                     voteAvg = it.voteAvg
                 )},
-            crewRoleMovie = results!!.crewRoleMovie!!.map{
+            crewRoleMovie = results.crewRoleMovie.map{
                 CrewRoleMovie(
                     id = it.id,
                     posterPath = it.posterPath,
@@ -90,6 +91,19 @@ class MovieRepositoryImpl @Inject constructor(
                     releaseDate = it.releaseDate,
                     voteAvg = it.voteAvg
                 )}
+        )
+    }
+
+    override suspend fun getPeopleDetails(personId: Int): PeopleDetails {
+        val networkResponse = networkService.getPeopleDetails(personId = personId)
+        val results = networkResponse.body()
+        return PeopleDetails(
+            bio = results!!.bio.toString(),
+            birthday = results.birthday.toString(),
+            deathday = results.deathday.toString(),
+            name = results.name.toString(),
+            birthPlace = results.birthPlace.toString(),
+            profilePath = results.profilePath.toString()
         )
     }
 }
