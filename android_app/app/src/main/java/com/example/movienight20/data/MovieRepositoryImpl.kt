@@ -1,12 +1,15 @@
 package com.example.movienight20.data
 
 import android.util.Log
+import com.example.movienight20.domain.ActorRoleMovie
 import com.example.movienight20.domain.Cast
+import com.example.movienight20.domain.CrewRoleMovie
 import com.example.movienight20.domain.Genre
 import com.example.movienight20.domain.MovieCredits
 import com.example.movienight20.domain.MovieDetails
 import com.example.movienight20.domain.PopularMoviesInfo
 import com.example.movienight20.domain.MoviesRepository
+import com.example.movienight20.domain.PeopleMovieCredits
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
@@ -17,7 +20,6 @@ class MovieRepositoryImpl @Inject constructor(
         val results = networkResponse.body()?.results
         val mapped = results!!.map {
             Log.v(TAG, it.toString())
-            // Get info from networkResponse and store into MovieInfo
             PopularMoviesInfo(
                 id = it.id!!,
                 title = it.title!!,
@@ -25,8 +27,7 @@ class MovieRepositoryImpl @Inject constructor(
                 posterPath = it.posterPath!!,
                 releaseDate = it.releaseDate!!,
                 rating = it.voteAverage!!.toString()
-            )
-        }
+            )}
         return mapped
     }
 
@@ -61,12 +62,34 @@ class MovieRepositoryImpl @Inject constructor(
             movieId = results!!.movieId!!,
             cast = results!!.cast!!.map {
                 Cast(
-                    castId = it.castId,
+                    castId = it.castId!!,
                     name = it.name,
                     picturePath = it.picturePath,
                     character = it.character
-                )
-            }
+                )}
+        )
+    }
+
+    override suspend fun getPeopleMovieCredits(personId: Int): PeopleMovieCredits {
+        val networkResponse = networkService.getPeopleMovieCredits(personId = personId)
+        val results = networkResponse.body()
+        return PeopleMovieCredits(
+            actorRoleMovie = results!!.actorRoleMovie!!.map{
+                ActorRoleMovie(
+                    id = it.id,
+                    posterPath = it.posterPath,
+                    title = it.title,
+                    releaseDate = it.releaseDate,
+                    voteAvg = it.voteAvg
+                )},
+            crewRoleMovie = results!!.crewRoleMovie!!.map{
+                CrewRoleMovie(
+                    id = it.id,
+                    posterPath = it.posterPath,
+                    title = it.title,
+                    releaseDate = it.releaseDate,
+                    voteAvg = it.voteAvg
+                )}
         )
     }
 }

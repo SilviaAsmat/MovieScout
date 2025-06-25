@@ -12,5 +12,7 @@ interface MovieDatabaseNetworkService {
     suspend fun getMovieDetails(@Path("movie_id") movieId: Int): Response<MovieDetailsNetworkResponse>
     @GET("/3/movie/{movie_id}/credits")
     suspend fun getMovieCredits(@Path("movie_id") movieId: Int): Response<MovieCreditsNetworkResponse>
+    @GET("/3/person/{person_id}/movie_credits")
+    suspend fun getPeopleMovieCredits(@Path("person_id") personId: Int): Response<PeopleMovieCreditsNetworkResponse>
 }
 

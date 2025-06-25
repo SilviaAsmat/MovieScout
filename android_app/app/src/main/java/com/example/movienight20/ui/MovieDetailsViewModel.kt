@@ -38,7 +38,6 @@ class MovieDetailsViewModel @Inject constructor(
                 tagline = detailsResult.tagline,
                 cast = creditsResult.cast
             )
-
             mutableViewState.emit(newState)
         }
     }

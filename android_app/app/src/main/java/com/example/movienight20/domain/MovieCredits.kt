@@ -6,7 +6,7 @@ data class MovieCredits (
 )
 
 data class Cast (
-    val castId: Int?,
+    val castId: Int,
     val name: String?,
     val picturePath: String?,
     val character: String?

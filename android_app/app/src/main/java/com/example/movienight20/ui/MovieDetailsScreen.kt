@@ -62,10 +62,11 @@ fun MovieDetailsScreen(
     viewModel:MovieDetailsViewModel,
     navController: NavController,
     onBackClick: () -> Unit,
+    onClickCastPhoto: (Int) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
     val errorToastViewState by viewModel.errorToastViewState.collectAsState()
-    MovieDetailsScreen(viewState = viewState, onClickMovieDetailsScreen = onClickMovieListItem, onBackClick = onBackClick)
+    MovieDetailsScreen(viewState = viewState, onClickCastPhoto = onClickCastPhoto, onClickMovieDetailsScreen = onClickMovieListItem, onBackClick = onBackClick)
 
 }
 
@@ -75,6 +76,7 @@ private fun MovieDetailsScreen(
     viewState: MovieDetailsScreenViewState,
     onClickMovieDetailsScreen: () -> Unit,
     onBackClick: () -> Unit,
+    onClickCastPhoto: (Int) -> Unit
 ) {
     val scrollState = rememberScrollState()
     Scaffold(
@@ -85,7 +87,7 @@ private fun MovieDetailsScreen(
                 .fillMaxSize()
                 .verticalScroll(scrollState)
                 .background(Color.White)
-                .padding(innerPadding)// Used as dummy footer space
+                .padding(innerPadding)
         ) {
 
             MoviePoster(url = viewState.backdropPath, onClickMovieDetailsScreen)
@@ -103,7 +105,7 @@ private fun MovieDetailsScreen(
             }
             Overview(overview = viewState.overview)
             Genres(genres = viewState.genres)
-            MovieCast(cast = viewState.cast)
+            MovieCast(cast = viewState.cast, onClickCastPhoto = onClickCastPhoto)
         }
     }
 }
@@ -225,7 +227,7 @@ private fun Genres(genres: List<Genre>, modifier: Modifier = Modifier) {
 }
 
 @Composable
-private fun MovieCast(cast: List<Cast>, modifier: Modifier = Modifier) {
+private fun MovieCast(cast: List<Cast>, modifier: Modifier = Modifier, onClickCastPhoto: (Int) -> Unit) {
     LazyHorizontalGrid(
         rows = GridCells.Fixed(1),
         modifier = modifier.heightIn(max = 220.dp).padding(16.dp, 10.dp),
@@ -248,7 +250,8 @@ private fun MovieCast(cast: List<Cast>, modifier: Modifier = Modifier) {
                         contentDescription = null,
                         modifier = Modifier
                             .fillMaxSize()
-                            .clip(RoundedCornerShape(8.dp)),
+                            .clip(RoundedCornerShape(8.dp))
+                            .clickable{onClickCastPhoto(it.castId)},
                         contentScale = ContentScale.Crop
                     )
                     Text(
@@ -261,6 +264,7 @@ private fun MovieCast(cast: List<Cast>, modifier: Modifier = Modifier) {
                             .width(100.dp),
                         overflow = TextOverflow.Ellipsis,
                         fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
                         color = Color.White
                     )
                     Text(
@@ -273,6 +277,7 @@ private fun MovieCast(cast: List<Cast>, modifier: Modifier = Modifier) {
                             .width(100.dp),
                         overflow = TextOverflow.Ellipsis,
                         fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
                         color = Color.White,
                     )
                 }
@@ -288,7 +293,7 @@ fun MovieDetailsTopAppBar(
 ) {
     CenterAlignedTopAppBar(
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color("#73ad0c".toColorInt())
+                containerColor = Color("#4b8f38".toColorInt())
             ),
         title = {
             Text(
@@ -333,5 +338,6 @@ fun PreviewMovieDetailsScreen() {
         ),
         onClickMovieDetailsScreen = {},
         onBackClick = {},
+        onClickCastPhoto = {},
         )
 }
