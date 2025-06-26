@@ -19,19 +19,27 @@ data class MovieDetails(val id: Int)
 @Serializable
 data class PeopleDetails(val id: Int)
 
+@Serializable
+object MainScreen
+
 @Composable
 fun MainNavHost(
     navController: NavHostController,
     popularMoviesViewModel: PopularMoviesViewModel,
     detailsViewModel: MovieDetailsViewModel,
     peopleDetailsViewModel: PeopleDetailsViewModel,
+    mainScreenViewModel: MainScreenViewModel,
     modifier: Modifier = Modifier
 ) {
     NavHost(
         navController = navController,
-        startDestination = PopularMoviesList,
+        startDestination = MainScreen,
+        //startDestination = PopularMoviesList,
         modifier = modifier
     ) {
+        composable<MainScreen> {
+            MainScreen(viewModel = mainScreenViewModel)
+        }
         composable<PopularMoviesList> {
             MoviesListScreen(
                 viewModel = popularMoviesViewModel,
@@ -60,12 +68,15 @@ fun MainNavHost(
 
         composable<PeopleDetails> { backStackEntry ->
             val peopleDetails: PeopleDetails = backStackEntry.toRoute()
-            peopleDetailsViewModel.initWithID(peopleDetails.id)
+            peopleDetailsViewModel.initWithID(id = peopleDetails.id)
             PeopleDetailsScreen(
                 onClickCastPhoto = {},
                 viewModel = peopleDetailsViewModel,
                 onBackClick = {
                     navController.popBackStack()
+                },
+                onClickMoviePhoto = { newMovieId: Int ->
+                    navController.navigate(MovieDetails(newMovieId))
                 }
             )
         }

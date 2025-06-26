@@ -153,7 +153,7 @@ private fun CastMovies(movies: List<ActorRoleMovie>, modifier: Modifier, onClick
                         .height(180.dp)
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(8.dp))
-                        //.clickable{onClickMoviePhoto(it.id!!)}
+                        .clickable{onClickMoviePhoto(it.id!!)}
                     ,
                     contentScale = ContentScale.Crop
                 )
