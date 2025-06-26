@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -29,12 +30,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -61,7 +66,7 @@ private fun MainScreen(viewState: MainScreenViewState, onClickMoviePhoto: (Int) 
         Column(
             modifier = Modifier
                 .padding(innerPadding)
-                .background(Color.LightGray)
+                .background(Color.White)
         ) {
             Header(header = "Popular")
             if (viewState.popMoviesInfo.isNotEmpty()) {
@@ -90,25 +95,14 @@ private fun PopularMovies(
                         .data(popMoviesInfo[page].backdropPath).build(),
                     contentDescription = null,
                     modifier = Modifier
-                        //.height(200.dp)
+                        .padding(12.dp,0.dp)
                         .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
                         .clickable { onClickMoviePhoto(popMoviesInfo[page].id) },
                     contentScale = ContentScale.FillWidth,
                     alignment = Alignment.TopStart
                 )
-                Text(
-                    text = popMoviesInfo[page].title,
-                    modifier = Modifier.padding(top = 8.dp, start = 8.dp),
-                    color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    style = TextStyle(
-                        shadow = Shadow(
-                            color = Color.Black, // Color of the shadow
-                            offset = Offset(3f, 3f), // X and Y offset of the shadow
-                            blurRadius = 2f // How blurry the shadow is
-                        )
-                    )
-                )
+                RibbonText(title = popMoviesInfo[page].title)
             }
 
         }
@@ -137,6 +131,48 @@ private fun PopularMovies(
 }
 
 @Composable
+fun RibbonText(title: String) {
+    val notchDepthDp = 10.dp
+    val density = LocalDensity.current
+
+    Box(
+        modifier = Modifier
+            .padding(top = 16.dp)
+            .offset(x = 12.dp)
+            .wrapContentWidth()
+            .drawBehind {
+                val notchDepthPx = with(density) { notchDepthDp.toPx() }
+
+                val ribbonPath = Path().apply {
+                    moveTo(0f, 0f)
+                    lineTo(size.width, 0f)
+                    lineTo(size.width - notchDepthPx, size.height / 2f)
+                    lineTo(size.width, size.height)
+                    lineTo(0f, size.height)
+                    close()
+                }
+                drawPath(ribbonPath, color = Color.Black.copy(alpha = 0.5f))
+            }
+            .padding(start = 6.dp, end = 15.dp, top = 6.dp, bottom = 6.dp)
+    ) {
+        Text(
+            text = title,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            style = TextStyle(
+                shadow = Shadow(
+                    color = Color.Black,
+                    offset = Offset(3f, 3f),
+                    blurRadius = 2f
+                )
+            ),
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis
+        )
+    }
+}
+
+@Composable
 private fun NowPlayingMovies(
     nowPlayingInfo: List<PopularMoviesInfo>,
     onClickMoviePhoto: (Int) -> Unit
@@ -145,8 +181,7 @@ private fun NowPlayingMovies(
         rows = GridCells.Fixed(1),
         modifier = Modifier
             .heightIn(max = 220.dp)
-            .padding(0.dp, 10.dp)
-            .background(color = Color.LightGray),
+            .padding(start = 12.dp, end = 0.dp, bottom = 10.dp, top = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(items = nowPlayingInfo) {
@@ -188,7 +223,10 @@ private fun Header(header: String) {
     ) {
         Text(
             text = header,
-            color = Color.Black
+            color = Color.Black,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            modifier = Modifier.padding(start = 12.dp, top = 8.dp, bottom = 8.dp)
 
         )
     }
