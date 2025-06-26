@@ -16,8 +16,26 @@ import javax.inject.Inject
 class MovieRepositoryImpl @Inject constructor(
     private val networkService: MovieDatabaseNetworkService
 ): MoviesRepository {
+
+    //TODO: Move getMovies and getNowPlaying logic to helper function
     override suspend fun getMovies(): List<PopularMoviesInfo> {
         val networkResponse = networkService.getPopularMovies()
+        val results = networkResponse.body()?.results
+        val mapped = results!!.map {
+            Log.v(TAG, it.toString())
+            PopularMoviesInfo(
+                id = it.id!!,
+                title = it.title!!,
+                backdropPath = it.backdropPath!!,
+                posterPath = it.posterPath!!,
+                releaseDate = it.releaseDate!!,
+                rating = it.voteAverage!!.toString()
+            )}
+        return mapped
+    }
+
+    override suspend fun getNowPlaying(): List<PopularMoviesInfo> {
+        val networkResponse = networkService.getNowPlaying()
         val results = networkResponse.body()?.results
         val mapped = results!!.map {
             Log.v(TAG, it.toString())
