@@ -38,9 +38,14 @@ fun MainNavHost(
         modifier = modifier
     ) {
         composable<MainScreen> {
-            MainScreen(viewModel = mainScreenViewModel)
+            MainScreen(
+                viewModel = mainScreenViewModel,
+                onClickMoviePhoto = { id:Int ->
+                    navController.navigate(MovieDetails(id))
+                })
         }
         composable<PopularMoviesList> {
+            popularMoviesViewModel.initViewModel(MovieCollectionType.POPULAR)
             MoviesListScreen(
                 viewModel = popularMoviesViewModel,
                 onClickMovieListItem = { id: Int ->
