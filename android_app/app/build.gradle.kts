@@ -7,12 +7,16 @@ plugins {
     id("com.google.devtools.ksp")
     id("com.google.dagger.hilt.android")
     id("org.jetbrains.kotlin.plugin.serialization")
+    id("kotlin-kapt")
+    id("androidx.room")
 }
 
 android {
     namespace = "com.example.movienight20"
     compileSdk = 35
-
+    room {
+        schemaDirectory("$projectDir/schemas")
+    }
     defaultConfig {
         applicationId = "com.example.movienight20"
         minSdk = 24
@@ -62,6 +66,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
 }
 
 
@@ -100,6 +105,11 @@ dependencies {
     implementation("androidx.compose.material3:material3-window-size-class:1.3.2")
     implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.4.0-alpha16")
     implementation("androidx.compose.material:material:1.8.3")
+
+    // Room
+    val room_version = "2.7.2"
+    implementation("androidx.room:room-ktx:$room_version")
+    ksp("androidx.room:room-compiler:$room_version")
 
 
 }
