@@ -1,6 +1,7 @@
 package com.example.movienight20.ui
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.NavHostController
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
@@ -56,7 +57,9 @@ fun MainNavHost(
 
         composable<MovieDetails> { backStackEntry ->
             val movieDetails: MovieDetails = backStackEntry.toRoute()
-            detailsViewModel.initWithID(movieDetails.id)
+            LaunchedEffect(Unit) {
+                detailsViewModel.initWithID(movieDetails.id)
+            }
             MovieDetailsScreen(
                 onClickMovieListItem = {},
                 viewModel = detailsViewModel,

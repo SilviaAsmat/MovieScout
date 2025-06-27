@@ -25,6 +25,8 @@ class MovieDetailsNetworkResponse (
     val voteCount: Int?,
     @SerializedName("tagline")
     val tagline: String?,
+    @SerializedName("poster_path")
+    val posterPath: String?
 ){
     data class Genre(
         @SerializedName("id")

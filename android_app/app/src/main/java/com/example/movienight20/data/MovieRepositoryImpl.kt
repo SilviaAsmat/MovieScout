@@ -1,6 +1,9 @@
 package com.example.movienight20.data
 
 import android.util.Log
+import com.example.movienight20.data.room.MovieInfoBasic
+import com.example.movienight20.data.room.MovieScoutDatabase
+import com.example.movienight20.data.room.RecentMovieId
 import com.example.movienight20.domain.ActorRoleMovie
 import com.example.movienight20.domain.Cast
 import com.example.movienight20.domain.CrewRoleMovie
@@ -14,8 +17,9 @@ import com.example.movienight20.domain.PeopleMovieCredits
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
-    private val networkService: MovieDatabaseNetworkService
-): MoviesRepository {
+    private val networkService: MovieDatabaseNetworkService,
+    private val movieScoutDatabase: MovieScoutDatabase
+) : MoviesRepository {
 
     //TODO: Move getMovies and getNowPlaying logic to helper function
     override suspend fun getMovies(): List<PopularMoviesInfo> {
@@ -30,7 +34,8 @@ class MovieRepositoryImpl @Inject constructor(
                 posterPath = it.posterPath!!,
                 releaseDate = it.releaseDate!!,
                 rating = it.voteAverage!!.toString()
-            )}
+            )
+        }
         return mapped
     }
 
@@ -46,13 +51,15 @@ class MovieRepositoryImpl @Inject constructor(
                 posterPath = it.posterPath!!,
                 releaseDate = it.releaseDate!!,
                 rating = it.voteAverage!!.toString()
-            )}
+            )
+        }
         return mapped
     }
 
     override suspend fun getMovieDetails(movieId: Int): MovieDetails {
         val networkResponse = networkService.getMovieDetails(movieId = movieId)
         val results = networkResponse.body()
+
         return MovieDetails(
             id = results!!.id!!,
             title = results!!.title!!,
@@ -66,7 +73,8 @@ class MovieRepositoryImpl @Inject constructor(
             releaseDate = results.releaseDate!!,
             voteAvg = results.voteAvg!!,
             voteCount = results.voteCount!!,
-            tagline = results.tagline!!
+            tagline = results.tagline!!,
+            posterPath = results.posterPath!!
         )
     }
 
@@ -85,7 +93,8 @@ class MovieRepositoryImpl @Inject constructor(
                     name = it.name,
                     picturePath = it.picturePath,
                     character = it.character
-                )}
+                )
+            }
         )
     }
 
@@ -93,22 +102,24 @@ class MovieRepositoryImpl @Inject constructor(
         val networkResponse = networkService.getPeopleMovieCredits(personId = personId)
         val results = networkResponse.body()
         return PeopleMovieCredits(
-            actorRoleMovie = results!!.actorRoleMovie.map{
+            actorRoleMovie = results!!.actorRoleMovie.map {
                 ActorRoleMovie(
                     id = it.id,
                     posterPath = it.posterPath,
                     title = it.title,
                     releaseDate = it.releaseDate,
                     voteAvg = it.voteAvg
-                )},
-            crewRoleMovie = results.crewRoleMovie.map{
+                )
+            },
+            crewRoleMovie = results.crewRoleMovie.map {
                 CrewRoleMovie(
                     id = it.id,
                     posterPath = it.posterPath,
                     title = it.title,
                     releaseDate = it.releaseDate,
                     voteAvg = it.voteAvg
-                )}
+                )
+            }
         )
     }
 
@@ -124,4 +135,17 @@ class MovieRepositoryImpl @Inject constructor(
             profilePath = results.profilePath.toString()
         )
     }
+
+    /**** database functions ****/
+
+    override suspend fun storeDataInCache(movie: MovieDetails) {
+        val recentMovieId = RecentMovieId(id = movie.id)
+        val movieInfoBasic = MovieInfoBasic(id = movie.id, posterPath = movie.posterPath, name = movie.title)
+
+        movieScoutDatabase.recentMovieIds().insertAll(recentMovieId)
+        movieScoutDatabase.movieInfoBasic().insertAll(movieInfoBasic)
+    }
+
+
+
 }

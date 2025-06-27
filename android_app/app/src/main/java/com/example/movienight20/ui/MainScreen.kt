@@ -95,7 +95,7 @@ private fun PopularMovies(
                         .data(popMoviesInfo[page].backdropPath).build(),
                     contentDescription = null,
                     modifier = Modifier
-                        .padding(12.dp,0.dp)
+                        .padding(12.dp, 0.dp)
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(8.dp))
                         .clickable { onClickMoviePhoto(popMoviesInfo[page].id) },
@@ -132,7 +132,7 @@ private fun PopularMovies(
 
 @Composable
 fun RibbonText(title: String) {
-    val notchDepthDp = 10.dp
+    val notchDepthDp = 8.dp
     val density = LocalDensity.current
 
     Box(
@@ -153,7 +153,7 @@ fun RibbonText(title: String) {
                 }
                 drawPath(ribbonPath, color = Color.Black.copy(alpha = 0.5f))
             }
-            .padding(start = 6.dp, end = 15.dp, top = 6.dp, bottom = 6.dp)
+            .padding(start = 10.dp, end = 15.dp, top = 6.dp, bottom = 6.dp)
     ) {
         Text(
             text = title,

@@ -7,4 +7,5 @@ interface MoviesRepository {
     suspend fun getPeopleMovieCredits(personId: Int): PeopleMovieCredits
     suspend fun getPeopleDetails(personId: Int): PeopleDetails
     suspend fun getNowPlaying(): List<PopularMoviesInfo>
+    suspend fun storeDataInCache(movie: MovieDetails)
 }
