@@ -2,6 +2,7 @@ package com.example.movienight20.ui
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.movienight20.domain.MovieInfoBasic
 import com.example.movienight20.domain.MoviesRepository
 import com.example.movienight20.domain.PopularMoviesInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -9,7 +10,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -19,6 +19,9 @@ class MainScreenViewModel @Inject constructor(
 ): ViewModel (){
     private val mutableViewState = MutableStateFlow<MainScreenViewState>(MainScreenViewState.NONE)
     val viewState: StateFlow<MainScreenViewState> = mutableViewState
+
+    private val _recentlyViewedViewState = MutableStateFlow<RecentlyViewedViewState>(RecentlyViewedViewState.NONE)
+    val recentlyViewedViewState: StateFlow<RecentlyViewedViewState> = _recentlyViewedViewState
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -45,12 +48,11 @@ class MainScreenViewModel @Inject constructor(
                 )
             }
 
-            val viewState = MainScreenViewState(popMoviesInfo = popState, nowPlayingMoviesInfo = nowPlayingState, recentlyViewedInfo = listOf())
+            val viewState = MainScreenViewState(popMoviesInfo = popState, nowPlayingMoviesInfo = nowPlayingState)
             mutableViewState.emit(viewState)
 
             movieRepo.getRecentlyViewed().collectLatest { recentlyViewed ->
-                val viewState = MainScreenViewState(popMoviesInfo = popState, nowPlayingMoviesInfo = nowPlayingState, recentlyViewedInfo = recentlyViewed)
-                mutableViewState.emit(viewState)
+                _recentlyViewedViewState.emit(RecentlyViewedViewState(recentlyViewed))
             }
         }
 

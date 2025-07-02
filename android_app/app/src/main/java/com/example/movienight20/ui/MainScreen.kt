@@ -69,11 +69,15 @@ fun MainScreen(
     onClickMoviePhoto: (Int) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
-    MainScreen(viewState = viewState, onClickMoviePhoto = onClickMoviePhoto)
+    val recentlyViewState by viewModel.recentlyViewedViewState.collectAsState()
+    MainScreen(viewState = viewState, recents = recentlyViewState, onClickMoviePhoto = onClickMoviePhoto)
 }
 
 @Composable
-private fun MainScreen(viewState: MainScreenViewState, onClickMoviePhoto: (Int) -> Unit) {
+private fun MainScreen(
+    viewState: MainScreenViewState,
+    recents: List<MovieInfoBasic>,
+    onClickMoviePhoto: (Int) -> Unit) {
     Scaffold(
         topBar = {MainScreenTopBar()}
     ) { innerPadding ->
@@ -91,7 +95,7 @@ private fun MainScreen(viewState: MainScreenViewState, onClickMoviePhoto: (Int) 
             NowPlayingMovies(viewState.nowPlayingMoviesInfo, onClickMoviePhoto)
             Header(header = "Recently Viewed")
             RecentlyViewedMovies(
-                recentlyViewedInfo = viewState.recentlyViewedInfo,
+                recentlyViewedInfo = recents,
                 onClickMoviePhoto
             )
 
@@ -324,8 +328,8 @@ private fun previewMainScreen() {
             MainScreenViewState(
                 popMoviesInfo = listOf(),
                 nowPlayingMoviesInfo = listOf(),
-                recentlyViewedInfo = listOf()
             ),
+        recents = emptyList(),
         onClickMoviePhoto = {}
     )
 }
