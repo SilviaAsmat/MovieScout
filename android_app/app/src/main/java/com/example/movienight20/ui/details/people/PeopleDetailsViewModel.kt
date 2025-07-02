@@ -1,4 +1,4 @@
-package com.example.movienight20.ui
+package com.example.movienight20.ui.details.people
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

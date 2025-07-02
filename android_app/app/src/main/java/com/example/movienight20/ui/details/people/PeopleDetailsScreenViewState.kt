@@ -1,4 +1,4 @@
-package com.example.movienight20.ui
+package com.example.movienight20.ui.details.people
 
 import com.example.movienight20.domain.ActorRoleMovie
 import com.example.movienight20.domain.CrewRoleMovie

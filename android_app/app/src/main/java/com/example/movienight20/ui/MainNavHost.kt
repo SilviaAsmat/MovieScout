@@ -7,6 +7,12 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.example.movienight20.ui.details.movie.MovieDetailsScreen
+import com.example.movienight20.ui.details.people.PeopleDetailsScreen
+import com.example.movienight20.ui.details.people.PeopleDetailsViewModel
+import com.example.movienight20.ui.home.HomeScreenViewModel
+import com.example.movienight20.ui.home.MainScreen
+import com.example.movienight20.ui.movie_list.MoviesListScreen
 import com.example.movienight20.ui.theme.MovieDetailsViewModel
 import com.example.movienight20.ui.theme.PopularMoviesViewModel
 import kotlinx.serialization.Serializable
@@ -29,7 +35,7 @@ fun MainNavHost(
     popularMoviesViewModel: PopularMoviesViewModel,
     detailsViewModel: MovieDetailsViewModel,
     peopleDetailsViewModel: PeopleDetailsViewModel,
-    mainScreenViewModel: MainScreenViewModel,
+    homeScreenViewModel: HomeScreenViewModel,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -40,8 +46,8 @@ fun MainNavHost(
     ) {
         composable<MainScreen> {
             MainScreen(
-                viewModel = mainScreenViewModel,
-                onClickMoviePhoto = { id:Int ->
+                viewModel = homeScreenViewModel,
+                onClickMoviePhoto = { id: Int ->
                     navController.navigate(MovieDetails(id))
                 })
         }
@@ -52,7 +58,8 @@ fun MainNavHost(
                 onClickMovieListItem = { id: Int ->
                     navController.navigate(MovieDetails(id))
                 },
-                navController = navController)
+                navController = navController
+            )
         }
 
         composable<MovieDetails> { backStackEntry ->

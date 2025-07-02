@@ -3,7 +3,7 @@ package com.example.movienight20.ui.theme
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movienight20.domain.MoviesRepository
-import com.example.movienight20.ui.MovieDetailsScreenViewState
+import com.example.movienight20.ui.details.movie.MovieDetailsScreenViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow

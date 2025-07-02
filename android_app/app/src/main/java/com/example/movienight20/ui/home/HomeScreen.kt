@@ -1,6 +1,5 @@
-package com.example.movienight20.ui
+package com.example.movienight20.ui.home
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -25,11 +24,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.TopAppBar
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -47,7 +43,6 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -57,15 +52,12 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.movienight20.R
 import com.example.movienight20.domain.MovieInfoBasic
 import com.example.movienight20.domain.PopularMoviesInfo
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
 fun MainScreen(
-    viewModel: MainScreenViewModel,
+    viewModel: HomeScreenViewModel,
     onClickMoviePhoto: (Int) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
@@ -75,7 +67,7 @@ fun MainScreen(
 
 @Composable
 private fun MainScreen(
-    viewState: MainScreenViewState,
+    viewState: HomeScreenViewState,
     recents: List<MovieInfoBasic>,
     onClickMoviePhoto: (Int) -> Unit) {
     Scaffold(
@@ -325,7 +317,7 @@ private fun Header(header: String) {
 private fun previewMainScreen() {
     MainScreen(
         viewState =
-            MainScreenViewState(
+            HomeScreenViewState(
                 popMoviesInfo = listOf(),
                 nowPlayingMoviesInfo = listOf(),
             ),

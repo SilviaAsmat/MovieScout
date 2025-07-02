@@ -1,4 +1,4 @@
-package com.example.movienight20.data
+package com.example.movienight20.data.network_response
 
 import com.google.gson.annotations.SerializedName
 
@@ -19,4 +19,3 @@ class MovieCreditsNetworkResponse (
         val character: String?
     )
 }
-

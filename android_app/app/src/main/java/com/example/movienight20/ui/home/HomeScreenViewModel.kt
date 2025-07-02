@@ -1,10 +1,10 @@
-package com.example.movienight20.ui
+package com.example.movienight20.ui.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.movienight20.domain.MovieInfoBasic
 import com.example.movienight20.domain.MoviesRepository
 import com.example.movienight20.domain.PopularMoviesInfo
+import com.example.movienight20.ui.RecentlyViewedViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,13 +14,14 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainScreenViewModel @Inject constructor(
+class HomeScreenViewModel @Inject constructor(
     private val movieRepo: MoviesRepository
 ): ViewModel (){
-    private val mutableViewState = MutableStateFlow<MainScreenViewState>(MainScreenViewState.NONE)
-    val viewState: StateFlow<MainScreenViewState> = mutableViewState
+    private val mutableViewState = MutableStateFlow<HomeScreenViewState>(HomeScreenViewState.NONE)
+    val viewState: StateFlow<HomeScreenViewState> = mutableViewState
 
-    private val _recentlyViewedViewState = MutableStateFlow<RecentlyViewedViewState>(RecentlyViewedViewState.NONE)
+    private val _recentlyViewedViewState = MutableStateFlow<RecentlyViewedViewState>(
+        RecentlyViewedViewState.Companion.NONE)
     val recentlyViewedViewState: StateFlow<RecentlyViewedViewState> = _recentlyViewedViewState
 
     init {
@@ -48,7 +49,7 @@ class MainScreenViewModel @Inject constructor(
                 )
             }
 
-            val viewState = MainScreenViewState(popMoviesInfo = popState, nowPlayingMoviesInfo = nowPlayingState)
+            val viewState = HomeScreenViewState(popMoviesInfo = popState, nowPlayingMoviesInfo = nowPlayingState)
             mutableViewState.emit(viewState)
 
             movieRepo.getRecentlyViewed().collectLatest { recentlyViewed ->

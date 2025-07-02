@@ -10,8 +10,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
 import com.example.movienight20.ui.MainNavHost
-import com.example.movienight20.ui.MainScreenViewModel
-import com.example.movienight20.ui.PeopleDetailsViewModel
+import com.example.movienight20.ui.home.HomeScreenViewModel
+import com.example.movienight20.ui.details.people.PeopleDetailsViewModel
 import com.example.movienight20.ui.theme.MovieDetailsViewModel
 import com.example.movienight20.ui.theme.MovieNight20Theme
 import com.example.movienight20.ui.theme.PopularMoviesViewModel
@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
     private val viewModel: PopularMoviesViewModel by viewModels()
     private val detailsViewModel: MovieDetailsViewModel by viewModels()
     private val peopleDetailsViewModel: PeopleDetailsViewModel by viewModels()
-    private val mainScreenViewModel: MainScreenViewModel by viewModels()
+    private val homeScreenViewModel: HomeScreenViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,7 +39,7 @@ class MainActivity : ComponentActivity() {
                         popularMoviesViewModel = viewModel,
                         detailsViewModel = detailsViewModel,
                         peopleDetailsViewModel = peopleDetailsViewModel,
-                        mainScreenViewModel = mainScreenViewModel
+                        homeScreenViewModel = homeScreenViewModel
                         )
                 }
             }

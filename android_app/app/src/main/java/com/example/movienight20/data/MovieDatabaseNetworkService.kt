@@ -1,6 +1,10 @@
 package com.example.movienight20.data
 
-import com.google.gson.annotations.SerializedName
+import com.example.movienight20.data.network_response.MovieCreditsNetworkResponse
+import com.example.movienight20.data.network_response.MovieDetailsNetworkResponse
+import com.example.movienight20.data.network_response.PeopleDetailsNetworkResponse
+import com.example.movienight20.data.network_response.PeopleMovieCreditsNetworkResponse
+import com.example.movienight20.data.network_response.PopularMoviesNetworkResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path

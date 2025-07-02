@@ -1,4 +1,4 @@
-package com.example.movienight20.ui
+package com.example.movienight20.ui.movie_list
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
