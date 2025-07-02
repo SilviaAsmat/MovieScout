@@ -59,14 +59,19 @@ import androidx.core.graphics.toColorInt
 @Composable
 fun MovieDetailsScreen(
     onClickMovieListItem: () -> Unit,
-    viewModel:MovieDetailsViewModel,
+    viewModel: MovieDetailsViewModel,
     navController: NavController,
     onBackClick: () -> Unit,
     onClickCastPhoto: (Int) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
     val errorToastViewState by viewModel.errorToastViewState.collectAsState()
-    MovieDetailsScreen(viewState = viewState, onClickCastPhoto = onClickCastPhoto, onClickMovieDetailsScreen = onClickMovieListItem, onBackClick = onBackClick)
+    MovieDetailsScreen(
+        viewState = viewState,
+        onClickCastPhoto = onClickCastPhoto,
+        onClickMovieDetailsScreen = onClickMovieListItem,
+        onBackClick = onBackClick
+    )
 
 }
 
@@ -80,7 +85,7 @@ private fun MovieDetailsScreen(
 ) {
     val scrollState = rememberScrollState()
     Scaffold(
-        topBar = {MovieDetailsTopAppBar(onBackClick = onBackClick) }
+        topBar = { MovieDetailsTopAppBar(onBackClick = onBackClick) }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -152,7 +157,7 @@ private fun Tagline(tagline: String, modifier: Modifier = Modifier) {
         text = tagline,
         fontSize = 16.sp,
         modifier = modifier
-            .padding(16.dp,10.dp, 16.dp, 0.dp),
+            .padding(16.dp, 10.dp, 16.dp, 0.dp),
         color = Color.Black,
         fontStyle = FontStyle.Italic
     )
@@ -168,6 +173,7 @@ private fun ReleaseDateLabel(releaseDate: String, modifier: Modifier = Modifier)
         color = Color.Black
     )
 }
+
 @Composable
 private fun VoteAvgLabel(voteAvg: Number, modifier: Modifier = Modifier) {
     Text(
@@ -179,6 +185,7 @@ private fun VoteAvgLabel(voteAvg: Number, modifier: Modifier = Modifier) {
     )
 
 }
+
 @Composable
 private fun VoteCountLabel(voteCount: Int, modifier: Modifier = Modifier) {
     Text(
@@ -190,6 +197,7 @@ private fun VoteCountLabel(voteCount: Int, modifier: Modifier = Modifier) {
     )
 
 }
+
 @Composable
 private fun Overview(overview: String, modifier: Modifier = Modifier) {
     Text(
@@ -222,26 +230,36 @@ private fun Genres(genres: List<Genre>, modifier: Modifier = Modifier) {
                 color = Color.White,
                 fontWeight = FontWeight.SemiBold
             )
-        } }
+        }
+    }
 }
 
 @Composable
-private fun MovieCast(cast: List<Cast>, modifier: Modifier = Modifier, onClickCastPhoto: (Int) -> Unit) {
+private fun MovieCast(
+    cast: List<Cast>,
+    modifier: Modifier = Modifier,
+    onClickCastPhoto: (Int) -> Unit
+) {
     LazyHorizontalGrid(
         rows = GridCells.Fixed(1),
-        modifier = modifier.heightIn(max = 220.dp).padding(16.dp, 10.dp),
+        modifier = modifier
+            .heightIn(max = 220.dp)
+            .padding(16.dp, 10.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         items(items = cast) {
-            Column(modifier = modifier.background(Color.White).height(220.dp)) {
+            Column(modifier = modifier
+                .background(Color.White)
+                .height(220.dp)) {
                 AsyncImage(
-                    model = ImageRequest.Builder(context = LocalContext.current).data("http://image.tmdb.org/t/p/" + "w1280" + it.picturePath).build(),
+                    model = ImageRequest.Builder(context = LocalContext.current)
+                        .data("http://image.tmdb.org/t/p/" + "w1280" + it.picturePath).build(),
                     contentDescription = null,
                     modifier = Modifier
                         .height(180.dp)
                         .width(120.dp)
                         .clip(RoundedCornerShape(8.dp))
-                        .clickable{onClickCastPhoto(it.castId)},
+                        .clickable { onClickCastPhoto(it.castId) },
                     contentScale = ContentScale.Crop
                 )
                 Text(
@@ -255,8 +273,10 @@ private fun MovieCast(cast: List<Cast>, modifier: Modifier = Modifier, onClickCa
                     fontWeight = FontWeight.Bold,
                     overflow = TextOverflow.Ellipsis,
 
-                )
-            } } }// End of LHG
+                    )
+            }
+        }
+    }// End of LHG
 }
 
 
@@ -266,9 +286,9 @@ private fun MovieDetailsTopAppBar(
     onBackClick: () -> Unit
 ) {
     CenterAlignedTopAppBar(
-            colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = Color("#4b8f38".toColorInt())
-            ),
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color("#4b8f38".toColorInt())
+        ),
         title = {
             Text(
                 "Movie Details",
@@ -276,13 +296,15 @@ private fun MovieDetailsTopAppBar(
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Bold,
                 color = Color.White
-            )},
+            )
+        },
         navigationIcon = {
             IconButton(onClick = onBackClick) {
                 Image(
-                painter = painterResource(id = R.drawable.baseline_arrow_back_24),
-                contentDescription = "back arrow"
-            )}
+                    painter = painterResource(id = R.drawable.baseline_arrow_back_24),
+                    contentDescription = "back arrow"
+                )
+            }
         },
         scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
     )
@@ -300,18 +322,44 @@ fun PreviewMovieDetailsScreen() {
             overview = "blahblahblahblahblahblahblahblahblahblahblahblahblahblahblahb\nlahblahblahblahblahblahblahblahblahblahblahblahblahblahblah",
             runtime = 90,
             status = "released",
-            genres = listOf(Genre(id = 1, title = "Comedy"),Genre(id = 2, title = "Horror"),Genre(id = 2, title = "Action")),
+            genres = listOf(
+                Genre(id = 1, title = "Comedy"),
+                Genre(id = 2, title = "Horror"),
+                Genre(id = 2, title = "Action")
+            ),
             releaseDate = "11-11-1111",
             voteAvg = 8.0,
             voteCount = 111,
             tagline = "this epic movie is about to get more epic",
-            cast = listOf(Cast(castId = 0, name = "Famous Actor Name That is too long", picturePath = "", character = "character"),
-                Cast(castId = 0, name = "Famous Actor", picturePath = "", character = "character name that is too long"),
-                Cast(castId = 0, name = "Famous Actor", picturePath = "", character = "character name that is too long"),
-                Cast(castId = 0, name = "Famous Actor", picturePath = "", character = "character name that is too long"))
+            cast = listOf(
+                Cast(
+                    castId = 0,
+                    name = "Famous Actor Name That is too long",
+                    picturePath = "",
+                    character = "character"
+                ),
+                Cast(
+                    castId = 0,
+                    name = "Famous Actor",
+                    picturePath = "",
+                    character = "character name that is too long"
+                ),
+                Cast(
+                    castId = 0,
+                    name = "Famous Actor",
+                    picturePath = "",
+                    character = "character name that is too long"
+                ),
+                Cast(
+                    castId = 0,
+                    name = "Famous Actor",
+                    picturePath = "",
+                    character = "character name that is too long"
+                )
+            )
         ),
         onClickMovieDetailsScreen = {},
         onBackClick = {},
         onClickCastPhoto = {},
-        )
+    )
 }

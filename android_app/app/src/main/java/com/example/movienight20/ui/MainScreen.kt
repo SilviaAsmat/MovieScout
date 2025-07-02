@@ -1,5 +1,6 @@
 package com.example.movienight20.ui
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,10 +21,18 @@ import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.TopAppBar
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -38,16 +47,21 @@ import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.graphics.toColorInt
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.movienight20.R
+import com.example.movienight20.domain.MovieInfoBasic
 import com.example.movienight20.domain.PopularMoviesInfo
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
 fun MainScreen(
@@ -61,12 +75,13 @@ fun MainScreen(
 @Composable
 private fun MainScreen(viewState: MainScreenViewState, onClickMoviePhoto: (Int) -> Unit) {
     Scaffold(
-        //topBar = {}
+        topBar = {MainScreenTopBar()}
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .background(Color.White)
+                .verticalScroll(rememberScrollState())
         ) {
             Header(header = "Popular")
             if (viewState.popMoviesInfo.isNotEmpty()) {
@@ -74,9 +89,34 @@ private fun MainScreen(viewState: MainScreenViewState, onClickMoviePhoto: (Int) 
             }
             Header(header = "Now Playing")
             NowPlayingMovies(viewState.nowPlayingMoviesInfo, onClickMoviePhoto)
+            Header(header = "Recently Viewed")
+            RecentlyViewedMovies(
+                recentlyViewedInfo = viewState.recentlyViewedInfo,
+                onClickMoviePhoto
+            )
 
         }
     }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun MainScreenTopBar() {
+    CenterAlignedTopAppBar(
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = Color("#4b8f38".toColorInt())
+        ),
+        title = {
+            Text(
+                "Movie Scout",
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                fontWeight = FontWeight.Bold,
+                color = Color.White
+            )
+        },
+        scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
+    )
 }
 
 @Composable
@@ -214,6 +254,49 @@ private fun NowPlayingMovies(
     }// End of LHG
 }
 
+
+@Composable
+private fun RecentlyViewedMovies(
+    recentlyViewedInfo: List<MovieInfoBasic>,
+    onClickMoviePhoto: (Int) -> Unit
+) {
+    LazyHorizontalGrid(
+        rows = GridCells.Fixed(1),
+        modifier = Modifier
+            .heightIn(max = 220.dp)
+            .padding(start = 12.dp, end = 0.dp, bottom = 10.dp, top = 10.dp),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        items(items = recentlyViewedInfo) {
+            Column(modifier = Modifier.height(220.dp)) {
+                AsyncImage(
+                    model = ImageRequest.Builder(context = LocalContext.current).data(it.posterPath)
+                        .build(),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .height(180.dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(8.dp))
+                        .clickable { onClickMoviePhoto(it.id) },
+                    contentScale = ContentScale.Crop
+                )
+                Text(
+                    text = it.name.toString(),
+                    maxLines = 1,
+                    modifier = Modifier
+                        .padding(start = 3.dp)
+                        .width(100.dp),
+                    color = Color.Black,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    overflow = TextOverflow.Ellipsis,
+
+                    )
+            }// End of Column
+        }
+    }// End of LHG
+}
+
 @Composable
 private fun Header(header: String) {
     Row(
@@ -240,7 +323,8 @@ private fun previewMainScreen() {
         viewState =
             MainScreenViewState(
                 popMoviesInfo = listOf(),
-                nowPlayingMoviesInfo = listOf()
+                nowPlayingMoviesInfo = listOf(),
+                recentlyViewedInfo = listOf()
             ),
         onClickMoviePhoto = {}
     )

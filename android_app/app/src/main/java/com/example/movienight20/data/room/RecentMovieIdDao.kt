@@ -6,9 +6,10 @@ import androidx.room.Query
 
 @Dao
 interface RecentMovieIdDao {
+
     @Query("SELECT * FROM recent_movie_ids")
     fun getAll(): List<RecentMovieId>
 
-    @Insert
-    fun insertAll(vararg recentMovieInfo: RecentMovieId)
+    @Insert(onConflict = 1)
+    fun insertMovieId(movie: RecentMovieId)
 }

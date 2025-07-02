@@ -7,5 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(tableName = "recent_movie_ids")
 data class RecentMovieId(
     @PrimaryKey
-    val id: Int
+    val id: Int,
+    @ColumnInfo(name = "timestamp")
+    val timestamp: Long = System.currentTimeMillis()
 )

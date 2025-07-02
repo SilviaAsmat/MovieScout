@@ -1,5 +1,8 @@
 package com.example.movienight20.domain
 
+import kotlinx.coroutines.flow.Flow
+
+
 interface MoviesRepository {
     suspend fun getMovies(): List<PopularMoviesInfo>
     suspend fun getMovieDetails(movieId: Int): MovieDetails
@@ -8,4 +11,5 @@ interface MoviesRepository {
     suspend fun getPeopleDetails(personId: Int): PeopleDetails
     suspend fun getNowPlaying(): List<PopularMoviesInfo>
     suspend fun storeDataInCache(movie: MovieDetails)
+    fun getRecentlyViewed(): Flow<List<MovieInfoBasic>>
 }

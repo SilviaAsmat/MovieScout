@@ -5,8 +5,11 @@ import androidx.lifecycle.viewModelScope
 import com.example.movienight20.domain.MoviesRepository
 import com.example.movienight20.domain.PopularMoviesInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,7 +21,7 @@ class MainScreenViewModel @Inject constructor(
     val viewState: StateFlow<MainScreenViewState> = mutableViewState
 
     init {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val popularMoviesResult = movieRepo.getMovies()
             val nowPlayingResult = movieRepo.getNowPlaying()
             val popState = popularMoviesResult.map {
@@ -41,9 +44,15 @@ class MainScreenViewModel @Inject constructor(
                     rating = it.rating
                 )
             }
-            val viewState = MainScreenViewState(popMoviesInfo = popState, nowPlayingMoviesInfo = nowPlayingState)
 
+            val viewState = MainScreenViewState(popMoviesInfo = popState, nowPlayingMoviesInfo = nowPlayingState, recentlyViewedInfo = listOf())
             mutableViewState.emit(viewState)
+
+            movieRepo.getRecentlyViewed().collectLatest { recentlyViewed ->
+                val viewState = MainScreenViewState(popMoviesInfo = popState, nowPlayingMoviesInfo = nowPlayingState, recentlyViewedInfo = recentlyViewed)
+                mutableViewState.emit(viewState)
+            }
         }
+
     }
 }

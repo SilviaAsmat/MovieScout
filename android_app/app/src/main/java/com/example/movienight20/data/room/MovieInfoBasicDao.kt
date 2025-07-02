@@ -2,14 +2,14 @@ package com.example.movienight20.data.room
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovieInfoBasicDao {
-    @Query("SELECT * FROM movie_info_basic")
-    fun getAll(): List<MovieInfoBasic>
+    @Query("SELECT * FROM movie_info_basic INNER JOIN recent_movie_ids ON movie_info_basic.id = recent_movie_ids.id ORDER BY recent_movie_ids.timestamp DESC")
+    fun getRecentlyViewed(): Flow<List<MovieInfoBasic>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAll(vararg movieInfoBasic: MovieInfoBasic)
+    @Insert(onConflict = 1)
+    fun insertMovie(vararg movieInfoBasic: MovieInfoBasic)
 }

@@ -15,6 +15,11 @@ import com.example.movienight20.domain.MoviesRepository
 import com.example.movienight20.domain.PeopleDetails
 import com.example.movienight20.domain.PeopleMovieCredits
 import com.example.movienight20.domain.MovieInfoBasic
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
@@ -148,17 +153,31 @@ class MovieRepositoryImpl @Inject constructor(
         movieScoutDatabase.movieInfoBasic().insertMovie(movieInfoBasic)
     }
 
-    override suspend fun getRecentlyViewed(): List<MovieInfoBasic> {
-        val data = movieScoutDatabase.movieInfoBasic().getRecentlyViewed()
-        val mapped = data.map {
-            MovieInfoBasic(
-                id = it.id,
-                posterPath = "http://image.tmdb.org/t/p/" + "w1280" + it.posterPath,
-                name = it.name
-            )
-        }
-        return mapped
-    }
+//    override suspend fun getRecentlyViewed(): Flow<List<MovieInfoBasic>> = flow {
+//        val data = movieScoutDatabase.movieInfoBasic().getRecentlyViewed()
+//        val mapped = data.map {
+//            MovieInfoBasic(
+//                id = it.id,
+//                posterPath = "http://image.tmdb.org/t/p/" + "w1280" + it.posterPath,
+//                name = it.name
+//            )
+//        }.flowOn(Dispatchers.IO)
+//    }
+
+    override fun getRecentlyViewed(): Flow<List<MovieInfoBasic>> =
+        movieScoutDatabase.movieInfoBasic().getRecentlyViewed()
+            .map { dataList ->
+                dataList.map { data ->
+                    MovieInfoBasic(
+                        id = data.id,
+                        name = data.name,
+                        posterPath = "http://image.tmdb.org/t/p/w1280${data.posterPath}"
+                    )
+                }
+            }
+            .flowOn(Dispatchers.IO)
+
+
 
 
 }
