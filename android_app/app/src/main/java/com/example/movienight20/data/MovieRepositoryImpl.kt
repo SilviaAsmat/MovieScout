@@ -1,7 +1,7 @@
 package com.example.movienight20.data
 
 import android.util.Log
-import com.example.movienight20.data.room.MovieInfoBasic
+import com.example.movienight20.data.room.MovieInfoBasic as MovieInfoBasicDao
 import com.example.movienight20.data.room.MovieScoutDatabase
 import com.example.movienight20.data.room.RecentMovieId
 import com.example.movienight20.domain.ActorRoleMovie
@@ -14,6 +14,7 @@ import com.example.movienight20.domain.PopularMoviesInfo
 import com.example.movienight20.domain.MoviesRepository
 import com.example.movienight20.domain.PeopleDetails
 import com.example.movienight20.domain.PeopleMovieCredits
+import com.example.movienight20.domain.MovieInfoBasic
 import javax.inject.Inject
 
 class MovieRepositoryImpl @Inject constructor(
@@ -140,12 +141,24 @@ class MovieRepositoryImpl @Inject constructor(
 
     override suspend fun storeDataInCache(movie: MovieDetails) {
         val recentMovieId = RecentMovieId(id = movie.id)
-        val movieInfoBasic = MovieInfoBasic(id = movie.id, posterPath = movie.posterPath, name = movie.title)
+        val movieInfoBasic =
+            MovieInfoBasicDao(id = movie.id, posterPath = movie.posterPath, name = movie.title)
 
-        movieScoutDatabase.recentMovieIds().insertAll(recentMovieId)
-        movieScoutDatabase.movieInfoBasic().insertAll(movieInfoBasic)
+        movieScoutDatabase.recentMovieIds().insertMovieId(recentMovieId)
+        movieScoutDatabase.movieInfoBasic().insertMovie(movieInfoBasic)
     }
 
+    override suspend fun getRecentlyViewed(): List<MovieInfoBasic> {
+        val data = movieScoutDatabase.movieInfoBasic().getRecentlyViewed()
+        val mapped = data.map {
+            MovieInfoBasic(
+                id = it.id,
+                posterPath = "http://image.tmdb.org/t/p/" + "w1280" + it.posterPath,
+                name = it.name
+            )
+        }
+        return mapped
+    }
 
 
 }
