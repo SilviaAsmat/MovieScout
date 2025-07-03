@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -54,6 +55,7 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.movienight20.domain.MovieInfoBasic
 import com.example.movienight20.domain.PopularMoviesInfo
+import com.example.movienight20.ui.RecentlyViewedViewState
 
 @Composable
 fun MainScreen(
@@ -68,7 +70,7 @@ fun MainScreen(
 @Composable
 private fun MainScreen(
     viewState: HomeScreenViewState,
-    recents: List<MovieInfoBasic>,
+    recents: RecentlyViewedViewState,
     onClickMoviePhoto: (Int) -> Unit) {
     Scaffold(
         topBar = {MainScreenTopBar()}
@@ -86,11 +88,21 @@ private fun MainScreen(
             Header(header = "Now Playing")
             NowPlayingMovies(viewState.nowPlayingMoviesInfo, onClickMoviePhoto)
             Header(header = "Recently Viewed")
-            RecentlyViewedMovies(
-                recentlyViewedInfo = recents,
-                onClickMoviePhoto
-            )
+            when (recents) {
+                is RecentlyViewedViewState.Data -> {
+                    RecentlyViewedMovies(
+                        recentlyViewedInfo = recents.recentlyViewedInfo,
+                        onClickMoviePhoto
+                    )
+                }
+                is RecentlyViewedViewState.Empty -> {
+                    // TODO create empty message composable
 
+                }
+                is RecentlyViewedViewState.Loading -> {
+                    // TODO create loading state for section
+                }
+            }
         }
     }
 }
@@ -217,17 +229,17 @@ private fun NowPlayingMovies(
         rows = GridCells.Fixed(1),
         modifier = Modifier
             .heightIn(max = 220.dp)
-            .padding(start = 12.dp, end = 0.dp, bottom = 10.dp, top = 10.dp),
+            .padding(start = 12.dp, end = 20.dp, bottom = 10.dp, top = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(items = nowPlayingInfo) {
-            Column(modifier = Modifier.height(220.dp)) {
+            Column(modifier = Modifier.height(260.dp)) {
                 AsyncImage(
                     model = ImageRequest.Builder(context = LocalContext.current).data(it.posterPath)
                         .build(),
                     contentDescription = null,
                     modifier = Modifier
-                        .height(180.dp)
+                        .fillMaxHeight()
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(8.dp))
                         .clickable { onClickMoviePhoto(it.id) },
@@ -250,12 +262,14 @@ private fun NowPlayingMovies(
     }// End of LHG
 }
 
-
+// TODO create a new RecentlyViewedMovies that will take the view state as a parameter, in its
+// own file
 @Composable
 private fun RecentlyViewedMovies(
     recentlyViewedInfo: List<MovieInfoBasic>,
     onClickMoviePhoto: (Int) -> Unit
 ) {
+    // TODO make this grid a reusable component
     LazyHorizontalGrid(
         rows = GridCells.Fixed(1),
         modifier = Modifier
@@ -263,6 +277,7 @@ private fun RecentlyViewedMovies(
             .padding(start = 12.dp, end = 0.dp, bottom = 10.dp, top = 10.dp),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
+
         items(items = recentlyViewedInfo) {
             Column(modifier = Modifier.height(220.dp)) {
                 AsyncImage(
@@ -321,7 +336,7 @@ private fun previewMainScreen() {
                 popMoviesInfo = listOf(),
                 nowPlayingMoviesInfo = listOf(),
             ),
-        recents = emptyList(),
+        recents = RecentlyViewedViewState.Empty,
         onClickMoviePhoto = {}
     )
 }

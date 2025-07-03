@@ -5,12 +5,9 @@ import com.example.movienight20.domain.MovieInfoBasic;
 
 
 @Immutable
-class RecentlyViewedViewState(
-    val recentlyViewedInfo: List<MovieInfoBasic>
-) {
-    companion object {
-        val NONE = RecentlyViewedViewState(
-            recentlyViewedInfo = emptyList<MovieInfoBasic>()
-        )
-    }
+sealed class RecentlyViewedViewState {
+    // TODO replace List with ImmutableList, see composable docs.
+    data class Data(val recentlyViewedInfo: List<MovieInfoBasic>): RecentlyViewedViewState()
+    data object Loading : RecentlyViewedViewState()
+    data object Empty : RecentlyViewedViewState()
 }
