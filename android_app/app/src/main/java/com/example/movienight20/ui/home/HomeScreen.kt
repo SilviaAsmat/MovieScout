@@ -106,6 +106,25 @@ private fun HomeScreen(
             Header(header = "Recently Viewed", onClickMovieCollection = onClickMovieCollection, collectionType = collectionType)
 //            when (recents) {
 //                is RecentlyViewedViewState.Data -> {
+            Header(
+                header = "Now Playing",
+                onClickMovieCollection = onClickMovieCollection,
+                collectionType = collectionType
+            )
+            HorizontalMovieListDisplay(movieInfo = viewState.nowPlayingMoviesInfo, onClickMoviePhoto)
+            Header(
+                header = "Top Rated",
+                onClickMovieCollection = onClickMovieCollection,
+                collectionType = collectionType
+            )
+            HorizontalMovieListDisplay(movieInfo = viewState.topRatedInfo, onClickMoviePhoto)
+            Header(
+                header = "Upcoming",
+                onClickMovieCollection = onClickMovieCollection,
+                collectionType = collectionType
+            )
+            HorizontalMovieListDisplay(movieInfo = viewState.upcomingInfo, onClickMoviePhoto)
+
 //                    RecentlyViewedMovies(
 //                        recentlyViewedInfo = recents.recentlyViewedInfo,
 //                        onClickMoviePhoto

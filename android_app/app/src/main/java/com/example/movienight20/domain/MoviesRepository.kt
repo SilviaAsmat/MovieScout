@@ -11,5 +11,7 @@ interface MoviesRepository {
     suspend fun getPeopleDetails(personId: Int): PeopleDetails
     suspend fun getNowPlaying(): List<MoviesCollectionInfo>
     suspend fun storeDataInCache(movie: MovieDetails)
+    suspend fun getUpcomingMovies(): List<MoviesCollectionInfo>
+    suspend fun getTopRated(): List<MoviesCollectionInfo>
     fun getRecentlyViewed(): Flow<List<MovieInfoBasic>>
 }

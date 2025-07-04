@@ -28,6 +28,8 @@ class MoviesListScreenViewModel @Inject constructor(
             val result = when (collectionType) {
                 MovieCollectionType.POPULAR -> movieRepo.getMovies()
                 MovieCollectionType.NOW_PLAYING -> movieRepo.getNowPlaying()
+                MovieCollectionType.TOP_RATED -> movieRepo.getTopRated()
+                MovieCollectionType.UPCOMING -> movieRepo.getUpcomingMovies()
             }
 
             _topAppBarViewState.emit(TopAppBarViewState(collectionType))

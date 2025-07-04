@@ -1,7 +1,7 @@
 package com.example.movienight20.data
 
 import android.util.Log
-import com.example.movienight20.data.network_response.PopularMoviesNetworkResponse
+import com.example.movienight20.data.network_response.MoviesCollectionsNetworkResponse
 import com.example.movienight20.data.room.MovieInfoBasic as MovieInfoBasicData
 import com.example.movienight20.data.room.MovieScoutDatabase
 import com.example.movienight20.data.room.RecentMovieId
@@ -39,7 +39,17 @@ class MovieRepositoryImpl @Inject constructor(
         return mapMovieCollectionNetworkResponse(networkResponse)
     }
 
-    private fun mapMovieCollectionNetworkResponse(networkResponse: Response<PopularMoviesNetworkResponse>): List<MoviesCollectionInfo> {
+    override suspend fun getUpcomingMovies(): List<MoviesCollectionInfo> {
+        val networkResponse = networkService.getUpcomingMovies()
+        return mapMovieCollectionNetworkResponse(networkResponse)
+    }
+
+    override suspend fun getTopRated(): List<MoviesCollectionInfo> {
+        val networkResponse = networkService.getTopRatedMovies()
+        return mapMovieCollectionNetworkResponse(networkResponse)
+    }
+
+    private fun mapMovieCollectionNetworkResponse(networkResponse: Response<MoviesCollectionsNetworkResponse>): List<MoviesCollectionInfo> {
         val results = networkResponse.body()?.results
         val mapped = results!!.map {
             Log.v(TAG, it.toString())

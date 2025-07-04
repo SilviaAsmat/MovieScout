@@ -43,36 +43,43 @@ class HomeScreenViewModel @Inject constructor(
     private suspend fun fetchAndUpdateViewState() {
         val popularMoviesResult = movieRepo.getMovies()
         val nowPlayingResult = movieRepo.getNowPlaying()
-        val popState = popularMoviesResult.map {
-            MoviesCollectionInfo(
-                id = it.id,
-                title = it.title,
-                backdropPath = "http://image.tmdb.org/t/p/" + "w1280" + it.backdropPath,
-                posterPath = "http://image.tmdb.org/t/p/" + "w1280" + it.posterPath,
-                releaseDate = it.releaseDate,
-                rating = it.rating
-            )
-        }
-        val nowPlayingState = nowPlayingResult.map {
-            MoviesCollectionInfo(
-                id = it.id,
-                title = it.title,
-                backdropPath = "http://image.tmdb.org/t/p/" + "w1280" + it.backdropPath,
-                posterPath = "http://image.tmdb.org/t/p/" + "w1280" + it.posterPath,
-                releaseDate = it.releaseDate,
-                rating = it.rating
-            )
-        }
-        val viewState = HomeScreenViewState(popMoviesInfo = popState, nowPlayingMoviesInfo = nowPlayingState)
+        val upcomingResult = movieRepo.getUpcomingMovies()
+        val topRatedResult = movieRepo.getTopRated()
+        val popState = mapMovieCollection(popularMoviesResult)
+        val nowPlayingState = mapMovieCollection(nowPlayingResult)
+        val upcomingState = mapMovieCollection(upcomingResult)
+        val topRatedState = mapMovieCollection(topRatedResult)
 
-        mutableViewState.emit(viewState) // TODO use update instead, to make it thread-safe
+        val viewState =
+            HomeScreenViewState(popMoviesInfo = popState, nowPlayingMoviesInfo = nowPlayingState,
+                upcomingInfo = upcomingState, topRatedInfo = topRatedState)
+
+        mutableViewState.update { viewState }
     }
 
-    private fun updateRecentsViewState(recentlyViewed: List<MovieInfoBasic>) {
+    private fun mapMovieCollection(result: List<MoviesCollectionInfo>): List<MovieCardInfoViewState> {
+        return result.map {
+            MovieCardInfoViewState(
+                id = it.id,
+                title = it.title,
+                posterPath = "http://image.tmdb.org/t/p/" + "w1280" + it.posterPath,
+                backdropPath = "http://image.tmdb.org/t/p/" + "w1280" + it.backdropPath
+            )
+        }
+    }
+
+    fun updateRecentsViewState(recentlyViewed: List<MovieInfoBasic>) {
         val recentViewState = if (recentlyViewed.isEmpty()) {
             RecentlyViewedViewState.Empty
         } else {
-            RecentlyViewedViewState.Data(recentlyViewedInfo = recentlyViewed)
+            RecentlyViewedViewState.Data(cards = recentlyViewed.map { recent ->
+                MovieCardInfoViewState(
+                    id = recent.id,
+                    title = recent.title,
+                    posterPath = "http://image.tmdb.org/t/p/" + "w1280" + recent.posterPath.toString(),
+                    backdropPath = ""// Does not use backdrop path
+                )
+            })
         }
         _recentlyViewedViewState.update { recentViewState }
     }

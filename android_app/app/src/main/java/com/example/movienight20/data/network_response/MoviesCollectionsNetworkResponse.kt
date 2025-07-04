@@ -2,7 +2,7 @@ package com.example.movienight20.data.network_response
 
 import com.google.gson.annotations.SerializedName
 
-class PopularMoviesNetworkResponse (
+class MoviesCollectionsNetworkResponse (
     @SerializedName("page")
     val page: Int?,
     @SerializedName("results")
