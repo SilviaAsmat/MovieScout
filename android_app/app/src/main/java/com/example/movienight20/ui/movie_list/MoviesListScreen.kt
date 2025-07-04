@@ -23,16 +23,17 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.movienight20.ui.theme.MovieNight20Theme
-import com.example.movienight20.ui.theme.PopularMoviesViewModel
+import com.example.movienight20.ui.theme.MoviesCollectionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoviesListScreen(
     onClickMovieListItem: (Int) -> Unit,
-    viewModel: PopularMoviesViewModel,
+    viewModel: MoviesCollectionViewModel,
     navController: NavController
 ) {
     val viewStates by viewModel.viewState.collectAsState()
+    //TODO: Implement Android Paging 3
     Scaffold(
         topBar = {PopMoviesTopAppBar()}
     ) { innerPadding ->

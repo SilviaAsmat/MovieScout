@@ -10,14 +10,13 @@ import com.example.movienight20.domain.CrewRoleMovie
 import com.example.movienight20.domain.Genre
 import com.example.movienight20.domain.MovieCredits
 import com.example.movienight20.domain.MovieDetails
-import com.example.movienight20.domain.PopularMoviesInfo
+import com.example.movienight20.domain.MoviesCollectionInfo
 import com.example.movienight20.domain.MoviesRepository
 import com.example.movienight20.domain.PeopleDetails
 import com.example.movienight20.domain.PeopleMovieCredits
 import com.example.movienight20.domain.MovieInfoBasic
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -28,12 +27,12 @@ class MovieRepositoryImpl @Inject constructor(
 ) : MoviesRepository {
 
     //TODO: Move getMovies and getNowPlaying logic to helper function
-    override suspend fun getMovies(): List<PopularMoviesInfo> {
+    override suspend fun getMovies(): List<MoviesCollectionInfo> {
         val networkResponse = networkService.getPopularMovies()
         val results = networkResponse.body()?.results
         val mapped = results!!.map {
             Log.v(TAG, it.toString())
-            PopularMoviesInfo(
+            MoviesCollectionInfo(
                 id = it.id!!,
                 title = it.title!!,
                 backdropPath = it.backdropPath!!,
@@ -45,12 +44,12 @@ class MovieRepositoryImpl @Inject constructor(
         return mapped
     }
 
-    override suspend fun getNowPlaying(): List<PopularMoviesInfo> {
+    override suspend fun getNowPlaying(): List<MoviesCollectionInfo> {
         val networkResponse = networkService.getNowPlaying()
         val results = networkResponse.body()?.results
         val mapped = results!!.map {
             Log.v(TAG, it.toString())
-            PopularMoviesInfo(
+            MoviesCollectionInfo(
                 id = it.id!!,
                 title = it.title!!,
                 backdropPath = it.backdropPath!!,
@@ -170,7 +169,7 @@ class MovieRepositoryImpl @Inject constructor(
                 dataList.map { data ->
                     MovieInfoBasic(
                         id = data.id,
-                        name = data.name,
+                        title = data.name,
                         posterPath = "http://image.tmdb.org/t/p/w1280${data.posterPath}"
                     )
                 }

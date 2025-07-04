@@ -14,12 +14,12 @@ import com.example.movienight20.ui.home.HomeScreenViewModel
 import com.example.movienight20.ui.details.people.PeopleDetailsViewModel
 import com.example.movienight20.ui.theme.MovieDetailsViewModel
 import com.example.movienight20.ui.theme.MovieNight20Theme
-import com.example.movienight20.ui.theme.PopularMoviesViewModel
+import com.example.movienight20.ui.theme.MoviesCollectionViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-    private val viewModel: PopularMoviesViewModel by viewModels()
+    private val collectionViewModel: MoviesCollectionViewModel by viewModels()
     private val detailsViewModel: MovieDetailsViewModel by viewModels()
     private val peopleDetailsViewModel: PeopleDetailsViewModel by viewModels()
     private val homeScreenViewModel: HomeScreenViewModel by viewModels()
@@ -36,7 +36,7 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     MainNavHost(
                         navController = navController,
-                        popularMoviesViewModel = viewModel,
+                        collectionViewModel = collectionViewModel,
                         detailsViewModel = detailsViewModel,
                         peopleDetailsViewModel = peopleDetailsViewModel,
                         homeScreenViewModel = homeScreenViewModel
