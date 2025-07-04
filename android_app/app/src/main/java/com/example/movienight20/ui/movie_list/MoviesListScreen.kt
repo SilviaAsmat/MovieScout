@@ -23,19 +23,19 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.navigation.NavController
 import com.example.movienight20.ui.theme.MovieNight20Theme
-import com.example.movienight20.ui.theme.MoviesCollectionViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MoviesListScreen(
     onClickMovieListItem: (Int) -> Unit,
-    viewModel: MoviesCollectionViewModel,
+    viewModel: MoviesListScreenViewModel,
     navController: NavController
 ) {
     val viewStates by viewModel.viewState.collectAsState()
+    val topAppBarViewState by viewModel.topAppBarViewState.collectAsState()
     //TODO: Implement Android Paging 3
     Scaffold(
-        topBar = {PopMoviesTopAppBar()}
+        topBar = {TopAppBar(topAppBarViewState.getStringName())}
     ) { innerPadding ->
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
@@ -55,14 +55,13 @@ fun MoviesListScreen(
 
 @ExperimentalMaterial3Api
 @Composable
-fun PopMoviesTopAppBar() {
+fun TopAppBar(collectionType: String) {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color("#4b8f38".toColorInt())
         ),
         title = {
-            Text(
-                "Popular Movies",
+            Text( text = "$collectionType Movies",
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 fontWeight = FontWeight.Bold,

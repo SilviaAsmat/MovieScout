@@ -6,12 +6,15 @@ class MovieCollectionTypeViewState(
     fun getCollectionType(modelName: String ): MovieCollectionType {
         val collectionType = when(modelName) {
             "Popular" -> MovieCollectionType.POPULAR
+            "Now Playing" -> MovieCollectionType.NOW_PLAYING
             else -> {
                 MovieCollectionType.POPULAR// TODO: Temporary placeholder, need to replace with appropriate missing collection error
             }
         }
         return collectionType
     }
+
+
     companion object{
         val NONE = MovieCollectionTypeViewState(
             modelName = ""
