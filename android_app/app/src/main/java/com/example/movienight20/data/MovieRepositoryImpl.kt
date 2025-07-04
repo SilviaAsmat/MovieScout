@@ -2,7 +2,7 @@ package com.example.movienight20.data
 
 import android.util.Log
 import com.example.movienight20.data.network_response.PopularMoviesNetworkResponse
-import com.example.movienight20.data.room.MovieInfoBasic as MovieInfoBasicDao
+import com.example.movienight20.data.room.MovieInfoBasic as MovieInfoBasicData
 import com.example.movienight20.data.room.MovieScoutDatabase
 import com.example.movienight20.data.room.RecentMovieId
 import com.example.movienight20.domain.ActorRoleMovie
@@ -140,22 +140,14 @@ class MovieRepositoryImpl @Inject constructor(
     override suspend fun storeDataInCache(movie: MovieDetails) {
         val recentMovieId = RecentMovieId(id = movie.id)
         val movieInfoBasic =
-            MovieInfoBasicDao(id = movie.id, posterPath = movie.posterPath, name = movie.title)
+            MovieInfoBasicData(
+                id = movie.id, posterPath = movie.posterPath, name = movie.title,
+                backdropPath = movie.backdropPath
+            )
 
         movieScoutDatabase.recentMovieIds().insertMovieId(recentMovieId)
         movieScoutDatabase.movieInfoBasic().insertMovie(movieInfoBasic)
     }
-
-//    override suspend fun getRecentlyViewed(): Flow<List<MovieInfoBasic>> = flow {
-//        val data = movieScoutDatabase.movieInfoBasic().getRecentlyViewed()
-//        val mapped = data.map {
-//            MovieInfoBasic(
-//                id = it.id,
-//                posterPath = "http://image.tmdb.org/t/p/" + "w1280" + it.posterPath,
-//                name = it.name
-//            )
-//        }.flowOn(Dispatchers.IO)
-//    }
 
     override fun getRecentlyViewed(): Flow<List<MovieInfoBasic>> =
         movieScoutDatabase.movieInfoBasic().getRecentlyViewed()

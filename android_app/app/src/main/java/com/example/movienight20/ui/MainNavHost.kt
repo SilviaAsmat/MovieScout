@@ -15,7 +15,7 @@ import com.example.movienight20.ui.home.HomeScreen
 import com.example.movienight20.ui.movie_collection_type.MovieCollectionType
 import com.example.movienight20.ui.movie_list.MoviesListScreen
 import com.example.movienight20.ui.theme.MovieDetailsViewModel
-import com.example.movienight20.ui.theme.MoviesCollectionViewModel
+import com.example.movienight20.ui.movie_list.MoviesListScreenViewModel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -33,7 +33,7 @@ object MainScreen
 @Composable
 fun MainNavHost(
     navController: NavHostController,
-    collectionViewModel: MoviesCollectionViewModel,
+    listScreenViewModel: MoviesListScreenViewModel,
     detailsViewModel: MovieDetailsViewModel,
     peopleDetailsViewModel: PeopleDetailsViewModel,
     homeScreenViewModel: HomeScreenViewModel,
@@ -42,13 +42,6 @@ fun MainNavHost(
     NavHost(
         navController = navController,
         startDestination = MainScreen,
-//        startDestination = MoviesListScreen(
-//            onClickMovieListItem = { id: Int ->
-//                navController.navigate(MovieDetails(id))
-//            },
-//            viewModel = MoviesCollectionViewModel(MovieCollectionType.POPULAR),
-//            navController = navController
-//        ),
         modifier = modifier
     ) {
         composable<MainScreen> {
@@ -64,13 +57,14 @@ fun MainNavHost(
         }
         composable<MoviesList> { backStackEntry ->
             val moviesList: MoviesList = backStackEntry.toRoute()
-            collectionViewModel.initViewModel(collectionType = moviesList.collectionType)
+            listScreenViewModel.initViewModel(collectionType = moviesList.collectionType)
             MoviesListScreen(
-                viewModel = collectionViewModel,
+                viewModel = listScreenViewModel,
                 onClickMovieListItem = { id: Int ->
                     navController.navigate(MovieDetails(id))
                 },
-                navController = navController
+                navController = navController,
+
             )
         }
 
@@ -109,21 +103,4 @@ fun MainNavHost(
         }
 
     }
-//
-//    fun NavHostController.navigateSingleTopTo(route: String) =
-//        this.navigate(route) {
-//            // Pop up to the start destination of the graph to
-//            // avoid building up a large stack of destinations
-//            // on the back stack as users select items
-//            popUpTo(
-//                this@navigateSingleTopTo.graph.findStartDestination().id
-//            ) {
-//                saveState = true
-//            }
-//            // Avoid multiple copies of the same destination when
-//            // reselecting the same item
-//            launchSingleTop = true
-//            // Restore state when reselecting a previously selected item
-//            restoreState = true
-//        }
 }
