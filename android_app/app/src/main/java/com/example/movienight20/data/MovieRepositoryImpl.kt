@@ -1,6 +1,7 @@
 package com.example.movienight20.data
 
 import android.util.Log
+import com.example.movienight20.data.network_response.PopularMoviesNetworkResponse
 import com.example.movienight20.data.room.MovieInfoBasic as MovieInfoBasicDao
 import com.example.movienight20.data.room.MovieScoutDatabase
 import com.example.movienight20.data.room.RecentMovieId
@@ -19,33 +20,26 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
+import retrofit2.Response
 import javax.inject.Inject
+import kotlin.collections.map
 
 class MovieRepositoryImpl @Inject constructor(
     private val networkService: MovieDatabaseNetworkService,
     private val movieScoutDatabase: MovieScoutDatabase
 ) : MoviesRepository {
 
-    //TODO: Move getMovies and getNowPlaying logic to helper function
     override suspend fun getMovies(): List<MoviesCollectionInfo> {
         val networkResponse = networkService.getPopularMovies()
-        val results = networkResponse.body()?.results
-        val mapped = results!!.map {
-            Log.v(TAG, it.toString())
-            MoviesCollectionInfo(
-                id = it.id!!,
-                title = it.title!!,
-                backdropPath = it.backdropPath!!,
-                posterPath = it.posterPath!!,
-                releaseDate = it.releaseDate!!,
-                rating = it.voteAverage!!.toString()
-            )
-        }
-        return mapped
+        return mapMovieCollectionNetworkResponse(networkResponse)
     }
 
     override suspend fun getNowPlaying(): List<MoviesCollectionInfo> {
         val networkResponse = networkService.getNowPlaying()
+        return mapMovieCollectionNetworkResponse(networkResponse)
+    }
+
+    private fun mapMovieCollectionNetworkResponse(networkResponse: Response<PopularMoviesNetworkResponse>): List<MoviesCollectionInfo> {
         val results = networkResponse.body()?.results
         val mapped = results!!.map {
             Log.v(TAG, it.toString())
@@ -175,8 +169,6 @@ class MovieRepositoryImpl @Inject constructor(
                 }
             }
             .flowOn(Dispatchers.IO)
-
-
 
 
 }
