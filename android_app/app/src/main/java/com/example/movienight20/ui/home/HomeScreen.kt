@@ -1,6 +1,5 @@
 package com.example.movienight20.ui.home
 
-import androidx.compose.animation.core.AnimationSpec
 import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -49,6 +48,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -57,10 +57,11 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.movienight20.domain.MoviesCollectionInfo
+import com.example.movienight20.ui.MovieCardInfoViewState
 import com.example.movienight20.ui.movie_collection_type.MovieCollectionType
 import com.example.movienight20.ui.RecentlyViewedViewState
 import com.example.movienight20.ui.movie_collection_type.MovieCollectionTypeViewState
+import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreen(
@@ -97,21 +98,23 @@ private fun HomeScreen(
                 .background(Color.White)
                 .verticalScroll(rememberScrollState())
         ) {
-            Header(header = "Popular", onClickMovieCollection = onClickMovieCollection, collectionType = collectionType)
+            Header(
+                header = "Popular",
+                onClickMovieCollection = onClickMovieCollection,
+                collectionType = collectionType
+            )
             if (viewState.popMoviesInfo.isNotEmpty()) {
                 MoviePaging(viewState.popMoviesInfo, onClickMoviePhoto)
             }
-            Header(header = "Now Playing", onClickMovieCollection = onClickMovieCollection, collectionType = collectionType)
-            HorizontalMovieDisplay(viewState.nowPlayingMoviesInfo, onClickMoviePhoto)
-            Header(header = "Recently Viewed", onClickMovieCollection = onClickMovieCollection, collectionType = collectionType)
-//            when (recents) {
-//                is RecentlyViewedViewState.Data -> {
             Header(
                 header = "Now Playing",
                 onClickMovieCollection = onClickMovieCollection,
                 collectionType = collectionType
             )
-            HorizontalMovieListDisplay(movieInfo = viewState.nowPlayingMoviesInfo, onClickMoviePhoto)
+            HorizontalMovieListDisplay(
+                movieInfo = viewState.nowPlayingMoviesInfo,
+                onClickMoviePhoto
+            )
             Header(
                 header = "Top Rated",
                 onClickMovieCollection = onClickMovieCollection,
@@ -187,14 +190,16 @@ private fun MoviePaging(
             while (true) {
                 delay(4500) // Delay between automatic scrolls
                 val nextPage = (pagerState.currentPage + 1) % pageCount
-                pagerState.animateScrollToPage(nextPage, animationSpec = tween(
-                    durationMillis = 600, // Duration of slide transition
-                    easing = FastOutSlowInEasing // Smooth easing
-                ))
+                pagerState.animateScrollToPage(
+                    nextPage, animationSpec = tween(
+                        durationMillis = 600, // Duration of slide transition
+                        easing = FastOutSlowInEasing // Smooth easing
+                    )
+                )
 
             }
         }
-        HorizontalPager(state = pagerState, key = { it }) //TODO: Look into auto-advancing
+        HorizontalPager(state = pagerState, key = { it })
         { page ->
             Box(modifier = Modifier) {
 
@@ -245,7 +250,7 @@ fun RibbonText(title: String) {
 
     Box(
         modifier = Modifier
-            .padding(top = 0.dp)
+            .padding(top = 8.dp)
             .offset(x = 12.dp)
             .wrapContentWidth()
             .drawBehind {
@@ -292,9 +297,14 @@ private fun RecentlyViewedMovies(
 }
 
 @Composable
-private fun Header(header: String, onClickMovieCollection: (MovieCollectionType) -> Unit, collectionType: MovieCollectionTypeViewState) {
+private fun Header(
+    header: String,
+    onClickMovieCollection: (MovieCollectionType) -> Unit,
+    collectionType: MovieCollectionTypeViewState
+) {
     val type = collectionType.getCollectionType(header)
     Row(
+        horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .background(Color.White)
             .fillMaxWidth()
@@ -303,22 +313,30 @@ private fun Header(header: String, onClickMovieCollection: (MovieCollectionType)
         Text(
             text = header,
             modifier = Modifier
-                .clip(RoundedCornerShape(12.dp))
-                .background(Color("#e46827".toColorInt()))
-                .padding(10.dp, 4.dp)
-                .clickable{onClickMovieCollection(type)}
-            ,
-            color = Color.White,
+                .padding(0.dp, 4.dp),
+            color = Color.Black,
             fontWeight = FontWeight.SemiBold,
             fontSize = 18.sp,
-            )
+        )
+        Text(
+            text = "SEE MORE",
+            modifier = Modifier
+                .clip(RoundedCornerShape(12.dp))
+                .padding(10.dp, 4.dp)
+                .clickable { onClickMovieCollection(type) },
+            color = Color.Black,
+            fontFamily = FontFamily.Monospace,
+            letterSpacing = 0.sp,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 16.sp,
+        )
     }
 
 }
 
 @Composable
-private fun HorizontalMovieDisplay(
-    movieInfo: List<MoviesCollectionInfo>,
+private fun HorizontalMovieListDisplay(
+    movieInfo: List<MovieCardInfoViewState>,
     onClickMoviePhoto: (Int) -> Unit
 ) {
     LazyHorizontalGrid(
@@ -328,7 +346,6 @@ private fun HorizontalMovieDisplay(
             .padding(start = 12.dp, end = 0.dp, bottom = 0.dp, top = 0.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-
         items(items = movieInfo) {
             Column(modifier = Modifier.height(250.dp)) {
                 AsyncImage(
@@ -351,8 +368,7 @@ private fun HorizontalMovieDisplay(
                     color = Color.Black,
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
-                    overflow = TextOverflow.Ellipsis,
-
+                    overflow = TextOverflow.Ellipsis
                     )
             }// End of Column
         }
@@ -367,6 +383,8 @@ private fun previewMainScreen() {
             HomeScreenViewState(
                 popMoviesInfo = listOf(),
                 nowPlayingMoviesInfo = listOf(),
+                upcomingInfo = listOf(),
+                topRatedInfo = listOf(),
             ),
         recents = RecentlyViewedViewState.Empty,
         collectionType = MovieCollectionTypeViewState.NONE,
