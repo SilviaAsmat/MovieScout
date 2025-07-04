@@ -9,6 +9,8 @@ class TopAppBarViewState (
         val name = when(collectionType) {
             MovieCollectionType.POPULAR -> "Popular"
             MovieCollectionType.NOW_PLAYING -> "Now Playing"
+            MovieCollectionType.TOP_RATED -> "Top Rated"
+            MovieCollectionType.UPCOMING -> "Upcoming"
         }
         return name
     }

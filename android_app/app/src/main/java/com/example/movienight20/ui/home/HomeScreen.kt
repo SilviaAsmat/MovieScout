@@ -124,20 +124,33 @@ private fun HomeScreen(
                 collectionType = collectionType
             )
             HorizontalMovieListDisplay(movieInfo = viewState.upcomingInfo, onClickMoviePhoto)
-
+            Header(
+                header = "Recently Viewed",
+                onClickMovieCollection = onClickMovieCollection,
+                collectionType = collectionType
+            )
+            when (recents) {
+                is RecentlyViewedViewState.Data -> {
 //                    RecentlyViewedMovies(
 //                        recentlyViewedInfo = recents.recentlyViewedInfo,
 //                        onClickMoviePhoto
 //                    )
-//                }
-//                is RecentlyViewedViewState.Empty -> {
-//                    // TODO create empty message composable
-//
-//                }
-//                is RecentlyViewedViewState.Loading -> {
-//                    // TODO create loading state for section
-//                }
-//            }
+                    RecentlyViewedMovies(
+                        recentViewState = recents,
+                        onClickMoviePhoto
+                    )
+                }
+
+                is RecentlyViewedViewState.Empty -> {
+                    // TODO create empty message composable
+//                    val emptyMovieInfo = MoviesCollectionInfo(pass in empty info)
+//                    HorizontalMovieListDisplay()
+                }
+
+                is RecentlyViewedViewState.Loading -> {
+                    // TODO create loading state for section
+                }
+            }
         }
     }
 }
@@ -269,13 +282,14 @@ fun RibbonText(title: String) {
 
 // TODO create a new RecentlyViewedMovies that will take the view state as a parameter, in its
 // own file
-//@Composable
-//private fun RecentlyViewedMovies(
-//    recentlyViewedInfo: List<MovieInfoBasic>,
-//    onClickMoviePhoto: (Int) -> Unit
-//) {
-//
-//}
+@Composable
+private fun RecentlyViewedMovies(
+    recentViewState: RecentlyViewedViewState.Data,
+    onClickMoviePhoto: (Int) -> Unit
+) {
+    HorizontalMovieListDisplay(recentViewState.cards, onClickMoviePhoto)
+
+}
 
 @Composable
 private fun Header(header: String, onClickMovieCollection: (MovieCollectionType) -> Unit, collectionType: MovieCollectionTypeViewState) {

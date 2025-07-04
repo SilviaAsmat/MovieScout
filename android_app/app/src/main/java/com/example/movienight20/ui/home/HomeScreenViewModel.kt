@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.movienight20.domain.MovieInfoBasic
 import com.example.movienight20.domain.MoviesRepository
 import com.example.movienight20.domain.MoviesCollectionInfo
+import com.example.movienight20.ui.MovieCardInfoViewState
 import com.example.movienight20.ui.RecentlyViewedViewState
 import com.example.movienight20.ui.movie_collection_type.MovieCollectionTypeViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -15,19 +16,27 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.collections.map
 
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(
     private val movieRepo: MoviesRepository
-): ViewModel (){
+) : ViewModel() {
     private val mutableViewState = MutableStateFlow<HomeScreenViewState>(HomeScreenViewState.NONE)
     val viewState: StateFlow<HomeScreenViewState> = mutableViewState
 
-    private val _recentlyViewedViewState = MutableStateFlow<RecentlyViewedViewState>(RecentlyViewedViewState.Loading)
+    private val _recentlyViewedViewState =
+        MutableStateFlow<RecentlyViewedViewState>(RecentlyViewedViewState.Loading)
     val recentlyViewedViewState: StateFlow<RecentlyViewedViewState> = _recentlyViewedViewState
 
-    private val _movieCollectionTypeViewState = MutableStateFlow<MovieCollectionTypeViewState>(MovieCollectionTypeViewState.NONE)
-    val movieCollectionTypeViewState: StateFlow<MovieCollectionTypeViewState> = _movieCollectionTypeViewState
+    private val _movieCollectionTypeViewState =
+        MutableStateFlow<MovieCollectionTypeViewState>(MovieCollectionTypeViewState.NONE)
+    val movieCollectionTypeViewState: StateFlow<MovieCollectionTypeViewState> =
+        _movieCollectionTypeViewState
+
+    private val _movieCardInfoViewState =
+        MutableStateFlow<MovieCardInfoViewState>(MovieCardInfoViewState.NONE)
+    val movieCardInfoViewState: StateFlow<MovieCardInfoViewState> = _movieCardInfoViewState
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
