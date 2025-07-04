@@ -11,14 +11,15 @@ import com.example.movienight20.ui.details.movie.MovieDetailsScreen
 import com.example.movienight20.ui.details.people.PeopleDetailsScreen
 import com.example.movienight20.ui.details.people.PeopleDetailsViewModel
 import com.example.movienight20.ui.home.HomeScreenViewModel
-import com.example.movienight20.ui.home.MainScreen
+import com.example.movienight20.ui.home.HomeScreen
+import com.example.movienight20.ui.movie_collection_type.MovieCollectionType
 import com.example.movienight20.ui.movie_list.MoviesListScreen
 import com.example.movienight20.ui.theme.MovieDetailsViewModel
-import com.example.movienight20.ui.theme.PopularMoviesViewModel
+import com.example.movienight20.ui.theme.MoviesCollectionViewModel
 import kotlinx.serialization.Serializable
 
 @Serializable
-object PopularMoviesList
+data class MoviesList(val collectionType: MovieCollectionType)
 
 @Serializable
 data class MovieDetails(val id: Int)
@@ -32,7 +33,7 @@ object MainScreen
 @Composable
 fun MainNavHost(
     navController: NavHostController,
-    popularMoviesViewModel: PopularMoviesViewModel,
+    collectionViewModel: MoviesCollectionViewModel,
     detailsViewModel: MovieDetailsViewModel,
     peopleDetailsViewModel: PeopleDetailsViewModel,
     homeScreenViewModel: HomeScreenViewModel,
@@ -41,20 +42,31 @@ fun MainNavHost(
     NavHost(
         navController = navController,
         startDestination = MainScreen,
-        //startDestination = PopularMoviesList,
+//        startDestination = MoviesListScreen(
+//            onClickMovieListItem = { id: Int ->
+//                navController.navigate(MovieDetails(id))
+//            },
+//            viewModel = MoviesCollectionViewModel(MovieCollectionType.POPULAR),
+//            navController = navController
+//        ),
         modifier = modifier
     ) {
         composable<MainScreen> {
-            MainScreen(
+            HomeScreen(
                 viewModel = homeScreenViewModel,
                 onClickMoviePhoto = { id: Int ->
                     navController.navigate(MovieDetails(id))
-                })
+                },
+                onClickMovieCollection = {collectionType: MovieCollectionType ->
+                    navController.navigate(MoviesList(collectionType))
+                }
+            )
         }
-        composable<PopularMoviesList> {
-            popularMoviesViewModel.initViewModel(MovieCollectionType.POPULAR)
+        composable<MoviesList> { backStackEntry ->
+            val moviesList: MoviesList = backStackEntry.toRoute()
+            collectionViewModel.initViewModel(collectionType = moviesList.collectionType)
             MoviesListScreen(
-                viewModel = popularMoviesViewModel,
+                viewModel = collectionViewModel,
                 onClickMovieListItem = { id: Int ->
                     navController.navigate(MovieDetails(id))
                 },

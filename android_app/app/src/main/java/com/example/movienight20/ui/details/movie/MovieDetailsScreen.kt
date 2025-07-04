@@ -217,7 +217,7 @@ private fun Genres(genres: List<Genre>, modifier: Modifier = Modifier) {
                 text = it.title.toString(),
                 fontSize = 16.sp,
                 modifier = modifier
-                    .clip(RoundedCornerShape(16.dp))
+                    .clip(RoundedCornerShape(14.dp))
                     .background(Color("#e46827".toColorInt()))
                     .padding(10.dp, 4.dp),
                 color = Color.White,

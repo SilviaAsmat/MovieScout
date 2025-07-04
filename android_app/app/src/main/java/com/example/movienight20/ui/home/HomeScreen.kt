@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -53,27 +52,39 @@ import androidx.compose.ui.unit.sp
 import androidx.core.graphics.toColorInt
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.example.movienight20.domain.MovieInfoBasic
-import com.example.movienight20.domain.PopularMoviesInfo
+import com.example.movienight20.domain.MoviesCollectionInfo
+import com.example.movienight20.ui.movie_collection_type.MovieCollectionType
 import com.example.movienight20.ui.RecentlyViewedViewState
+import com.example.movienight20.ui.movie_collection_type.MovieCollectionTypeViewState
 
 @Composable
-fun MainScreen(
+fun HomeScreen(
     viewModel: HomeScreenViewModel,
-    onClickMoviePhoto: (Int) -> Unit
+    onClickMoviePhoto: (Int) -> Unit,
+    onClickMovieCollection: (MovieCollectionType) -> Unit
 ) {
     val viewState by viewModel.viewState.collectAsState()
     val recentlyViewState by viewModel.recentlyViewedViewState.collectAsState()
-    MainScreen(viewState = viewState, recents = recentlyViewState, onClickMoviePhoto = onClickMoviePhoto)
+    val movieCollectionTypeViewState by viewModel.movieCollectionTypeViewState.collectAsState()
+    HomeScreen(
+        viewState = viewState,
+        recents = recentlyViewState,
+        onClickMoviePhoto = onClickMoviePhoto,
+        onClickMovieCollection = onClickMovieCollection,
+        collectionType = movieCollectionTypeViewState
+    )
 }
 
 @Composable
-private fun MainScreen(
+private fun HomeScreen(
     viewState: HomeScreenViewState,
     recents: RecentlyViewedViewState,
-    onClickMoviePhoto: (Int) -> Unit) {
+    collectionType: MovieCollectionTypeViewState,
+    onClickMoviePhoto: (Int) -> Unit,
+    onClickMovieCollection: (MovieCollectionType) -> Unit
+) {
     Scaffold(
-        topBar = {MainScreenTopBar()}
+        topBar = { HomeScreenTopBar() }
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -81,35 +92,35 @@ private fun MainScreen(
                 .background(Color.White)
                 .verticalScroll(rememberScrollState())
         ) {
-            Header(header = "Popular")
+            Header(header = "Popular", onClickMovieCollection = onClickMovieCollection, collectionType = collectionType)
             if (viewState.popMoviesInfo.isNotEmpty()) {
-                PopularMovies(viewState.popMoviesInfo, onClickMoviePhoto)
+                MoviePaging(viewState.popMoviesInfo, onClickMoviePhoto)
             }
-            Header(header = "Now Playing")
-            NowPlayingMovies(viewState.nowPlayingMoviesInfo, onClickMoviePhoto)
-            Header(header = "Recently Viewed")
-            when (recents) {
-                is RecentlyViewedViewState.Data -> {
-                    RecentlyViewedMovies(
-                        recentlyViewedInfo = recents.recentlyViewedInfo,
-                        onClickMoviePhoto
-                    )
-                }
-                is RecentlyViewedViewState.Empty -> {
-                    // TODO create empty message composable
-
-                }
-                is RecentlyViewedViewState.Loading -> {
-                    // TODO create loading state for section
-                }
-            }
+            Header(header = "Now Playing", onClickMovieCollection = onClickMovieCollection, collectionType = collectionType)
+            HorizontalMovieDisplay(viewState.nowPlayingMoviesInfo, onClickMoviePhoto)
+            Header(header = "Recently Viewed", onClickMovieCollection = onClickMovieCollection, collectionType = collectionType)
+//            when (recents) {
+//                is RecentlyViewedViewState.Data -> {
+//                    RecentlyViewedMovies(
+//                        recentlyViewedInfo = recents.recentlyViewedInfo,
+//                        onClickMoviePhoto
+//                    )
+//                }
+//                is RecentlyViewedViewState.Empty -> {
+//                    // TODO create empty message composable
+//
+//                }
+//                is RecentlyViewedViewState.Loading -> {
+//                    // TODO create loading state for section
+//                }
+//            }
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun MainScreenTopBar() {
+private fun HomeScreenTopBar() {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color("#4b8f38".toColorInt())
@@ -128,8 +139,8 @@ private fun MainScreenTopBar() {
 }
 
 @Composable
-private fun PopularMovies(
-    popMoviesInfo: List<PopularMoviesInfo>,
+private fun MoviePaging(
+    popMoviesInfo: List<MoviesCollectionInfo>,
     onClickMoviePhoto: (Int) -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { 10 })
@@ -220,26 +231,62 @@ fun RibbonText(title: String) {
     }
 }
 
+// TODO create a new RecentlyViewedMovies that will take the view state as a parameter, in its
+// own file
+//@Composable
+//private fun RecentlyViewedMovies(
+//    recentlyViewedInfo: List<MovieInfoBasic>,
+//    onClickMoviePhoto: (Int) -> Unit
+//) {
+//
+//}
+
 @Composable
-private fun NowPlayingMovies(
-    nowPlayingInfo: List<PopularMoviesInfo>,
+private fun Header(header: String, onClickMovieCollection: (MovieCollectionType) -> Unit, collectionType: MovieCollectionTypeViewState) {
+    val type = collectionType.getCollectionType(header)
+    Row(
+        modifier = Modifier
+            .background(Color.White)
+            .fillMaxWidth()
+            .padding(16.dp, 16.dp, 16.dp, 6.dp),
+    ) {
+        Text(
+            text = header,
+            modifier = Modifier
+                .clip(RoundedCornerShape(12.dp))
+                .background(Color("#e46827".toColorInt()))
+                .padding(10.dp, 4.dp)
+                .clickable{onClickMovieCollection(type)}
+            ,
+            color = Color.White,
+            fontWeight = FontWeight.SemiBold,
+            fontSize = 18.sp,
+            )
+    }
+
+}
+
+@Composable
+private fun HorizontalMovieDisplay(
+    movieInfo: List<MoviesCollectionInfo>,
     onClickMoviePhoto: (Int) -> Unit
 ) {
     LazyHorizontalGrid(
         rows = GridCells.Fixed(1),
         modifier = Modifier
-            .heightIn(max = 220.dp)
-            .padding(start = 12.dp, end = 20.dp, bottom = 10.dp, top = 10.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
+            .heightIn(max = 250.dp)
+            .padding(start = 12.dp, end = 0.dp, bottom = 0.dp, top = 0.dp),
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        items(items = nowPlayingInfo) {
-            Column(modifier = Modifier.height(260.dp)) {
+
+        items(items = movieInfo) {
+            Column(modifier = Modifier.height(250.dp)) {
                 AsyncImage(
                     model = ImageRequest.Builder(context = LocalContext.current).data(it.posterPath)
                         .build(),
                     contentDescription = null,
                     modifier = Modifier
-                        .fillMaxHeight()
+                        .height(220.dp)
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(8.dp))
                         .clickable { onClickMoviePhoto(it.id) },
@@ -262,81 +309,18 @@ private fun NowPlayingMovies(
     }// End of LHG
 }
 
-// TODO create a new RecentlyViewedMovies that will take the view state as a parameter, in its
-// own file
-@Composable
-private fun RecentlyViewedMovies(
-    recentlyViewedInfo: List<MovieInfoBasic>,
-    onClickMoviePhoto: (Int) -> Unit
-) {
-    // TODO make this grid a reusable component
-    LazyHorizontalGrid(
-        rows = GridCells.Fixed(1),
-        modifier = Modifier
-            .heightIn(max = 220.dp)
-            .padding(start = 12.dp, end = 0.dp, bottom = 10.dp, top = 10.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-
-        items(items = recentlyViewedInfo) {
-            Column(modifier = Modifier.height(220.dp)) {
-                AsyncImage(
-                    model = ImageRequest.Builder(context = LocalContext.current).data(it.posterPath)
-                        .build(),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .height(180.dp)
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp))
-                        .clickable { onClickMoviePhoto(it.id) },
-                    contentScale = ContentScale.Crop
-                )
-                Text(
-                    text = it.name.toString(),
-                    maxLines = 1,
-                    modifier = Modifier
-                        .padding(start = 3.dp)
-                        .width(100.dp),
-                    color = Color.Black,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    overflow = TextOverflow.Ellipsis,
-
-                    )
-            }// End of Column
-        }
-    }// End of LHG
-}
-
-@Composable
-private fun Header(header: String) {
-    Row(
-        modifier = Modifier
-            .background(Color.White)
-            .fillMaxWidth()
-    ) {
-        Text(
-            text = header,
-            color = Color.Black,
-            fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            modifier = Modifier.padding(start = 12.dp, top = 8.dp, bottom = 8.dp)
-
-        )
-    }
-
-}
-
 @Preview(showBackground = true)
 @Composable
 private fun previewMainScreen() {
-    MainScreen(
+    HomeScreen(
         viewState =
             HomeScreenViewState(
                 popMoviesInfo = listOf(),
                 nowPlayingMoviesInfo = listOf(),
             ),
         recents = RecentlyViewedViewState.Empty,
-        onClickMoviePhoto = {}
+        collectionType = MovieCollectionTypeViewState.NONE,
+        onClickMoviePhoto = {},
+        onClickMovieCollection = {}
     )
 }

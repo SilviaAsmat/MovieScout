@@ -4,8 +4,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movienight20.domain.MovieInfoBasic
 import com.example.movienight20.domain.MoviesRepository
-import com.example.movienight20.domain.PopularMoviesInfo
+import com.example.movienight20.domain.MoviesCollectionInfo
 import com.example.movienight20.ui.RecentlyViewedViewState
+import com.example.movienight20.ui.movie_collection_type.MovieCollectionTypeViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,6 +26,9 @@ class HomeScreenViewModel @Inject constructor(
     private val _recentlyViewedViewState = MutableStateFlow<RecentlyViewedViewState>(RecentlyViewedViewState.Loading)
     val recentlyViewedViewState: StateFlow<RecentlyViewedViewState> = _recentlyViewedViewState
 
+    private val _movieCollectionTypeViewState = MutableStateFlow<MovieCollectionTypeViewState>(MovieCollectionTypeViewState.NONE)
+    val movieCollectionTypeViewState: StateFlow<MovieCollectionTypeViewState> = _movieCollectionTypeViewState
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             fetchAndUpdateViewState()
@@ -40,7 +44,7 @@ class HomeScreenViewModel @Inject constructor(
         val popularMoviesResult = movieRepo.getMovies()
         val nowPlayingResult = movieRepo.getNowPlaying()
         val popState = popularMoviesResult.map {
-            PopularMoviesInfo(
+            MoviesCollectionInfo(
                 id = it.id,
                 title = it.title,
                 backdropPath = "http://image.tmdb.org/t/p/" + "w1280" + it.backdropPath,
@@ -50,7 +54,7 @@ class HomeScreenViewModel @Inject constructor(
             )
         }
         val nowPlayingState = nowPlayingResult.map {
-            PopularMoviesInfo(
+            MoviesCollectionInfo(
                 id = it.id,
                 title = it.title,
                 backdropPath = "http://image.tmdb.org/t/p/" + "w1280" + it.backdropPath,
