@@ -1,5 +1,8 @@
 package com.example.movienight20.ui.home
 
+import androidx.compose.animation.core.AnimationSpec
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -30,8 +33,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -140,11 +145,23 @@ private fun HomeScreenTopBar() {
 
 @Composable
 private fun MoviePaging(
-    popMoviesInfo: List<MoviesCollectionInfo>,
+    popMoviesInfo: List<MovieCardInfoViewState>,
     onClickMoviePhoto: (Int) -> Unit
 ) {
     val pagerState = rememberPagerState(pageCount = { 10 })
     Box() {
+        val pageCount = 10
+        LaunchedEffect(Unit) {
+            while (true) {
+                delay(4500) // Delay between automatic scrolls
+                val nextPage = (pagerState.currentPage + 1) % pageCount
+                pagerState.animateScrollToPage(nextPage, animationSpec = tween(
+                    durationMillis = 600, // Duration of slide transition
+                    easing = FastOutSlowInEasing // Smooth easing
+                ))
+
+            }
+        }
         HorizontalPager(state = pagerState, key = { it }) //TODO: Look into auto-advancing
         { page ->
             Box(modifier = Modifier) {
@@ -161,7 +178,7 @@ private fun MoviePaging(
                     contentScale = ContentScale.FillWidth,
                     alignment = Alignment.TopStart
                 )
-                RibbonText(title = popMoviesInfo[page].title)
+                RibbonText(title = popMoviesInfo[page].title.toString())
             }
 
         }
@@ -182,7 +199,7 @@ private fun MoviePaging(
                         .padding(3.dp)
                         .clip(CircleShape)
                         .background(color)
-                        .size(8.dp)
+                        .size(6.dp)
                 )
             }
         }// End of Row
@@ -191,12 +208,12 @@ private fun MoviePaging(
 
 @Composable
 fun RibbonText(title: String) {
-    val notchDepthDp = 8.dp
+    val notchDepthDp = 6.dp
     val density = LocalDensity.current
 
     Box(
         modifier = Modifier
-            .padding(top = 16.dp)
+            .padding(top = 0.dp)
             .offset(x = 12.dp)
             .wrapContentWidth()
             .drawBehind {
