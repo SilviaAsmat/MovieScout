@@ -238,7 +238,7 @@ private fun MovieCast(
         modifier = modifier
             .heightIn(max = 220.dp)
             .padding(16.dp, 10.dp),
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
+        horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(items = cast) {
             Column(modifier = modifier

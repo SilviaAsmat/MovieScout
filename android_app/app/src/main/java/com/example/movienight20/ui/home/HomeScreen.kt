@@ -287,7 +287,7 @@ private fun HorizontalMovieDisplay(
                     contentDescription = null,
                     modifier = Modifier
                         .height(220.dp)
-                        .fillMaxWidth()
+                        .width(140.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .clickable { onClickMoviePhoto(it.id) },
                     contentScale = ContentScale.Crop
