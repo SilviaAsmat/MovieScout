@@ -85,6 +85,7 @@ dependencies {
     implementation("com.squareup.retrofit2:converter-gson:2.7.1")
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("io.coil-kt:coil:2.6.0")
+    implementation(libs.androidx.paging.common.android)
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -110,6 +111,11 @@ dependencies {
     val room_version = "2.7.2"
     implementation("androidx.room:room-ktx:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
+
+    // Paging
+    val paging_version = "3.1.1"
+    implementation("androidx.paging:paging-runtime:$paging_version")
+    implementation("androidx.paging:paging-compose:1.0.0-alpha17")
 
 
 }

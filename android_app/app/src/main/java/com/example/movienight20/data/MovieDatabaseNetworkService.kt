@@ -8,10 +8,13 @@ import com.example.movienight20.data.network_response.MoviesCollectionsNetworkRe
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 interface MovieDatabaseNetworkService {
     @GET("/3/movie/popular")
-    suspend fun getPopularMovies(): Response<MoviesCollectionsNetworkResponse>
+    suspend fun getPopularMovies(
+        @Query("page") page: Int
+    ): Response<MoviesCollectionsNetworkResponse>
     @GET("/3/movie/{movie_id}")
     suspend fun getMovieDetails(@Path("movie_id") movieId: Int): Response<MovieDetailsNetworkResponse>
     @GET("/3/movie/{movie_id}/credits")
