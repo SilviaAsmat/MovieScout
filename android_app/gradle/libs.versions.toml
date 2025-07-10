@@ -1,8 +1,12 @@
 [versions]
 agp = "8.10.1"
 kotlin = "2.0.21"
+pagingCommonAndroid = "3.3.6"
+roomCompilerProcessingTesting = "2.7.2"
 
 [libraries]
+androidx-paging-common-android = { group = "androidx.paging", name = "paging-common-android", version.ref = "pagingCommonAndroid" }
+androidx-room-compiler-processing-testing = { group = "androidx.room", name = "room-compiler-processing-testing", version.ref = "roomCompilerProcessingTesting" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

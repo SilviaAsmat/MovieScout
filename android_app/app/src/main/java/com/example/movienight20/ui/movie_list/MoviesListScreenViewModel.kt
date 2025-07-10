@@ -2,6 +2,8 @@ package com.example.movienight20.ui.movie_list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.map
 import com.example.movienight20.domain.MoviesRepository
 import com.example.movienight20.ui.TopAppBarViewState
 import com.example.movienight20.ui.movie_collection_type.MovieCollectionType
@@ -10,6 +12,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -22,6 +25,22 @@ class MoviesListScreenViewModel @Inject constructor(
 
     private val _topAppBarViewState = MutableStateFlow<TopAppBarViewState>(TopAppBarViewState.Companion.NONE)
     val topAppBarViewState: StateFlow<TopAppBarViewState> = _topAppBarViewState
+
+    // TODO use popMovies in composable
+    val popMovies = movieRepo.popularMoviesPagination().map { pagingData ->
+        pagingData.map { movie ->
+            val releaseYear = ""
+            val url = "http://image.tmdb.org/t/p/" + "w1280" + movie.posterPath
+            MovieListItemViewState(
+                id = movie.id,
+                title = movie.name ?: "",
+                url = url,
+                year = releaseYear,
+                rating = ""
+            )
+        }
+    }
+
 
     fun initViewModel(collectionType: MovieCollectionType) {
         viewModelScope.launch {

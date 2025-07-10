@@ -1,6 +1,8 @@
 package com.example.movienight20.domain
 
+import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
+import com.example.movienight20.data.room.MovieInfoBasic as MovieInfoBasicData
 
 
 interface MoviesRepository {
@@ -14,4 +16,6 @@ interface MoviesRepository {
     suspend fun getUpcomingMovies(): List<MoviesCollectionInfo>
     suspend fun getTopRated(): List<MoviesCollectionInfo>
     fun getRecentlyViewed(): Flow<List<MovieInfoBasic>>
+    fun popularMoviesPagination(): Flow<PagingData<MovieInfoBasicData>>
+//    fun popularMoviesSinglePage(): Flow<List<MoviesCollectionInfo>>
 }

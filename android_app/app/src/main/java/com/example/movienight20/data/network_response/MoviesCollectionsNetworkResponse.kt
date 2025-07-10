@@ -6,7 +6,7 @@ class MoviesCollectionsNetworkResponse (
     @SerializedName("page")
     val page: Int?,
     @SerializedName("results")
-    val results: List<Item>?,
+    val results: List<Item>,
 ) {
     data class Item (
         @SerializedName("id")

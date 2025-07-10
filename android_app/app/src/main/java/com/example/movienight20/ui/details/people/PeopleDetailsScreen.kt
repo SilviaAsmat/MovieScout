@@ -150,8 +150,8 @@ private fun CastMovies(movies: List<ActorRoleMovie>, modifier: Modifier, onClick
                         .data("http://image.tmdb.org/t/p/" + "w1280" + it.posterPath).build(),
                     contentDescription = it.title.toString(),
                     modifier = Modifier
-                        .height(180.dp)
-                        .fillMaxWidth()
+                        .height(220.dp)
+                        .width(140.dp)
                         .clip(RoundedCornerShape(8.dp))
                         .clickable{onClickMoviePhoto(it.id!!)}
                     ,
@@ -181,7 +181,7 @@ fun CastDetailsTopAppBar(
 ) {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color("#4b8f38".toColorInt())
+            containerColor = Color("#134e03".toColorInt())
         ),
         title = {
             Text(

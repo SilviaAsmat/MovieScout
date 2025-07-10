@@ -11,9 +11,11 @@ data class MovieInfoBasic(
     @PrimaryKey
     val id: Int,
     @ColumnInfo(name = "poster_path")
-    val posterPath: String?,
+    val posterPath: String,
     @ColumnInfo(name = "backdrop_path")
-    val backdropPath: String?,
+    val backdropPath: String,
     @ColumnInfo(name = "name")
-    val name: String?
+    val name: String,
+    @ColumnInfo(name = "page")
+    var page: Int,
 )

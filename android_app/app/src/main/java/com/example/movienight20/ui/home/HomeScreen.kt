@@ -49,6 +49,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -116,18 +117,6 @@ private fun HomeScreen(
                 onClickMoviePhoto
             )
             Header(
-                header = "Top Rated",
-                onClickMovieCollection = onClickMovieCollection,
-                collectionType = collectionType
-            )
-            HorizontalMovieListDisplay(movieInfo = viewState.topRatedInfo, onClickMoviePhoto)
-            Header(
-                header = "Upcoming",
-                onClickMovieCollection = onClickMovieCollection,
-                collectionType = collectionType
-            )
-            HorizontalMovieListDisplay(movieInfo = viewState.upcomingInfo, onClickMoviePhoto)
-            Header(
                 header = "Recently Viewed",
                 onClickMovieCollection = onClickMovieCollection,
                 collectionType = collectionType
@@ -154,6 +143,19 @@ private fun HomeScreen(
                     // TODO create loading state for section
                 }
             }
+            Header(
+                header = "Top Rated",
+                onClickMovieCollection = onClickMovieCollection,
+                collectionType = collectionType
+            )
+            HorizontalMovieListDisplay(movieInfo = viewState.topRatedInfo, onClickMoviePhoto)
+            Header(
+                header = "Upcoming",
+                onClickMovieCollection = onClickMovieCollection,
+                collectionType = collectionType
+            )
+            HorizontalMovieListDisplay(movieInfo = viewState.upcomingInfo, onClickMoviePhoto)
+
         }
     }
 }
@@ -163,7 +165,7 @@ private fun HomeScreen(
 private fun HomeScreenTopBar() {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color("#4b8f38".toColorInt())
+            containerColor = Color("#134e03".toColorInt())
         ),
         title = {
             Text(
@@ -188,7 +190,7 @@ private fun MoviePaging(
         val pageCount = 10
         LaunchedEffect(Unit) {
             while (true) {
-                delay(4500) // Delay between automatic scrolls
+                delay(4000) // Delay between automatic scrolls
                 val nextPage = (pagerState.currentPage + 1) % pageCount
                 pagerState.animateScrollToPage(
                     nextPage, animationSpec = tween(
@@ -250,7 +252,7 @@ fun RibbonText(title: String) {
 
     Box(
         modifier = Modifier
-            .padding(top = 8.dp)
+            .padding(top = 145.dp)
             .offset(x = 12.dp)
             .wrapContentWidth()
             .drawBehind {

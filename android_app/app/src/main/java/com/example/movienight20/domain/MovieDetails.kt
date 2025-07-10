@@ -12,7 +12,8 @@ data class MovieDetails (
     val releaseDate: String,
     val voteAvg: Number,
     val voteCount: Int,
-    val tagline: String
+    val tagline: String,
+    val page: Int
 
 )
 

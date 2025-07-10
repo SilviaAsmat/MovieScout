@@ -1,6 +1,13 @@
 package com.example.movienight20.data
 
+import android.net.Network
 import android.util.Log
+import androidx.paging.ExperimentalPagingApi
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.RemoteMediator
+import androidx.paging.map
 import com.example.movienight20.data.network_response.MoviesCollectionsNetworkResponse
 import com.example.movienight20.data.room.MovieInfoBasic as MovieInfoBasicData
 import com.example.movienight20.data.room.MovieScoutDatabase
@@ -30,7 +37,7 @@ class MovieRepositoryImpl @Inject constructor(
 ) : MoviesRepository {
 
     override suspend fun getMovies(): List<MoviesCollectionInfo> {
-        val networkResponse = networkService.getPopularMovies()
+        val networkResponse = networkService.getPopularMovies(page = 1)
         return mapMovieCollectionNetworkResponse(networkResponse)
     }
 
@@ -56,7 +63,7 @@ class MovieRepositoryImpl @Inject constructor(
             MoviesCollectionInfo(
                 id = it.id!!,
                 title = it.title!!,
-                backdropPath = it.backdropPath!!,
+                backdropPath = it.backdropPath.toString(),
                 posterPath = it.posterPath!!,
                 releaseDate = it.releaseDate!!,
                 rating = it.voteAverage!!.toString()
@@ -71,7 +78,7 @@ class MovieRepositoryImpl @Inject constructor(
 
         return MovieDetails(
             id = results!!.id!!,
-            title = results!!.title!!,
+            title = results.title!!,
             backdropPath = results.backdropPath!!,
             overview = results.overview!!,
             runtime = results.runtime!!,
@@ -83,7 +90,8 @@ class MovieRepositoryImpl @Inject constructor(
             voteAvg = results.voteAvg!!,
             voteCount = results.voteCount!!,
             tagline = results.tagline!!,
-            posterPath = results.posterPath!!
+            posterPath = results.posterPath!!,
+            page = results.page!!
         )
     }
 
@@ -152,7 +160,7 @@ class MovieRepositoryImpl @Inject constructor(
         val movieInfoBasic =
             MovieInfoBasicData(
                 id = movie.id, posterPath = movie.posterPath, name = movie.title,
-                backdropPath = movie.backdropPath
+                backdropPath = movie.backdropPath, page = movie.page
             )
 
         movieScoutDatabase.recentMovieIds().insertMovieId(recentMovieId)
@@ -171,6 +179,51 @@ class MovieRepositoryImpl @Inject constructor(
                 }
             }
             .flowOn(Dispatchers.IO)
+
+    @OptIn(ExperimentalPagingApi::class)
+    override fun popularMoviesPagination(): Flow<PagingData<MovieInfoBasicData>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = 20,
+                enablePlaceholders = false),
+            remoteMediator = MoviesRemoteMediator(networkService, movieScoutDatabase),
+            pagingSourceFactory = {
+                movieScoutDatabase.movieInfoBasic().getMoviesPagingSource()
+            }
+        ).flow
+    }
+
+//    override fun popularMoviesSinglePage(): Flow<List<MovieInfoBasic>> = flow {
+//        val response = networkService.getPopularMovies(1)
+//        val movies = response.body()?.results?.map {
+//            movieMapper.movieResponseToMovieSummary(it)
+//        } ?: emptyList()
+//
+//        emit(movies)
+//    }
+
+//    override fun popularMoviesSinglePage(): Flow<List<MoviesCollectionInfo>> {
+//        return List<MoviesCollectionInfo>(size = null){
+//            override suspend fun fetchData(): List<MoviesCollectionInfo>{
+//                val networkResponse = networkService.getPopularMovies(page = 1)
+//                return mapMovieCollectionNetworkResponse(networkResponse)
+//            }
+//        }.load()
+//    }
+//    override fun popularMoviesSinglePage(): Flow<List<MovieInfoBasic>> {
+//        return List<MoviesCollectionInfo>{
+//            override suspend fun getPopularMovies(): MoviesCollectionsNetworkResponse<List<MoviesCollectionInfo>> {
+//                val response = tmdbClient.getPopularMoviesSuspend(1)
+//                return response.body()?.results?.map {
+//                    movieMapper.movieResponseToMovieSummary(it)
+//                }?.let { data ->
+//                    NetworkResponse.Success(data)
+//                } ?: run {
+//                    NetworkResponse.Failure(response.message())
+//                }
+//            }
+//        }.load()
+//    }
 
 
 }

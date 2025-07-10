@@ -86,6 +86,7 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("io.coil-kt:coil:2.6.0")
     implementation(libs.androidx.paging.common.android)
+//    implementation(libs.androidx.room.compiler.processing.testing)
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.2.1")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.6.1")
@@ -108,14 +109,19 @@ dependencies {
     implementation("androidx.compose.material:material:1.8.3")
 
     // Room
-    val room_version = "2.7.2"
-    implementation("androidx.room:room-ktx:$room_version")
-    ksp("androidx.room:room-compiler:$room_version")
+    val roomVersion = "2.7.2"
+    implementation("androidx.room:room-ktx:$roomVersion")
+    ksp("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-paging:$roomVersion")
 
     // Paging
     val paging_version = "3.1.1"
     implementation("androidx.paging:paging-runtime:$paging_version")
-    implementation("androidx.paging:paging-compose:1.0.0-alpha17")
+    implementation("androidx.paging:paging-compose:3.4.0-alpha01")
+
+
+//    annotationProcessor ("com.google.auto.value:auto-value:1.6.3")
+//    implementation ("com.google.auto.value:auto-value-annotations:1.6.3")
 
 
 }

@@ -280,7 +280,7 @@ private fun MovieDetailsTopAppBar(
 ) {
     CenterAlignedTopAppBar(
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color("#4b8f38".toColorInt())
+            containerColor = Color("#134e03".toColorInt())
         ),
         title = {
             Text(
