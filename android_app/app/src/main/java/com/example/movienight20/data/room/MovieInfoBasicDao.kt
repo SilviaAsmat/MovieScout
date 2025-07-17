@@ -9,7 +9,8 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface MovieInfoBasicDao {
-    @Query("SELECT * FROM movie_info_basic INNER JOIN recent_movie_ids ON movie_info_basic.localId = recent_movie_ids.id ORDER BY recent_movie_ids.timestamp DESC")
+    @Query("SELECT * FROM movie_info_basic INNER JOIN recent_movie_ids ON movie_info_basic.remote_id = recent_movie_ids.id " +
+            "GROUP BY id ORDER BY recent_movie_ids.timestamp DESC")
     fun getRecentlyViewed(): Flow<List<MovieInfoBasicEntity>>
 
     @Insert(onConflict = 1)
