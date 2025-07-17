@@ -2,7 +2,7 @@ package com.example.movienight20.domain
 
 import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
-import com.example.movienight20.data.room.MovieInfoBasic as MovieInfoBasicData
+import com.example.movienight20.data.room.MovieInfoBasicEntity as MovieInfoBasicData
 
 
 interface MoviesRepository {

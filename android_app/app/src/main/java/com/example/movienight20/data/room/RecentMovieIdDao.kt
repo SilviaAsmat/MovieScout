@@ -8,8 +8,8 @@ import androidx.room.Query
 interface RecentMovieIdDao {
 
     @Query("SELECT * FROM recent_movie_ids")
-    fun getAll(): List<RecentMovieId>
+    fun getAll(): List<RecentMovieIdEntity>
 
     @Insert(onConflict = 1)
-    fun insertMovieId(movie: RecentMovieId)
+    fun insertMovieId(movie: RecentMovieIdEntity)
 }

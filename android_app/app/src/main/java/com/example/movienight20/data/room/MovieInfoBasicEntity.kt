@@ -7,7 +7,7 @@ import androidx.room.PrimaryKey
 @Entity(
     tableName = "movie_info_basic",
 )
-data class MovieInfoBasic(
+data class MovieInfoBasicEntity(
     @PrimaryKey
     val id: Int,
     @ColumnInfo(name = "poster_path")
@@ -16,6 +16,4 @@ data class MovieInfoBasic(
     val backdropPath: String,
     @ColumnInfo(name = "name")
     val name: String,
-    @ColumnInfo(name = "page")
-    var page: Int,
 )

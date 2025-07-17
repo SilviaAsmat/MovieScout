@@ -10,14 +10,14 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface MovieInfoBasicDao {
     @Query("SELECT * FROM movie_info_basic INNER JOIN recent_movie_ids ON movie_info_basic.id = recent_movie_ids.id ORDER BY recent_movie_ids.timestamp DESC")
-    fun getRecentlyViewed(): Flow<List<MovieInfoBasic>>
+    fun getRecentlyViewed(): Flow<List<MovieInfoBasicEntity>>
 
     @Insert(onConflict = 1)
-    fun insertMovie(vararg movieInfoBasic: MovieInfoBasic)
+    fun insertMovie(vararg movieInfoBasic: MovieInfoBasicEntity)
 
     @Insert(onConflict = 1)
-    fun insertAllPopularMovies(movies: List<MovieInfoBasic>)
+    fun insertAllPopularMovies(movies: List<MovieInfoBasicEntity>)
 
     @Query("Select * From movie_info_basic")
-    fun getMoviesPagingSource(): PagingSource<Int, MovieInfoBasic>
+    fun getMoviesPagingSource(): PagingSource<Int, MovieInfoBasicEntity>
 }

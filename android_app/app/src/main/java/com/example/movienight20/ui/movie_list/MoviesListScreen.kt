@@ -41,11 +41,28 @@ fun MoviesListScreen(
     Scaffold(
         topBar = {TopAppBar(topAppBarViewState.getStringName())}
     ) { innerPadding ->
-        LazyColumn(
+//        LazyColumn(
+//            modifier = Modifier
+//                .background(Color.Black)
+//                .padding(innerPadding),
+//        ) {
+//            items(
+//                lazyPagingItems.itemCount,
+//                key = lazyPagingItems.itemKey { it.id }
+//            ) { index ->
+//                val item = lazyPagingItems[index]
+//                MovieListItem(viewState = item!!, onClickMovieListItem = onClickMovieListItem)
+//            }
+//        }
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(2),
             modifier = Modifier
                 .background(Color.Black)
                 .padding(innerPadding),
-        ) {
+            verticalArrangement = Arrangement.spacedBy(0.dp),
+            horizontalArrangement = Arrangement.spacedBy(0.dp)
+        )
+        {
             items(
                 lazyPagingItems.itemCount,
                 key = lazyPagingItems.itemKey { it.id }
@@ -54,19 +71,6 @@ fun MoviesListScreen(
                 MovieListItem(viewState = item!!, onClickMovieListItem = onClickMovieListItem)
             }
         }
-//        LazyVerticalGrid(
-//            columns = GridCells.Fixed(2),
-//            modifier = Modifier
-//                .background(Color.Black)
-//                .padding(innerPadding),
-//            verticalArrangement = Arrangement.spacedBy(0.dp),
-//            horizontalArrangement = Arrangement.spacedBy(0.dp)
-//        )
-//        {
-//            items(items = viewStates) {
-//                MovieListItem(viewState = it, onClickMovieListItem = onClickMovieListItem)
-//            }
-//        }
     }
 }
 

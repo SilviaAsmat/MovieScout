@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "recent_movie_ids")
-data class RecentMovieId(
+data class RecentMovieIdEntity(
     @PrimaryKey
     val id: Int,
     @ColumnInfo(name = "timestamp")

@@ -1,17 +1,14 @@
 package com.example.movienight20.data
 
-import android.net.Network
 import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import androidx.paging.RemoteMediator
-import androidx.paging.map
 import com.example.movienight20.data.network_response.MoviesCollectionsNetworkResponse
-import com.example.movienight20.data.room.MovieInfoBasic as MovieInfoBasicData
+import com.example.movienight20.data.room.MovieInfoBasicEntity
 import com.example.movienight20.data.room.MovieScoutDatabase
-import com.example.movienight20.data.room.RecentMovieId
+import com.example.movienight20.data.room.RecentMovieIdEntity
 import com.example.movienight20.domain.ActorRoleMovie
 import com.example.movienight20.domain.Cast
 import com.example.movienight20.domain.CrewRoleMovie
@@ -91,7 +88,6 @@ class MovieRepositoryImpl @Inject constructor(
             voteCount = results.voteCount!!,
             tagline = results.tagline!!,
             posterPath = results.posterPath!!,
-            page = results.page!!
         )
     }
 
@@ -156,19 +152,21 @@ class MovieRepositoryImpl @Inject constructor(
     /**** database functions ****/
 
     override suspend fun storeDataInCache(movie: MovieDetails) {
-        val recentMovieId = RecentMovieId(id = movie.id)
+        val recentMovieIdEntity = RecentMovieIdEntity(id = movie.id)
         val movieInfoBasic =
-            MovieInfoBasicData(
-                id = movie.id, posterPath = movie.posterPath, name = movie.title,
-                backdropPath = movie.backdropPath, page = movie.page
+            MovieInfoBasicEntity(
+                id = movie.id,
+                posterPath = movie.posterPath,
+                name = movie.title,
+                backdropPath = movie.backdropPath,
             )
 
-        movieScoutDatabase.recentMovieIds().insertMovieId(recentMovieId)
-        movieScoutDatabase.movieInfoBasic().insertMovie(movieInfoBasic)
+        movieScoutDatabase.recentMovieIdsDao().insertMovieId(recentMovieIdEntity)
+        movieScoutDatabase.movieInfoBasicDao().insertMovie(movieInfoBasic)
     }
 
     override fun getRecentlyViewed(): Flow<List<MovieInfoBasic>> =
-        movieScoutDatabase.movieInfoBasic().getRecentlyViewed()
+        movieScoutDatabase.movieInfoBasicDao().getRecentlyViewed()
             .map { dataList ->
                 dataList.map { data ->
                     MovieInfoBasic(
@@ -181,14 +179,14 @@ class MovieRepositoryImpl @Inject constructor(
             .flowOn(Dispatchers.IO)
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun popularMoviesPagination(): Flow<PagingData<MovieInfoBasicData>> {
+    override fun popularMoviesPagination(): Flow<PagingData<MovieInfoBasicEntity>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 20,
                 enablePlaceholders = false),
             remoteMediator = MoviesRemoteMediator(networkService, movieScoutDatabase),
             pagingSourceFactory = {
-                movieScoutDatabase.movieInfoBasic().getMoviesPagingSource()
+                movieScoutDatabase.movieInfoBasicDao().getMoviesPagingSource()
             }
         ).flow
     }

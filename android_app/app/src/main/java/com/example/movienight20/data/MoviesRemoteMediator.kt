@@ -1,14 +1,14 @@
 package com.example.movienight20.data
 
 import com.example.movienight20.data.room.MovieScoutDatabase
-import com.example.movienight20.data.room.RemoteKeys
+import com.example.movienight20.data.room.RemoteKeysEntity
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import com.example.movienight20.data.room.MovieInfoBasic
+import com.example.movienight20.data.room.MovieInfoBasicEntity
 
 import kotlinx.coroutines.delay
 import retrofit2.HttpException
@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit
 class MoviesRemoteMediator (
     private val moviesApiService: MovieDatabaseNetworkService,
     private val moviesDatabase: MovieScoutDatabase,
-): RemoteMediator<Int, MovieInfoBasic>() {
+): RemoteMediator<Int, MovieInfoBasicEntity>() {
 
     override suspend fun initialize(): InitializeAction {
         val cacheTimeout = TimeUnit.MILLISECONDS.convert(1, TimeUnit.HOURS)
@@ -31,7 +31,7 @@ class MoviesRemoteMediator (
         }
     }
 
-    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, MovieInfoBasic>): RemoteKeys? {
+    private suspend fun getRemoteKeyForLastItem(state: PagingState<Int, MovieInfoBasicEntity>): RemoteKeysEntity? {
         return state.pages.lastOrNull {
             it.data.isNotEmpty()
         }?.data?.lastOrNull()?.let { movie ->
@@ -39,7 +39,7 @@ class MoviesRemoteMediator (
         }
     }
 
-    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, MovieInfoBasic>): RemoteKeys? {
+    private suspend fun getRemoteKeyForFirstItem(state: PagingState<Int, MovieInfoBasicEntity>): RemoteKeysEntity? {
         return state.pages.firstOrNull {
             it.data.isNotEmpty()
         }?.data?.firstOrNull()?.let { movie ->
@@ -47,7 +47,7 @@ class MoviesRemoteMediator (
         }
     }
 
-    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, MovieInfoBasic>): RemoteKeys? {
+    private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, MovieInfoBasicEntity>): RemoteKeysEntity? {
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.id?.let { id ->
                 moviesDatabase.getRemoteKeysDao().getRemoteKeyByMovieID(id)
@@ -57,7 +57,7 @@ class MoviesRemoteMediator (
 
     override suspend fun load(
         loadType: LoadType,
-        state: PagingState<Int, MovieInfoBasic>
+        state: PagingState<Int, MovieInfoBasicEntity>
     ): MediatorResult {
         val page: Int = when (loadType) {
             LoadType.REFRESH -> {
@@ -84,12 +84,11 @@ class MoviesRemoteMediator (
 
             val movies = apiResponse.body()?.results
             val moviesResult = movies!!.map { data ->
-                MovieInfoBasic(
+                MovieInfoBasicEntity(
                     id = data.id!!,
                     name = data.title.toString(),
                     posterPath = "http://image.tmdb.org/t/p/w1280${data.posterPath}",
                     backdropPath = "http://image.tmdb.org/t/p/w1280${data.backdropPath}",
-                    page = page
                 )
 
             }
@@ -102,12 +101,12 @@ class MoviesRemoteMediator (
                 }
                 val prevKey = if (page > 1) page - 1 else null
                 val nextKey = if (endOfPaginationReached == true) null else page + 1
-                val remoteKeys = movies.map {
-                    RemoteKeys(movieID = it.id, prevKey = prevKey, currentPage = page, nextKey = nextKey)
+                val remoteKeyEntities = movies.map {
+                    RemoteKeysEntity(movieID = it.id, prevKey = prevKey, currentPage = page, nextKey = nextKey)
                 }
 
-                moviesDatabase.getRemoteKeysDao().insertAll(remoteKeys)
-                moviesDatabase.movieInfoBasic().insertAllPopularMovies(moviesResult)// movies?.onEachIndexed { _, movie -> movie.page = page }
+                moviesDatabase.getRemoteKeysDao().insertAll(remoteKeyEntities)
+                moviesDatabase.movieInfoBasicDao().insertAllPopularMovies(moviesResult)// movies?.onEachIndexed { _, movie -> movie.page = page }
             }
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached == true)
         } catch (error: IOException) {

@@ -13,8 +13,6 @@ data class MovieDetails (
     val voteAvg: Number,
     val voteCount: Int,
     val tagline: String,
-    val page: Int
-
 )
 
 data class Genre(
