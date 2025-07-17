@@ -8,8 +8,10 @@ import androidx.room.PrimaryKey
     tableName = "movie_info_basic",
 )
 data class MovieInfoBasicEntity(
-    @PrimaryKey
-    val id: Int,
+    @PrimaryKey(autoGenerate = true)
+    val localId: Int,
+    @ColumnInfo(name = "remote_id")
+    val remoteId: Int,
     @ColumnInfo(name = "poster_path")
     val posterPath: String,
     @ColumnInfo(name = "backdrop_path")

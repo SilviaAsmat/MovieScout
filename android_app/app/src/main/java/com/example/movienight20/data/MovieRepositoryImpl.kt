@@ -155,10 +155,11 @@ class MovieRepositoryImpl @Inject constructor(
         val recentMovieIdEntity = RecentMovieIdEntity(id = movie.id)
         val movieInfoBasic =
             MovieInfoBasicEntity(
-                id = movie.id,
+                remoteId = movie.id,
                 posterPath = movie.posterPath,
                 name = movie.title,
                 backdropPath = movie.backdropPath,
+                localId = 0
             )
 
         movieScoutDatabase.recentMovieIdsDao().insertMovieId(recentMovieIdEntity)
@@ -170,7 +171,7 @@ class MovieRepositoryImpl @Inject constructor(
             .map { dataList ->
                 dataList.map { data ->
                     MovieInfoBasic(
-                        id = data.id,
+                        id = data.remoteId,
                         title = data.name,
                         posterPath = "http://image.tmdb.org/t/p/w1280${data.posterPath}"
                     )

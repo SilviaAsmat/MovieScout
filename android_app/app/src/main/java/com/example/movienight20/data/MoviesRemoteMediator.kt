@@ -10,7 +10,6 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.example.movienight20.data.room.MovieInfoBasicEntity
 
-import kotlinx.coroutines.delay
 import retrofit2.HttpException
 import java.io.IOException
 import java.util.concurrent.TimeUnit
@@ -35,7 +34,7 @@ class MoviesRemoteMediator (
         return state.pages.lastOrNull {
             it.data.isNotEmpty()
         }?.data?.lastOrNull()?.let { movie ->
-            moviesDatabase.getRemoteKeysDao().getRemoteKeyByMovieID(movie.id)
+            moviesDatabase.getRemoteKeysDao().getRemoteKeyByMovieID(movie.remoteId)
         }
     }
 
@@ -43,13 +42,13 @@ class MoviesRemoteMediator (
         return state.pages.firstOrNull {
             it.data.isNotEmpty()
         }?.data?.firstOrNull()?.let { movie ->
-            moviesDatabase.getRemoteKeysDao().getRemoteKeyByMovieID(movie.id)
+            moviesDatabase.getRemoteKeysDao().getRemoteKeyByMovieID(movie.remoteId)
         }
     }
 
     private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, MovieInfoBasicEntity>): RemoteKeysEntity? {
         return state.anchorPosition?.let { position ->
-            state.closestItemToPosition(position)?.id?.let { id ->
+            state.closestItemToPosition(position)?.remoteId?.let { id ->
                 moviesDatabase.getRemoteKeysDao().getRemoteKeyByMovieID(id)
             }
         }
@@ -80,15 +79,16 @@ class MoviesRemoteMediator (
         try {
             val apiResponse = moviesApiService.getPopularMovies(page = page)
 
-            delay(1000L) //TODO For testing only!
+            //delay(1000L) //TODO For testing only!
 
             val movies = apiResponse.body()?.results
             val moviesResult = movies!!.map { data ->
                 MovieInfoBasicEntity(
-                    id = data.id!!,
+                    remoteId = data.id!!,
                     name = data.title.toString(),
                     posterPath = "http://image.tmdb.org/t/p/w1280${data.posterPath}",
                     backdropPath = "http://image.tmdb.org/t/p/w1280${data.backdropPath}",
+                    localId = 0,
                 )
 
             }
