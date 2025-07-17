@@ -96,6 +96,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     val hilt = "2.50"
     implementation("com.google.dagger:hilt-android:$hilt")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
     ksp("com.google.dagger:hilt-compiler:$hilt")
     val nav_version = "2.8.3"
     implementation("androidx.navigation:navigation-compose:$nav_version")

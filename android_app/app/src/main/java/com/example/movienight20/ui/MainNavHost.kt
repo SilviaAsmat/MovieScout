@@ -7,6 +7,8 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import androidx.hilt.navigation.compose.hiltViewModel
+
 import com.example.movienight20.ui.details.movie.MovieDetailsScreen
 import com.example.movienight20.ui.details.people.PeopleDetailsScreen
 import com.example.movienight20.ui.details.people.PeopleDetailsViewModel
@@ -19,7 +21,7 @@ import com.example.movienight20.ui.movie_list.MoviesListScreenViewModel
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MoviesList(val collectionType: MovieCollectionType)
+data class MoviesList(val collectionType: String)
 
 @Serializable
 data class MovieDetails(val id: Int)
@@ -33,10 +35,6 @@ object MainScreen
 @Composable
 fun MainNavHost(
     navController: NavHostController,
-    listScreenViewModel: MoviesListScreenViewModel,
-    detailsViewModel: MovieDetailsViewModel,
-    peopleDetailsViewModel: PeopleDetailsViewModel,
-    homeScreenViewModel: HomeScreenViewModel,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -45,37 +43,38 @@ fun MainNavHost(
         modifier = modifier
     ) {
         composable<MainScreen> {
+            val args = it.toRoute<MainScreen>()
+            val viewModel: HomeScreenViewModel = hiltViewModel()
             HomeScreen(
-                viewModel = homeScreenViewModel,
+                viewModel = viewModel,
+                onClickMovieCollection = {collectionType: MovieCollectionType ->
+                    navController.navigate(MoviesList(collectionType.name))},
                 onClickMoviePhoto = { id: Int ->
                     navController.navigate(MovieDetails(id))
-                },
-                onClickMovieCollection = {collectionType: MovieCollectionType ->
-                    navController.navigate(MoviesList(collectionType))
                 }
             )
         }
-        composable<MoviesList> { backStackEntry ->
-            val moviesList: MoviesList = backStackEntry.toRoute()
-            listScreenViewModel.initViewModel(collectionType = moviesList.collectionType)
+        composable<MoviesList> {
+            val args = it.toRoute<MoviesList>()
+            val viewModel: MoviesListScreenViewModel = hiltViewModel()
             MoviesListScreen(
-                viewModel = listScreenViewModel,
                 onClickMovieListItem = { id: Int ->
                     navController.navigate(MovieDetails(id))
                 },
-                navController = navController,
-
+                viewModel = viewModel,
+                navController = navController
             )
         }
 
         composable<MovieDetails> { backStackEntry ->
             val movieDetails: MovieDetails = backStackEntry.toRoute()
+            val viewModel: MovieDetailsViewModel = hiltViewModel()
             LaunchedEffect(Unit) {
-                detailsViewModel.initWithID(movieDetails.id)
+                viewModel.initWithID(movieDetails.id)
             }
             MovieDetailsScreen(
                 onClickMovieListItem = {},
-                viewModel = detailsViewModel,
+                viewModel = viewModel,
                 navController = navController,
                 onBackClick = {
                     navController.popBackStack()
@@ -86,13 +85,13 @@ fun MainNavHost(
 
             )
         }
-
         composable<PeopleDetails> { backStackEntry ->
             val peopleDetails: PeopleDetails = backStackEntry.toRoute()
-            peopleDetailsViewModel.initWithID(id = peopleDetails.id)
+            val viewModel: PeopleDetailsViewModel = hiltViewModel()
+            viewModel.initWithID(id = peopleDetails.id)
             PeopleDetailsScreen(
                 onClickCastPhoto = {},
-                viewModel = peopleDetailsViewModel,
+                viewModel = viewModel,
                 onBackClick = {
                     navController.popBackStack()
                 },

@@ -20,6 +20,7 @@ import com.example.movienight20.domain.MoviesRepository
 import com.example.movienight20.domain.PeopleDetails
 import com.example.movienight20.domain.PeopleMovieCredits
 import com.example.movienight20.domain.MovieInfoBasic
+import com.example.movienight20.ui.movie_collection_type.MovieCollectionType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOn
@@ -33,23 +34,23 @@ class MovieRepositoryImpl @Inject constructor(
     private val movieScoutDatabase: MovieScoutDatabase
 ) : MoviesRepository {
 
-    override suspend fun getMovies(): List<MoviesCollectionInfo> {
+    override suspend fun getPopularMovies(): List<MoviesCollectionInfo> {
         val networkResponse = networkService.getPopularMovies(page = 1)
         return mapMovieCollectionNetworkResponse(networkResponse)
     }
 
     override suspend fun getNowPlaying(): List<MoviesCollectionInfo> {
-        val networkResponse = networkService.getNowPlaying()
+        val networkResponse = networkService.getNowPlaying(page = 1)
         return mapMovieCollectionNetworkResponse(networkResponse)
     }
 
     override suspend fun getUpcomingMovies(): List<MoviesCollectionInfo> {
-        val networkResponse = networkService.getUpcomingMovies()
+        val networkResponse = networkService.getUpcomingMovies(page = 1)
         return mapMovieCollectionNetworkResponse(networkResponse)
     }
 
     override suspend fun getTopRated(): List<MoviesCollectionInfo> {
-        val networkResponse = networkService.getTopRatedMovies()
+        val networkResponse = networkService.getTopRatedMovies(page = 1)
         return mapMovieCollectionNetworkResponse(networkResponse)
     }
 
@@ -76,7 +77,7 @@ class MovieRepositoryImpl @Inject constructor(
         return MovieDetails(
             id = results!!.id!!,
             title = results.title!!,
-            backdropPath = results.backdropPath!!,
+            backdropPath = results.backdropPath!!, //TODO: Default state for missing/null info
             overview = results.overview!!,
             runtime = results.runtime!!,
             status = results.status!!,
@@ -180,49 +181,18 @@ class MovieRepositoryImpl @Inject constructor(
             .flowOn(Dispatchers.IO)
 
     @OptIn(ExperimentalPagingApi::class)
-    override fun popularMoviesPagination(): Flow<PagingData<MovieInfoBasicEntity>> {
+    override fun moviesPagination(movieCollectionType: MovieCollectionType): Flow<PagingData<MovieInfoBasicEntity>> {
         return Pager(
             config = PagingConfig(
                 pageSize = 20,
                 enablePlaceholders = false),
-            remoteMediator = MoviesRemoteMediator(networkService, movieScoutDatabase),
+            remoteMediator = MoviesRemoteMediator(networkService, movieScoutDatabase, collectionType = movieCollectionType),
             pagingSourceFactory = {
                 movieScoutDatabase.movieInfoBasicDao().getMoviesPagingSource()
             }
         ).flow
     }
 
-//    override fun popularMoviesSinglePage(): Flow<List<MovieInfoBasic>> = flow {
-//        val response = networkService.getPopularMovies(1)
-//        val movies = response.body()?.results?.map {
-//            movieMapper.movieResponseToMovieSummary(it)
-//        } ?: emptyList()
-//
-//        emit(movies)
-//    }
-
-//    override fun popularMoviesSinglePage(): Flow<List<MoviesCollectionInfo>> {
-//        return List<MoviesCollectionInfo>(size = null){
-//            override suspend fun fetchData(): List<MoviesCollectionInfo>{
-//                val networkResponse = networkService.getPopularMovies(page = 1)
-//                return mapMovieCollectionNetworkResponse(networkResponse)
-//            }
-//        }.load()
-//    }
-//    override fun popularMoviesSinglePage(): Flow<List<MovieInfoBasic>> {
-//        return List<MoviesCollectionInfo>{
-//            override suspend fun getPopularMovies(): MoviesCollectionsNetworkResponse<List<MoviesCollectionInfo>> {
-//                val response = tmdbClient.getPopularMoviesSuspend(1)
-//                return response.body()?.results?.map {
-//                    movieMapper.movieResponseToMovieSummary(it)
-//                }?.let { data ->
-//                    NetworkResponse.Success(data)
-//                } ?: run {
-//                    NetworkResponse.Failure(response.message())
-//                }
-//            }
-//        }.load()
-//    }
 
 
 }

@@ -1,5 +1,6 @@
 package com.example.movienight20.ui.home
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movienight20.domain.MovieInfoBasic
@@ -38,6 +39,9 @@ class HomeScreenViewModel @Inject constructor(
         MutableStateFlow<MovieCardInfoViewState>(MovieCardInfoViewState.NONE)
     val movieCardInfoViewState: StateFlow<MovieCardInfoViewState> = _movieCardInfoViewState
 
+
+
+
     init {
         viewModelScope.launch(Dispatchers.IO) {
             fetchAndUpdateViewState()
@@ -50,7 +54,7 @@ class HomeScreenViewModel @Inject constructor(
     }
 
     private suspend fun fetchAndUpdateViewState() {
-        val popularMoviesResult = movieRepo.getMovies()
+        val popularMoviesResult = movieRepo.getPopularMovies()
         val nowPlayingResult = movieRepo.getNowPlaying()
         val upcomingResult = movieRepo.getUpcomingMovies()
         val topRatedResult = movieRepo.getTopRated()

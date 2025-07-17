@@ -72,13 +72,11 @@ fun HomeScreen(
 ) {
     val viewState by viewModel.viewState.collectAsState()
     val recentlyViewState by viewModel.recentlyViewedViewState.collectAsState()
-    val movieCollectionTypeViewState by viewModel.movieCollectionTypeViewState.collectAsState()
     HomeScreen(
         viewState = viewState,
         recents = recentlyViewState,
         onClickMoviePhoto = onClickMoviePhoto,
         onClickMovieCollection = onClickMovieCollection,
-        collectionType = movieCollectionTypeViewState
     )
 }
 
@@ -86,7 +84,6 @@ fun HomeScreen(
 private fun HomeScreen(
     viewState: HomeScreenViewState,
     recents: RecentlyViewedViewState,
-    collectionType: MovieCollectionTypeViewState,
     onClickMoviePhoto: (Int) -> Unit,
     onClickMovieCollection: (MovieCollectionType) -> Unit
 ) {
@@ -102,7 +99,7 @@ private fun HomeScreen(
             Header(
                 header = "Popular",
                 onClickMovieCollection = onClickMovieCollection,
-                collectionType = collectionType
+                collectionType = MovieCollectionType.POPULAR
             )
             if (viewState.popMoviesInfo.isNotEmpty()) {
                 MoviePaging(viewState.popMoviesInfo, onClickMoviePhoto)
@@ -110,7 +107,7 @@ private fun HomeScreen(
             Header(
                 header = "Now Playing",
                 onClickMovieCollection = onClickMovieCollection,
-                collectionType = collectionType
+                collectionType = MovieCollectionType.NOW_PLAYING
             )
             HorizontalMovieListDisplay(
                 movieInfo = viewState.nowPlayingMoviesInfo,
@@ -119,7 +116,7 @@ private fun HomeScreen(
             Header(
                 header = "Recently Viewed",
                 onClickMovieCollection = onClickMovieCollection,
-                collectionType = collectionType
+                collectionType = MovieCollectionType.NOW_PLAYING
             )
             when (recents) {
                 is RecentlyViewedViewState.Data -> {
@@ -146,13 +143,13 @@ private fun HomeScreen(
             Header(
                 header = "Top Rated",
                 onClickMovieCollection = onClickMovieCollection,
-                collectionType = collectionType
+                collectionType = MovieCollectionType.TOP_RATED
             )
             HorizontalMovieListDisplay(movieInfo = viewState.topRatedInfo, onClickMoviePhoto)
             Header(
                 header = "Upcoming",
                 onClickMovieCollection = onClickMovieCollection,
-                collectionType = collectionType
+                collectionType = MovieCollectionType.UPCOMING
             )
             HorizontalMovieListDisplay(movieInfo = viewState.upcomingInfo, onClickMoviePhoto)
 
@@ -302,9 +299,8 @@ private fun RecentlyViewedMovies(
 private fun Header(
     header: String,
     onClickMovieCollection: (MovieCollectionType) -> Unit,
-    collectionType: MovieCollectionTypeViewState
+    collectionType: MovieCollectionType
 ) {
-    val type = collectionType.getCollectionType(header)
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
@@ -325,7 +321,7 @@ private fun Header(
             modifier = Modifier
                 .clip(RoundedCornerShape(12.dp))
                 .padding(10.dp, 4.dp)
-                .clickable { onClickMovieCollection(type) },
+                .clickable { onClickMovieCollection(collectionType) },
             color = Color.Black,
             fontFamily = FontFamily.Monospace,
             letterSpacing = 0.sp,
@@ -389,7 +385,6 @@ private fun previewMainScreen() {
                 topRatedInfo = listOf(),
             ),
         recents = RecentlyViewedViewState.Empty,
-        collectionType = MovieCollectionTypeViewState.NONE,
         onClickMoviePhoto = {},
         onClickMovieCollection = {}
     )

@@ -3,10 +3,8 @@ package com.example.movienight20.ui.movie_list
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -35,25 +33,11 @@ fun MoviesListScreen(
     navController: NavController
 ) {
     val viewStates by viewModel.viewState.collectAsState()
-    val lazyPagingItems = viewModel.popMovies.collectAsLazyPagingItems()
+    val lazyPagingItems = viewModel.pagedMovies.collectAsLazyPagingItems()
     val topAppBarViewState by viewModel.topAppBarViewState.collectAsState()
-    //TODO: Implement Android Paging 3
     Scaffold(
         topBar = {TopAppBar(topAppBarViewState.getStringName())}
     ) { innerPadding ->
-//        LazyColumn(
-//            modifier = Modifier
-//                .background(Color.Black)
-//                .padding(innerPadding),
-//        ) {
-//            items(
-//                lazyPagingItems.itemCount,
-//                key = lazyPagingItems.itemKey { it.id }
-//            ) { index ->
-//                val item = lazyPagingItems[index]
-//                MovieListItem(viewState = item!!, onClickMovieListItem = onClickMovieListItem)
-//            }
-//        }
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier

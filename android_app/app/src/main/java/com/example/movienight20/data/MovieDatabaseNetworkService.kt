@@ -11,10 +11,6 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MovieDatabaseNetworkService {
-    @GET("/3/movie/popular")
-    suspend fun getPopularMovies(
-        @Query("page") page: Int
-    ): Response<MoviesCollectionsNetworkResponse>
     @GET("/3/movie/{movie_id}")
     suspend fun getMovieDetails(@Path("movie_id") movieId: Int): Response<MovieDetailsNetworkResponse>
     @GET("/3/movie/{movie_id}/credits")
@@ -23,11 +19,25 @@ interface MovieDatabaseNetworkService {
     suspend fun getPeopleMovieCredits(@Path("person_id") personId: Int): Response<PeopleMovieCreditsNetworkResponse>
     @GET("/3/person/{person_id}")
     suspend fun getPeopleDetails(@Path("person_id") personId: Int): Response<PeopleDetailsNetworkResponse>
+
+    @GET("/3/movie/popular")
+    suspend fun getPopularMovies(
+        @Query("page") page: Int
+    ): Response<MoviesCollectionsNetworkResponse>
+
     @GET("/3/movie/now_playing")
-    suspend fun getNowPlaying(): Response<MoviesCollectionsNetworkResponse>
+    suspend fun getNowPlaying(
+        @Query("page") page: Int
+    ): Response<MoviesCollectionsNetworkResponse>
+
     @GET("/3/movie/upcoming")
-    suspend fun getUpcomingMovies(): Response<MoviesCollectionsNetworkResponse>
+    suspend fun getUpcomingMovies(
+        @Query("page") page: Int
+    ): Response<MoviesCollectionsNetworkResponse>
+
     @GET("/3/movie/top_rated")
-    suspend fun getTopRatedMovies(): Response<MoviesCollectionsNetworkResponse>
+    suspend fun getTopRatedMovies(
+        @Query("page") page: Int
+    ): Response<MoviesCollectionsNetworkResponse>
 }
 

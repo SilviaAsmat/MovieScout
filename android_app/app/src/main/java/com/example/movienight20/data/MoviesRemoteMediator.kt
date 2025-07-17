@@ -9,6 +9,7 @@ import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.example.movienight20.data.room.MovieInfoBasicEntity
+import com.example.movienight20.ui.movie_collection_type.MovieCollectionType
 
 import retrofit2.HttpException
 import java.io.IOException
@@ -18,6 +19,7 @@ import java.util.concurrent.TimeUnit
 class MoviesRemoteMediator (
     private val moviesApiService: MovieDatabaseNetworkService,
     private val moviesDatabase: MovieScoutDatabase,
+    private val collectionType: MovieCollectionType
 ): RemoteMediator<Int, MovieInfoBasicEntity>() {
 
     override suspend fun initialize(): InitializeAction {
@@ -77,9 +79,12 @@ class MoviesRemoteMediator (
         }
 
         try {
-            val apiResponse = moviesApiService.getPopularMovies(page = page)
-
-            //delay(1000L) //TODO For testing only!
+            val apiResponse = when (collectionType) {
+                MovieCollectionType.POPULAR -> moviesApiService.getPopularMovies(page = page)
+                MovieCollectionType.NOW_PLAYING -> moviesApiService.getNowPlaying(page = page)
+                MovieCollectionType.TOP_RATED -> moviesApiService.getTopRatedMovies(page = page)
+                MovieCollectionType.UPCOMING -> moviesApiService.getUpcomingMovies(page = page)
+            }
 
             val movies = apiResponse.body()?.results
             val moviesResult = movies!!.map { data ->

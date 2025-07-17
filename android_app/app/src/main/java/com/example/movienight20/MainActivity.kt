@@ -36,10 +36,10 @@ class MainActivity : ComponentActivity() {
                     val navController = rememberNavController()
                     MainNavHost(
                         navController = navController,
-                        listScreenViewModel = collectionViewModel,
-                        detailsViewModel = detailsViewModel,
-                        peopleDetailsViewModel = peopleDetailsViewModel,
-                        homeScreenViewModel = homeScreenViewModel
+//                        listScreenViewModel = collectionViewModel,
+//                        detailsViewModel = detailsViewModel,
+//                        peopleDetailsViewModel = peopleDetailsViewModel,
+//                        homeScreenViewModel = homeScreenViewModel
                         )
                 }
             }
