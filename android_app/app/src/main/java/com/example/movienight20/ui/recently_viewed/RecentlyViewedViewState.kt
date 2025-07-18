@@ -1,6 +1,7 @@
-package com.example.movienight20.ui
+package com.example.movienight20.ui.recently_viewed
 
 import androidx.compose.runtime.Immutable
+import com.example.movienight20.ui.MovieCardInfoViewState
 
 @Immutable
 sealed class RecentlyViewedViewState {

@@ -35,7 +35,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,7 +48,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -60,8 +58,8 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.movienight20.ui.MovieCardInfoViewState
 import com.example.movienight20.ui.movie_collection_type.MovieCollectionType
-import com.example.movienight20.ui.RecentlyViewedViewState
-import com.example.movienight20.ui.movie_collection_type.MovieCollectionTypeViewState
+import com.example.movienight20.ui.recently_viewed.RecentlyViewedViewState
+import com.example.movienight20.ui.recently_viewed.RecentlyViewedMoviesHLG
 import kotlinx.coroutines.delay
 
 @Composable
@@ -96,62 +94,38 @@ private fun HomeScreen(
                 .background(Color.White)
                 .verticalScroll(rememberScrollState())
         ) {
-            Header(
+            MovieCollectionHeader(
                 header = "Popular",
-                onClickMovieCollection = onClickMovieCollection,
+                onClickMovieCollection = {onClickMovieCollection(MovieCollectionType.POPULAR)},
                 collectionType = MovieCollectionType.POPULAR
             )
             if (viewState.popMoviesInfo.isNotEmpty()) {
                 MoviePaging(viewState.popMoviesInfo, onClickMoviePhoto)
             }
-            Header(
+            MovieCollectionHeader(
                 header = "Now Playing",
-                onClickMovieCollection = onClickMovieCollection,
+                onClickMovieCollection = {onClickMovieCollection(MovieCollectionType.NOW_PLAYING)},
                 collectionType = MovieCollectionType.NOW_PLAYING
             )
-            HorizontalMovieListDisplay(
+            MovieListLHG(
                 movieInfo = viewState.nowPlayingMoviesInfo,
                 onClickMoviePhoto
             )
-            Header(
-                header = "Recently Viewed",
-                onClickMovieCollection = onClickMovieCollection,
-                collectionType = MovieCollectionType.NOW_PLAYING
-            )
-            when (recents) {
-                is RecentlyViewedViewState.Data -> {
-//                    RecentlyViewedMovies(
-//                        recentlyViewedInfo = recents.recentlyViewedInfo,
-//                        onClickMoviePhoto
-//                    )
-                    RecentlyViewedMovies(
-                        recentViewState = recents,
-                        onClickMoviePhoto
-                    )
-                }
 
-                is RecentlyViewedViewState.Empty -> {
-                    // TODO create empty message composable
-//                    val emptyMovieInfo = MoviesCollectionInfo(pass in empty info)
-//                    HorizontalMovieListDisplay()
-                }
+            RecentlyViewedMoviesHLG(recents, onClickMoviePhoto)
 
-                is RecentlyViewedViewState.Loading -> {
-                    // TODO create loading state for section
-                }
-            }
-            Header(
+            MovieCollectionHeader(
                 header = "Top Rated",
-                onClickMovieCollection = onClickMovieCollection,
+                onClickMovieCollection = {onClickMovieCollection(MovieCollectionType.TOP_RATED)},
                 collectionType = MovieCollectionType.TOP_RATED
             )
-            HorizontalMovieListDisplay(movieInfo = viewState.topRatedInfo, onClickMoviePhoto)
-            Header(
+            MovieListLHG(movieInfo = viewState.topRatedInfo, onClickMoviePhoto)
+            MovieCollectionHeader(
                 header = "Upcoming",
-                onClickMovieCollection = onClickMovieCollection,
+                onClickMovieCollection = {onClickMovieCollection(MovieCollectionType.UPCOMING)},
                 collectionType = MovieCollectionType.UPCOMING
             )
-            HorizontalMovieListDisplay(movieInfo = viewState.upcomingInfo, onClickMoviePhoto)
+            MovieListLHG(movieInfo = viewState.upcomingInfo, onClickMoviePhoto)
 
         }
     }
@@ -286,17 +260,17 @@ fun RibbonText(title: String) {
 
 // TODO create a new RecentlyViewedMovies that will take the view state as a parameter, in its
 // own file
-@Composable
-private fun RecentlyViewedMovies(
-    recentViewState: RecentlyViewedViewState.Data,
-    onClickMoviePhoto: (Int) -> Unit
-) {
-    HorizontalMovieListDisplay(recentViewState.cards, onClickMoviePhoto)
+//@Composable
+//private fun RecentlyViewedMovies(
+//    recentViewState: RecentlyViewedViewState.Data,
+//    onClickMoviePhoto: (Int) -> Unit
+//) {
+//    HorizontalMovieListDisplay(recentViewState.cards, onClickMoviePhoto)
+//
+//}
 
-}
-
 @Composable
-private fun Header(
+private fun MovieCollectionHeader(
     header: String,
     onClickMovieCollection: (MovieCollectionType) -> Unit,
     collectionType: MovieCollectionType
@@ -308,32 +282,41 @@ private fun Header(
             .fillMaxWidth()
             .padding(16.dp, 16.dp, 16.dp, 6.dp),
     ) {
-        Text(
-            text = header,
-            modifier = Modifier
-                .padding(0.dp, 4.dp),
-            color = Color.Black,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 18.sp,
-        )
-        Text(
-            text = "SEE MORE",
-            modifier = Modifier
-                .clip(RoundedCornerShape(12.dp))
-                .padding(10.dp, 4.dp)
-                .clickable { onClickMovieCollection(collectionType) },
-            color = Color.Black,
-            fontFamily = FontFamily.Monospace,
-            letterSpacing = 0.sp,
-            fontWeight = FontWeight.SemiBold,
-            fontSize = 16.sp,
-        )
-    }
+        HeaderLabel(header)
+        SeeMoreButton { onClickMovieCollection(collectionType) }
 
+    }
+}
+@Composable
+private fun HeaderLabel(header: String){
+    Text(
+        text = header,
+        modifier = Modifier
+            .padding(0.dp, 4.dp),
+        color = Color.Black,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 18.sp,
+    )
 }
 
 @Composable
-private fun HorizontalMovieListDisplay(
+private fun SeeMoreButton(onSeeMoreClicked:() -> Unit){
+    Text(
+        text = "SEE MORE",
+        modifier = Modifier
+            .clip(RoundedCornerShape(12.dp))
+            .padding(10.dp, 4.dp)
+            .clickable { onSeeMoreClicked() },
+        color = Color.Black,
+        fontFamily = FontFamily.Monospace,
+        letterSpacing = 0.sp,
+        fontWeight = FontWeight.SemiBold,
+        fontSize = 16.sp,
+    )
+}
+
+@Composable
+private fun MovieListLHG(
     movieInfo: List<MovieCardInfoViewState>,
     onClickMoviePhoto: (Int) -> Unit
 ) {

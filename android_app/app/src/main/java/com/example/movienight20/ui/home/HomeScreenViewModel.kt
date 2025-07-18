@@ -7,7 +7,7 @@ import com.example.movienight20.domain.MovieInfoBasic
 import com.example.movienight20.domain.MoviesRepository
 import com.example.movienight20.domain.MoviesCollectionInfo
 import com.example.movienight20.ui.MovieCardInfoViewState
-import com.example.movienight20.ui.RecentlyViewedViewState
+import com.example.movienight20.ui.recently_viewed.RecentlyViewedViewState
 import com.example.movienight20.ui.movie_collection_type.MovieCollectionTypeViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -26,8 +26,7 @@ class HomeScreenViewModel @Inject constructor(
     private val mutableViewState = MutableStateFlow<HomeScreenViewState>(HomeScreenViewState.NONE)
     val viewState: StateFlow<HomeScreenViewState> = mutableViewState
 
-    private val _recentlyViewedViewState =
-        MutableStateFlow<RecentlyViewedViewState>(RecentlyViewedViewState.Loading)
+    private val _recentlyViewedViewState = MutableStateFlow<RecentlyViewedViewState>(RecentlyViewedViewState.Loading)
     val recentlyViewedViewState: StateFlow<RecentlyViewedViewState> = _recentlyViewedViewState
 
     private val _movieCollectionTypeViewState =
