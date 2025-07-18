@@ -1,14 +1,20 @@
 package com.example.movienight20.data
 
+import android.util.Log
+import android.webkit.ConsoleMessage.MessageLevel.LOG
 import com.example.movienight20.data.room.MovieScoutDatabase
-import com.example.movienight20.data.room.RemoteKeysEntity
+import com.example.movienight20.data.room.remote_keys.RemoteKeysEntity
 
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
 import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
-import com.example.movienight20.data.room.MovieInfoBasicEntity
+import com.example.movienight20.data.room.movie_collection_types.NowPlayingMoviesEntity
+import com.example.movienight20.data.room.movie_info_basic.MovieInfoBasicEntity
+import com.example.movienight20.data.room.movie_collection_types.PopularMoviesEntity
+import com.example.movienight20.data.room.movie_collection_types.TopRatedMoviesEntity
+import com.example.movienight20.data.room.movie_collection_types.UpcomingMoviesEntity
 import com.example.movienight20.ui.movie_collection_type.MovieCollectionType
 
 import retrofit2.HttpException
@@ -16,16 +22,19 @@ import java.io.IOException
 import java.util.concurrent.TimeUnit
 
 @OptIn(ExperimentalPagingApi::class)
-class MoviesRemoteMediator (
+class MoviesRemoteMediator(
     private val moviesApiService: MovieDatabaseNetworkService,
     private val moviesDatabase: MovieScoutDatabase,
     private val collectionType: MovieCollectionType
-): RemoteMediator<Int, MovieInfoBasicEntity>() {
+) : RemoteMediator<Int, MovieInfoBasicEntity>() {
 
     override suspend fun initialize(): InitializeAction {
-        val cacheTimeout = TimeUnit.MILLISECONDS.convert(1, TimeUnit.HOURS)
-
-        return if (System.currentTimeMillis() - moviesDatabase.getRemoteKeysDao().getCreationTime() < cacheTimeout) {
+        val cacheTimeout = TimeUnit.MILLISECONDS.convert(1, TimeUnit.SECONDS)
+        Log.v("SAA", "initialize() ${collectionType.name}")
+        return if (
+            System.currentTimeMillis() - moviesDatabase.getRemoteKeysDao()
+                .getCreationTime(collectionType.name) < cacheTimeout
+        ) {
             InitializeAction.SKIP_INITIAL_REFRESH
         } else {
             InitializeAction.LAUNCH_INITIAL_REFRESH
@@ -36,7 +45,10 @@ class MoviesRemoteMediator (
         return state.pages.lastOrNull {
             it.data.isNotEmpty()
         }?.data?.lastOrNull()?.let { movie ->
-            moviesDatabase.getRemoteKeysDao().getRemoteKeyByMovieID(movie.remoteId)
+            Log.v("SAA", "getRemoteKeyForLastItem ${collectionType.name}")
+            moviesDatabase.getRemoteKeysDao()
+                .getRemoteKeyByMovieID(movie.remoteId, collectionType.name)
+
         }
     }
 
@@ -44,14 +56,19 @@ class MoviesRemoteMediator (
         return state.pages.firstOrNull {
             it.data.isNotEmpty()
         }?.data?.firstOrNull()?.let { movie ->
-            moviesDatabase.getRemoteKeysDao().getRemoteKeyByMovieID(movie.remoteId)
+            Log.v("SAA", "getRemoteKeyForFirstItem ${collectionType.name}")
+            moviesDatabase.getRemoteKeysDao().getRemoteKeyByMovieID(
+                movie.remoteId,
+                collectionType.name
+            )
         }
     }
 
     private suspend fun getRemoteKeyClosestToCurrentPosition(state: PagingState<Int, MovieInfoBasicEntity>): RemoteKeysEntity? {
         return state.anchorPosition?.let { position ->
             state.closestItemToPosition(position)?.remoteId?.let { id ->
-                moviesDatabase.getRemoteKeysDao().getRemoteKeyByMovieID(id)
+                Log.v("SAA", "getRemoteKeyClosestToCurrentPosition ${collectionType.name}")
+                moviesDatabase.getRemoteKeysDao().getRemoteKeyByMovieID(id, collectionType.name)
             }
         }
     }
@@ -65,16 +82,37 @@ class MoviesRemoteMediator (
                 val remoteKeys = getRemoteKeyClosestToCurrentPosition(state)
                 remoteKeys?.nextKey?.minus(1) ?: 1
             }
+
             LoadType.PREPEND -> {
-                val remoteKeys = getRemoteKeyForFirstItem(state)
-                val prevKey = remoteKeys?.prevKey
-                prevKey ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                return MediatorResult.Success(endOfPaginationReached = true)
+//                Log.v("SAA", "prepend")
+//                val remoteKeys = getRemoteKeyForFirstItem(state)
+//                val prevKey = remoteKeys?.prevKey
+//                prevKey
+//                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
             }
+
             LoadType.APPEND -> {
+//                val lastItem = state.lastItemOrNull()
+//
+//                // You must explicitly check if the last item is null when
+//                // appending, since passing null to networkService is only
+//                // valid for initial load. If lastItem is null it means no
+//                // items were loaded after the initial REFRESH and there are
+//                // no more items to load.
+//                if (lastItem == null) {
+//                    return MediatorResult.Success(
+//                        endOfPaginationReached = true
+//                    )
+//                }
+//
+//                lastItem
+
                 val remoteKeys = getRemoteKeyForLastItem(state)
 
                 val nextKey = remoteKeys?.nextKey
-                nextKey ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
+                nextKey
+                    ?: return MediatorResult.Success(endOfPaginationReached = remoteKeys != null)
             }
         }
 
@@ -92,8 +130,7 @@ class MoviesRemoteMediator (
                     remoteId = data.id!!,
                     name = data.title.toString(),
                     posterPath = "http://image.tmdb.org/t/p/w1280${data.posterPath}",
-                    backdropPath = "http://image.tmdb.org/t/p/w1280${data.backdropPath}",
-                    localId = 0,
+                    backdropPath = "http://image.tmdb.org/t/p/w1280${data.backdropPath}"
                 )
 
             }
@@ -102,17 +139,88 @@ class MoviesRemoteMediator (
 
             moviesDatabase.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    moviesDatabase.getRemoteKeysDao().clearRemoteKeys()
+                    Log.v("SAA", "REFRESH " + collectionType.name)
+                    moviesDatabase.getRemoteKeysDao().clearRemoteKeys(collectionType.name)
+                    val ids: List<Int>
+                    when (collectionType) {
+                        MovieCollectionType.POPULAR -> {
+                            moviesDatabase.getPopularMoviesDao().clearMovies()
+                            ids = moviesDatabase.getPopularMoviesDao().getMovieIds()
+                        }
+
+                        MovieCollectionType.NOW_PLAYING -> {
+                            moviesDatabase.getNowPlayingMoviesDao().clearMovies()
+                            ids = moviesDatabase.getNowPlayingMoviesDao().getMovieIds()
+                        }
+
+                        MovieCollectionType.TOP_RATED -> {
+                            moviesDatabase.getTopRatedMoviesDao().clearMovies()
+                            ids = moviesDatabase.getTopRatedMoviesDao().getMovieIds()
+                        }
+
+                        MovieCollectionType.UPCOMING -> {
+                            moviesDatabase.getUpcomingMoviesDao().clearMovies()
+                            ids = moviesDatabase.getUpcomingMoviesDao().getMovieIds()
+                        }
+                    }
+//                    moviesDatabase.movieInfoBasicDao().deleteMovies(ids)
+
                 }
                 val prevKey = if (page > 1) page - 1 else null
                 val nextKey = if (endOfPaginationReached == true) null else page + 1
                 val remoteKeyEntities = movies.map {
-                    RemoteKeysEntity(movieID = it.id, prevKey = prevKey, currentPage = page, nextKey = nextKey)
+                    RemoteKeysEntity(
+                        movieID = it.id!!,
+                        prevKey = prevKey,
+                        currentPage = page,
+                        nextKey = nextKey,
+                        collectionType = collectionType.name
+                    )
                 }
 
+                Log.v("SAA", "insertAll " + collectionType.name)
+                Log.v("SAA", "remoteKeyEntities count: " + remoteKeyEntities.size)
+                Log.v("SAA", "moviesResult count: " + moviesResult.size)
                 moviesDatabase.getRemoteKeysDao().insertAll(remoteKeyEntities)
-                moviesDatabase.movieInfoBasicDao().insertAllPopularMovies(moviesResult)// movies?.onEachIndexed { _, movie -> movie.page = page }
+                moviesDatabase.movieInfoBasicDao().insertAllPopularMovies(moviesResult)
+
+                when (collectionType) {
+                    MovieCollectionType.POPULAR -> moviesDatabase.getPopularMoviesDao()
+                        .addMovies(movies.map {
+                            PopularMoviesEntity(
+                                localId = 0,
+                                remoteId = it.id!!
+                            )
+                        })
+
+                    MovieCollectionType.NOW_PLAYING -> moviesDatabase.getNowPlayingMoviesDao()
+                        .addMovies(movies.map {
+                            NowPlayingMoviesEntity(
+                                localId = 0,
+                                remoteId = it.id!!
+                            )
+                        })
+
+                    MovieCollectionType.TOP_RATED -> moviesDatabase.getTopRatedMoviesDao()
+                        .addMovies(movies.map {
+                            TopRatedMoviesEntity(
+                                localId = 0,
+                                remoteId = it.id!!
+                            )
+                        })
+
+                    MovieCollectionType.UPCOMING -> moviesDatabase.getUpcomingMoviesDao()
+                        .addMovies(movies.map {
+                            UpcomingMoviesEntity(
+                                localId = 0,
+                                remoteId = it.id!!
+                            )
+                        })
+                }
+
+
             }
+            Log.v("SAA", "success")
             return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached == true)
         } catch (error: IOException) {
             return MediatorResult.Error(error)

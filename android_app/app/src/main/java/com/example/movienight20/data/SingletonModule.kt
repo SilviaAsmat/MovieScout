@@ -2,9 +2,9 @@
 //
 //import android.content.Context
 //import androidx.room.Room
-//import com.example.movienight20.data.room.MovieInfoBasicDao
+//import com.example.movienight20.data.room.movie_info_basic.MovieInfoBasicDao
 //import com.example.movienight20.data.room.MovieScoutDatabase
-//import com.example.movienight20.data.room.RemoteKeysDao
+//import com.example.movienight20.data.room.remote_keys.RemoteKeysDao
 //import dagger.Module
 //import dagger.Provides
 //import dagger.hilt.InstallIn

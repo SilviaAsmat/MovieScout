@@ -1,4 +1,4 @@
-package com.example.movienight20.data.room
+package com.example.movienight20.data.room.recently_viewed
 
 import androidx.room.Dao
 import androidx.room.Insert

@@ -1,4 +1,4 @@
-package com.example.movienight20.data.room
+package com.example.movienight20.data.room.movie_info_basic
 
 import androidx.room.Dao
 import androidx.room.Insert
@@ -19,6 +19,9 @@ interface MovieInfoBasicDao {
     @Insert(onConflict = 1)
     fun insertAllPopularMovies(movies: List<MovieInfoBasicEntity>)
 
-    @Query("Select * From movie_info_basic")
+    @Query("SELECT * FROM movie_info_basic")
     fun getMoviesPagingSource(): PagingSource<Int, MovieInfoBasicEntity>
+
+    @Query("DELETE FROM movie_info_basic WHERE remote_id IN (:id)")
+    fun deleteMovies(id: List<Int>)
 }

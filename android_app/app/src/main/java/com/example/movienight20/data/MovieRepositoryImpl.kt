@@ -6,9 +6,9 @@ import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import com.example.movienight20.data.network_response.MoviesCollectionsNetworkResponse
-import com.example.movienight20.data.room.MovieInfoBasicEntity
+import com.example.movienight20.data.room.movie_info_basic.MovieInfoBasicEntity
 import com.example.movienight20.data.room.MovieScoutDatabase
-import com.example.movienight20.data.room.RecentMovieIdEntity
+import com.example.movienight20.data.room.recently_viewed.RecentMovieIdEntity
 import com.example.movienight20.domain.ActorRoleMovie
 import com.example.movienight20.domain.Cast
 import com.example.movienight20.domain.CrewRoleMovie
@@ -159,8 +159,7 @@ class MovieRepositoryImpl @Inject constructor(
                 remoteId = movie.id,
                 posterPath = movie.posterPath,
                 name = movie.title,
-                backdropPath = movie.backdropPath,
-                localId = 0
+                backdropPath = movie.backdropPath
             )
 
         movieScoutDatabase.recentMovieIdsDao().insertMovieId(recentMovieIdEntity)
@@ -188,7 +187,12 @@ class MovieRepositoryImpl @Inject constructor(
                 enablePlaceholders = false),
             remoteMediator = MoviesRemoteMediator(networkService, movieScoutDatabase, collectionType = movieCollectionType),
             pagingSourceFactory = {
-                movieScoutDatabase.movieInfoBasicDao().getMoviesPagingSource()
+                when (movieCollectionType) {
+                    MovieCollectionType.POPULAR -> movieScoutDatabase.getPopularMoviesDao().getPopularMovies()
+                    MovieCollectionType.NOW_PLAYING -> movieScoutDatabase.getNowPlayingMoviesDao().getNowPlayingMovies()
+                    MovieCollectionType.TOP_RATED -> movieScoutDatabase.getTopRatedMoviesDao().getTopRatedMovies()
+                    MovieCollectionType.UPCOMING -> movieScoutDatabase.getUpcomingMoviesDao().getUpcomingMovies()
+                }
             }
         ).flow
     }

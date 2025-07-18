@@ -5,10 +5,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.map
-import com.example.movienight20.data.room.MovieInfoBasicEntity
+import com.example.movienight20.data.room.movie_info_basic.MovieInfoBasicEntity
 import com.example.movienight20.domain.MoviesRepository
 import com.example.movienight20.ui.TopAppBarViewState
-import com.example.movienight20.ui.movie_collection_type.MovieCollectionType
 import com.example.movienight20.ui.movie_collection_type.MovieCollectionTypeViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
@@ -53,43 +52,11 @@ class MoviesListScreenViewModel @Inject constructor(
     }
 
     private fun getMoviesPagination(): Flow<PagingData<MovieInfoBasicEntity>> {
-        val savedStateValue = savedStateHandle.get<String>("collectionType") // get collection type from savedStateValue
-        val collectionType = MovieCollectionTypeViewState().getCollectionType(savedStateValue!!)// if needed map from string to MovieCollectionType
+        val savedStateValue =
+            savedStateHandle.get<String>("collectionType") // get collection type from savedStateValue
+        val collectionType =
+            MovieCollectionTypeViewState().getCollectionType(savedStateValue!!)// if needed map from string to MovieCollectionType
         return movieRepo.moviesPagination(collectionType)
-//        return when (collectionType) {
-//            MovieCollectionType.POPULAR -> movieRepo.moviesPagination()
-//            MovieCollectionType.NOW_PLAYING -> movieRepo.moviesPagination()
-//            MovieCollectionType.TOP_RATED -> movieRepo.moviesPagination()
-//            MovieCollectionType.UPCOMING -> movieRepo.moviesPagination()
-//        }
     }
-
-    // other init to be used
-//    fun initViewModel(collectionType: MovieCollectionType) {
-//        viewModelScope.launch {
-//            val result = when (collectionType) {
-//                MovieCollectionType.POPULAR -> movieRepo.getPopularMovies()
-//                MovieCollectionType.NOW_PLAYING -> movieRepo.getNowPlaying()
-//                MovieCollectionType.TOP_RATED -> movieRepo.getTopRated()
-//                MovieCollectionType.UPCOMING -> movieRepo.getUpcomingMovies()
-//            }
-//
-//            _topAppBarViewState.emit(TopAppBarViewState(collectionType))
-//
-//            val viewStates = result.map {
-//                val releaseYear = it.releaseDate.substringBefore("-")
-//                val url = "http://image.tmdb.org/t/p/" + "w1280" + it.posterPath
-//                MovieListItemViewState(
-//                    id = it.id,
-//                    title = it.title,
-//                    url = url,
-//                    year = releaseYear,
-//                    rating = it.rating
-//                )
-//            }
-//            mutableViewState.emit(viewStates)
-//        }
-//
-//    }
 
 }
