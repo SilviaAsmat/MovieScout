@@ -30,9 +30,7 @@ import com.example.movienight20.ui.theme.MovieNight20Theme
 fun MoviesListScreen(
     onClickMovieListItem: (Int) -> Unit,
     viewModel: MoviesListScreenViewModel,
-    navController: NavController
 ) {
-    val viewStates by viewModel.viewState.collectAsState()
     val lazyPagingItems = viewModel.pagedMovies.collectAsLazyPagingItems()
     val topAppBarViewState by viewModel.topAppBarViewState.collectAsState()
     Scaffold(

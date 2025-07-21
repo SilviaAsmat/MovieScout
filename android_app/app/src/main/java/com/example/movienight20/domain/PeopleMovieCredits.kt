@@ -5,19 +5,19 @@ data class PeopleMovieCredits (
     val crewRoleMovie: List<CrewRoleMovie>
 )
 data class ActorRoleMovie (
-    val id: Int?,
-    val posterPath: String?,
-    val title: String?,
-    val releaseDate: String?,
-    val voteAvg: String?
+    val id: Int,
+    val posterPath: String,
+    val title: String,
+    val releaseDate: String,
+    val voteAvg: String
 )
 
 data class CrewRoleMovie (
-    val id: Int?,
-    val posterPath: String?,
-    val title: String?,
-    val releaseDate: String?,
-    val voteAvg: String?
+    val id: Int,
+    val posterPath: String,
+    val title: String,
+    val releaseDate: String,
+    val voteAvg: String
 )
 
 

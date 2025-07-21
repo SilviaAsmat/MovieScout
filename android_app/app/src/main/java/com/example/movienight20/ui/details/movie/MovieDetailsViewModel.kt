@@ -25,7 +25,7 @@ class MovieDetailsViewModel @Inject constructor(
         // TODO fill it in here once you inject ID
     }
 
-    fun initWithID(id: Int){
+    fun initWithID(id: Int){ // TODO future feature:pass in id via savedStateHandle
         viewModelScope.launch(Dispatchers.IO) {
             val detailsResult = movieRepo.getMovieDetails(id)
             val creditsResult = movieRepo.getMovieCredits(id)
@@ -44,7 +44,7 @@ class MovieDetailsViewModel @Inject constructor(
                 cast = creditsResult.cast
             )
             mutableViewState.emit(newState)
-            movieRepo.storeDataInCache(detailsResult)
+            movieRepo.storeRecentlyViewed(detailsResult)
         }
     }
 }

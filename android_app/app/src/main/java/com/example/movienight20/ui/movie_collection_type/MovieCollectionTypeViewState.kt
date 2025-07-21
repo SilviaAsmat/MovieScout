@@ -1,7 +1,7 @@
 package com.example.movienight20.ui.movie_collection_type
 
-class MovieCollectionTypeViewState(
-) {
+// TODO make immutable annotation, delete?
+class MovieCollectionTypeViewState() {
     fun getCollectionType(modelName: String): MovieCollectionType {
         val collectionType = when(modelName) {
             MovieCollectionType.POPULAR.name -> MovieCollectionType.POPULAR

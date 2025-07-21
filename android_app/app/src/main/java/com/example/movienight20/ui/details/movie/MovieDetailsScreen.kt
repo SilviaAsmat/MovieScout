@@ -269,7 +269,7 @@ private fun MovieCast(
                     )
             }
         }
-    }// End of LHG
+    }
 }
 
 

@@ -1,7 +1,7 @@
 package com.example.movienight20.domain
 
 
-data class MoviesCollectionInfo (
+data class MovieCollectionItem (
     val id: Int,
     val title: String,
     val backdropPath: String,

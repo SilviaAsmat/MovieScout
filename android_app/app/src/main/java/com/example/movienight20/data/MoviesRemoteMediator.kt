@@ -105,7 +105,7 @@ class MoviesRemoteMediator(
             val moviesResult = movies!!.map { data ->
                 MovieInfoBasicEntity(
                     remoteId = data.id!!,
-                    name = data.title.toString(),
+                    name = data.title ?: "",
                     posterPath = "http://image.tmdb.org/t/p/w1280${data.posterPath}",
                     backdropPath = "http://image.tmdb.org/t/p/w1280${data.backdropPath}"
                 )

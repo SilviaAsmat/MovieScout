@@ -8,7 +8,6 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
 import androidx.hilt.navigation.compose.hiltViewModel
-
 import com.example.movienight20.ui.details.movie.MovieDetailsScreen
 import com.example.movienight20.ui.details.people.PeopleDetailsScreen
 import com.example.movienight20.ui.details.people.PeopleDetailsViewModel
@@ -43,7 +42,6 @@ fun MainNavHost(
         modifier = modifier
     ) {
         composable<MainScreen> {
-            val args = it.toRoute<MainScreen>()
             val viewModel: HomeScreenViewModel = hiltViewModel()
             HomeScreen(
                 viewModel = viewModel,
@@ -55,14 +53,12 @@ fun MainNavHost(
             )
         }
         composable<MoviesList> {
-            val args = it.toRoute<MoviesList>()
             val viewModel: MoviesListScreenViewModel = hiltViewModel()
             MoviesListScreen(
                 onClickMovieListItem = { id: Int ->
                     navController.navigate(MovieDetails(id))
                 },
                 viewModel = viewModel,
-                navController = navController
             )
         }
 

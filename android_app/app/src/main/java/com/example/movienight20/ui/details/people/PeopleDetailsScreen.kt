@@ -170,7 +170,7 @@ private fun CastMovies(movies: List<ActorRoleMovie>, modifier: Modifier, onClick
 
                 )
             }// End of Column
-        }}// End of LHG
+        }}
 }
 
 

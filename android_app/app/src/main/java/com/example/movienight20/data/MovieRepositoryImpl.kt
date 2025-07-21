@@ -15,7 +15,7 @@ import com.example.movienight20.domain.CrewRoleMovie
 import com.example.movienight20.domain.Genre
 import com.example.movienight20.domain.MovieCredits
 import com.example.movienight20.domain.MovieDetails
-import com.example.movienight20.domain.MoviesCollectionInfo
+import com.example.movienight20.domain.MovieCollectionItem
 import com.example.movienight20.domain.MoviesRepository
 import com.example.movienight20.domain.PeopleDetails
 import com.example.movienight20.domain.PeopleMovieCredits
@@ -34,37 +34,38 @@ class MovieRepositoryImpl @Inject constructor(
     private val movieScoutDatabase: MovieScoutDatabase
 ) : MoviesRepository {
 
-    override suspend fun getPopularMovies(): List<MoviesCollectionInfo> {
-        val networkResponse = networkService.getPopularMovies(page = 1)
+    override suspend fun getPopularMovies(): List<MovieCollectionItem> {
+        val networkResponse = networkService.getPopularMovies(page = FIRST_PAGE)
         return mapMovieCollectionNetworkResponse(networkResponse)
     }
 
-    override suspend fun getNowPlaying(): List<MoviesCollectionInfo> {
-        val networkResponse = networkService.getNowPlaying(page = 1)
+    override suspend fun getNowPlaying(): List<MovieCollectionItem> {
+        val networkResponse = networkService.getNowPlaying(page = FIRST_PAGE)
         return mapMovieCollectionNetworkResponse(networkResponse)
     }
 
-    override suspend fun getUpcomingMovies(): List<MoviesCollectionInfo> {
-        val networkResponse = networkService.getUpcomingMovies(page = 1)
+    override suspend fun getUpcomingMovies(): List<MovieCollectionItem> {
+        val networkResponse = networkService.getUpcomingMovies(page = FIRST_PAGE)
         return mapMovieCollectionNetworkResponse(networkResponse)
     }
 
-    override suspend fun getTopRated(): List<MoviesCollectionInfo> {
-        val networkResponse = networkService.getTopRatedMovies(page = 1)
+    override suspend fun getTopRated(): List<MovieCollectionItem> {
+        val networkResponse = networkService.getTopRatedMovies(page = FIRST_PAGE)
         return mapMovieCollectionNetworkResponse(networkResponse)
     }
 
-    private fun mapMovieCollectionNetworkResponse(networkResponse: Response<MoviesCollectionsNetworkResponse>): List<MoviesCollectionInfo> {
+    private fun mapMovieCollectionNetworkResponse(
+        networkResponse: Response<MoviesCollectionsNetworkResponse>,
+    ): List<MovieCollectionItem> {
         val results = networkResponse.body()?.results
         val mapped = results!!.map {
-            Log.v(TAG, it.toString())
-            MoviesCollectionInfo(
+            MovieCollectionItem(
                 id = it.id!!,
-                title = it.title!!,
-                backdropPath = it.backdropPath.toString(),
-                posterPath = it.posterPath!!,
-                releaseDate = it.releaseDate!!,
-                rating = it.voteAverage!!.toString()
+                title = it.title ?: "",
+                backdropPath = it.backdropPath ?: "",
+                posterPath = it.posterPath ?: "",
+                releaseDate = it.releaseDate ?: "",
+                rating = (it.voteAverage ?: "").toString()
             )
         }
         return mapped
@@ -75,38 +76,34 @@ class MovieRepositoryImpl @Inject constructor(
         val results = networkResponse.body()
 
         return MovieDetails(
-            id = results!!.id!!,
-            title = results.title!!,
-            backdropPath = results.backdropPath!!, //TODO: Default state for missing/null info
-            overview = results.overview!!,
-            runtime = results.runtime!!,
-            status = results.status!!,
+            id = results!!.id ?: 0,
+            title = results.title ?: "",
+            backdropPath = results.backdropPath ?: "",
+            overview = results.overview ?: "",
+            runtime = results.runtime ?: 0,
+            status = results.status ?: "",
             genres = results.genres!!.map {
-                Genre(id = it.id!!, title = it.title!!)
+                Genre(id = it.id ?: 0, title = it.title ?: "")
             },
-            releaseDate = results.releaseDate!!,
-            voteAvg = results.voteAvg!!,
-            voteCount = results.voteCount!!,
-            tagline = results.tagline!!,
-            posterPath = results.posterPath!!,
+            releaseDate = results.releaseDate ?: "",
+            voteAvg = results.voteAvg ?: 0,
+            voteCount = results.voteCount ?: 0,
+            tagline = results.tagline ?: "",
+            posterPath = results.posterPath ?: "",
         )
-    }
-
-    private companion object {
-        private const val TAG = "MovieRepositoryImpl"
     }
 
     override suspend fun getMovieCredits(movieId: Int): MovieCredits {
         val networkResponse = networkService.getMovieCredits(movieId = movieId)
         val results = networkResponse.body()
         return MovieCredits(
-            movieId = results!!.movieId!!,
+            movieId = results!!.movieId ?: 0,
             cast = results.cast!!.map {
                 Cast(
-                    castId = it.castId!!,
-                    name = it.name,
-                    picturePath = it.picturePath,
-                    character = it.character
+                    castId = it.castId ?: 0,
+                    name = it.name ?: "",
+                    picturePath = it.picturePath ?: "",
+                    character = it.character ?: ""
                 )
             }
         )
@@ -118,20 +115,20 @@ class MovieRepositoryImpl @Inject constructor(
         return PeopleMovieCredits(
             actorRoleMovie = results!!.actorRoleMovie.map {
                 ActorRoleMovie(
-                    id = it.id,
-                    posterPath = it.posterPath,
-                    title = it.title,
-                    releaseDate = it.releaseDate,
-                    voteAvg = it.voteAvg
+                    id = it.id ?: 0,
+                    posterPath = it.posterPath ?: "",
+                    title = it.title ?: "",
+                    releaseDate = it.releaseDate ?: "",
+                    voteAvg = it.voteAvg ?: ""
                 )
             },
             crewRoleMovie = results.crewRoleMovie.map {
                 CrewRoleMovie(
-                    id = it.id,
-                    posterPath = it.posterPath,
-                    title = it.title,
-                    releaseDate = it.releaseDate,
-                    voteAvg = it.voteAvg
+                    id = it.id ?: 0,
+                    posterPath = it.posterPath ?: "",
+                    title = it.title ?: "",
+                    releaseDate = it.releaseDate ?: "",
+                    voteAvg = it.voteAvg ?: ""
                 )
             }
         )
@@ -141,18 +138,18 @@ class MovieRepositoryImpl @Inject constructor(
         val networkResponse = networkService.getPeopleDetails(personId = personId)
         val results = networkResponse.body()
         return PeopleDetails(
-            bio = results!!.bio.toString(),
-            birthday = results.birthday.toString(),
-            deathday = results.deathday.toString(),
-            name = results.name.toString(),
-            birthPlace = results.birthPlace.toString(),
-            profilePath = results.profilePath.toString()
+            bio = results!!.bio ?: "",
+            birthday = results.birthday ?: "",
+            deathday = results.deathday ?: "",
+            name = results.name ?: "",
+            birthPlace = results.birthPlace ?: "",
+            profilePath = results.profilePath ?: ""
         )
     }
 
     /**** database functions ****/
 
-    override suspend fun storeDataInCache(movie: MovieDetails) {
+    override suspend fun storeRecentlyViewed(movie: MovieDetails) {
         val recentMovieIdEntity = RecentMovieIdEntity(id = movie.id)
         val movieInfoBasic =
             MovieInfoBasicEntity(
@@ -184,19 +181,32 @@ class MovieRepositoryImpl @Inject constructor(
         return Pager(
             config = PagingConfig(
                 pageSize = 20,
-                enablePlaceholders = false),
-            remoteMediator = MoviesRemoteMediator(networkService, movieScoutDatabase, collectionType = movieCollectionType),
+                enablePlaceholders = false
+            ),
+            remoteMediator = MoviesRemoteMediator(
+                networkService,
+                movieScoutDatabase,
+                collectionType = movieCollectionType
+            ),
             pagingSourceFactory = {
                 when (movieCollectionType) {
-                    MovieCollectionType.POPULAR -> movieScoutDatabase.getPopularMoviesDao().getPopularMovies()
-                    MovieCollectionType.NOW_PLAYING -> movieScoutDatabase.getNowPlayingMoviesDao().getNowPlayingMovies()
-                    MovieCollectionType.TOP_RATED -> movieScoutDatabase.getTopRatedMoviesDao().getTopRatedMovies()
-                    MovieCollectionType.UPCOMING -> movieScoutDatabase.getUpcomingMoviesDao().getUpcomingMovies()
+                    MovieCollectionType.POPULAR -> movieScoutDatabase.getPopularMoviesDao()
+                        .getPopularMovies()
+
+                    MovieCollectionType.NOW_PLAYING -> movieScoutDatabase.getNowPlayingMoviesDao()
+                        .getNowPlayingMovies()
+
+                    MovieCollectionType.TOP_RATED -> movieScoutDatabase.getTopRatedMoviesDao()
+                        .getTopRatedMovies()
+
+                    MovieCollectionType.UPCOMING -> movieScoutDatabase.getUpcomingMoviesDao()
+                        .getUpcomingMovies()
                 }
             }
         ).flow
     }
 
-
-
+    private companion object {
+        private const val FIRST_PAGE = 1
+    }
 }

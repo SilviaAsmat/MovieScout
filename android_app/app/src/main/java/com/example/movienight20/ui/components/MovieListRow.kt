@@ -1,4 +1,4 @@
-package com.example.movienight20.ui.recently_viewed
+package com.example.movienight20.ui.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -27,32 +27,7 @@ import coil.request.ImageRequest
 import com.example.movienight20.ui.MovieCardInfoViewState
 
 @Composable
-fun RecentlyViewedMoviesHLG(recents: RecentlyViewedViewState, onClickMoviePhoto: (Int) -> Unit) {
-    Text(
-        text = "Recently Viewed",
-    )
-    when (recents) {
-        is RecentlyViewedViewState.Data -> {
-            MovieListLHG(
-                movieInfo = recents.cards,
-                onClickMoviePhoto = onClickMoviePhoto
-            )
-        }
-
-        is RecentlyViewedViewState.Empty -> {
-            // TODO create empty message composable
-//                    val emptyMovieInfo = MoviesCollectionInfo(pass in empty info)
-//                    HorizontalMovieListDisplay()
-        }
-
-        is RecentlyViewedViewState.Loading -> {
-            // TODO create loading state for section
-        }
-    }
-}
-
-@Composable
-private fun MovieListLHG(
+fun MovieListRow(
     movieInfo: List<MovieCardInfoViewState>,
     onClickMoviePhoto: (Int) -> Unit
 ) {
@@ -89,5 +64,5 @@ private fun MovieListLHG(
                 )
             }// End of Column
         }
-    }// End of LHG
+    }
 }

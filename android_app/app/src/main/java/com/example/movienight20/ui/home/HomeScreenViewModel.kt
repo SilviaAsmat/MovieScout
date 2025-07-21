@@ -1,14 +1,12 @@
 package com.example.movienight20.ui.home
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movienight20.domain.MovieInfoBasic
 import com.example.movienight20.domain.MoviesRepository
-import com.example.movienight20.domain.MoviesCollectionInfo
+import com.example.movienight20.domain.MovieCollectionItem
 import com.example.movienight20.ui.MovieCardInfoViewState
 import com.example.movienight20.ui.recently_viewed.RecentlyViewedViewState
-import com.example.movienight20.ui.movie_collection_type.MovieCollectionTypeViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,20 +24,9 @@ class HomeScreenViewModel @Inject constructor(
     private val mutableViewState = MutableStateFlow<HomeScreenViewState>(HomeScreenViewState.NONE)
     val viewState: StateFlow<HomeScreenViewState> = mutableViewState
 
-    private val _recentlyViewedViewState = MutableStateFlow<RecentlyViewedViewState>(RecentlyViewedViewState.Loading)
+    private val _recentlyViewedViewState =
+        MutableStateFlow<RecentlyViewedViewState>(RecentlyViewedViewState.Loading)
     val recentlyViewedViewState: StateFlow<RecentlyViewedViewState> = _recentlyViewedViewState
-
-    private val _movieCollectionTypeViewState =
-        MutableStateFlow<MovieCollectionTypeViewState>(MovieCollectionTypeViewState.NONE)
-    val movieCollectionTypeViewState: StateFlow<MovieCollectionTypeViewState> =
-        _movieCollectionTypeViewState
-
-    private val _movieCardInfoViewState =
-        MutableStateFlow<MovieCardInfoViewState>(MovieCardInfoViewState.NONE)
-    val movieCardInfoViewState: StateFlow<MovieCardInfoViewState> = _movieCardInfoViewState
-
-
-
 
     init {
         viewModelScope.launch(Dispatchers.IO) {
@@ -49,7 +36,6 @@ class HomeScreenViewModel @Inject constructor(
                 updateRecentsViewState(recentlyViewed)
             }
         }
-
     }
 
     private suspend fun fetchAndUpdateViewState() {
@@ -62,19 +48,22 @@ class HomeScreenViewModel @Inject constructor(
         val upcomingState = mapMovieCollection(upcomingResult)
         val topRatedState = mapMovieCollection(topRatedResult)
 
-        val viewState =
-            HomeScreenViewState(popMoviesInfo = popState, nowPlayingMoviesInfo = nowPlayingState,
-                upcomingInfo = upcomingState, topRatedInfo = topRatedState)
+        val viewState = HomeScreenViewState(
+            popMoviesInfo = popState,
+            nowPlayingMoviesInfo = nowPlayingState,
+            upcomingInfo = upcomingState,
+            topRatedInfo = topRatedState,
+        )
 
         mutableViewState.update { viewState }
     }
 
-    private fun mapMovieCollection(result: List<MoviesCollectionInfo>): List<MovieCardInfoViewState> {
+    private fun mapMovieCollection(result: List<MovieCollectionItem>): List<MovieCardInfoViewState> {
         return result.map {
             MovieCardInfoViewState(
                 id = it.id,
                 title = it.title,
-                posterPath = "http://image.tmdb.org/t/p/" + "w1280" + it.posterPath,
+                posterPath = "http://image.tmdb.org/t/p/" + "w1280" + it.posterPath, // TODO move url creation logic to a private function
                 backdropPath = "http://image.tmdb.org/t/p/" + "w1280" + it.backdropPath
             )
         }

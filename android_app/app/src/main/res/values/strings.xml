@@ -1,3 +1,12 @@
 <resources>
+    <!--    <string name=""></string>-->
     <string name="app_name">MovieNight2.0</string>
+    <string name="popular_movies_row_header">Popular</string>
+    <string name="now_playing_movies_row_header">Now Playing</string>
+    <string name="top_rated_movies_row_header">Top Rated</string>
+    <string name="recently_viewed_row_header">Recently Viewed</string>
+    <string name="upcoming_movies_row_header">Upcoming</string>
+    <string name="home_screen_top_app_bar">Movie Scout</string>
+    <string name="see_more_button">SEE MORE</string>
+
 </resources>

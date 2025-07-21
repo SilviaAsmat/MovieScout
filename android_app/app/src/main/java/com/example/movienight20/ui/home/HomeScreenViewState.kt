@@ -1,7 +1,6 @@
 package com.example.movienight20.ui.home
 
 import androidx.compose.runtime.Immutable
-import com.example.movienight20.domain.MoviesCollectionInfo
 import com.example.movienight20.ui.MovieCardInfoViewState
 
 @Immutable
