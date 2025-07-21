@@ -1,6 +1,8 @@
 package com.example.movienight20.ui.movie_list
 
-// TODO add immutable annotation
+import androidx.compose.runtime.Immutable
+
+@Immutable
 data class MovieListItemViewState (
     val id: Int,
     val title: String,

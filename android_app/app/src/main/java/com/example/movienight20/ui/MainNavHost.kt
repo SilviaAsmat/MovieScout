@@ -62,12 +62,9 @@ fun MainNavHost(
             )
         }
 
-        composable<MovieDetails> { backStackEntry ->
-            val movieDetails: MovieDetails = backStackEntry.toRoute()
+        composable<MovieDetails> {
             val viewModel: MovieDetailsViewModel = hiltViewModel()
-            LaunchedEffect(Unit) {
-                viewModel.initWithID(movieDetails.id)
-            }
+            LaunchedEffect(Unit) {}
             MovieDetailsScreen(
                 onClickMovieListItem = {},
                 viewModel = viewModel,

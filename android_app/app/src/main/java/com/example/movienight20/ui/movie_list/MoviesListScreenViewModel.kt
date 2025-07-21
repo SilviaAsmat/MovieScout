@@ -28,7 +28,6 @@ class MoviesListScreenViewModel @Inject constructor(
     private val _topAppBarViewState = MutableStateFlow<TopAppBarViewState>(TopAppBarViewState.Companion.NONE)
     val topAppBarViewState: StateFlow<TopAppBarViewState> = _topAppBarViewState
 
-    // TODO use popMovies in composable
     val pagedMovies = getMoviesPagination().map { pagingData ->
         pagingData.map { movie ->
             val releaseYear = ""
@@ -46,17 +45,16 @@ class MoviesListScreenViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             val savedStateValue = savedStateHandle.get<String>("collectionType")
-            val collectionType = MovieCollectionTypeViewState().getCollectionType(savedStateValue!!) // if needed map from string to MovieCollectionType
+            val collectionType = MovieCollectionTypeViewState().getCollectionType(savedStateValue!!)
             _topAppBarViewState.emit(TopAppBarViewState(collectionType))
         }
     }
 
     private fun getMoviesPagination(): Flow<PagingData<MovieInfoBasicEntity>> {
         val savedStateValue =
-            savedStateHandle.get<String>("collectionType") // get collection type from savedStateValue
+            savedStateHandle.get<String>("collectionType")
         val collectionType =
-            MovieCollectionTypeViewState().getCollectionType(savedStateValue!!)// if needed map from string to MovieCollectionType
+            MovieCollectionTypeViewState().getCollectionType(savedStateValue!!)
         return movieRepo.moviesPagination(collectionType)
     }
-
 }

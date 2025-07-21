@@ -1,5 +1,6 @@
 package com.example.movienight20.ui.theme
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movienight20.domain.MoviesRepository
@@ -13,21 +14,20 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MovieDetailsViewModel @Inject constructor(
-    private val movieRepo: MoviesRepository
-): ViewModel() {
-    private val mutableViewState = MutableStateFlow<MovieDetailsScreenViewState>(MovieDetailsScreenViewState.NONE)
+    private val movieRepo: MoviesRepository,
+    private val savedStateHandle: SavedStateHandle
+) : ViewModel() {
+    private val mutableViewState =
+        MutableStateFlow<MovieDetailsScreenViewState>(MovieDetailsScreenViewState.NONE)
     val viewState: StateFlow<MovieDetailsScreenViewState> = mutableViewState
 
     private val _errorToastViewState = MutableStateFlow<String>("")
     val errorToastViewState: StateFlow<String> = _errorToastViewState
 
     init {
-        // TODO fill it in here once you inject ID
-    }
-
-    fun initWithID(id: Int){ // TODO future feature:pass in id via savedStateHandle
+        val id = savedStateHandle.get<Int>("id")
         viewModelScope.launch(Dispatchers.IO) {
-            val detailsResult = movieRepo.getMovieDetails(id)
+            val detailsResult = movieRepo.getMovieDetails(id!!)
             val creditsResult = movieRepo.getMovieCredits(id)
             val newState = MovieDetailsScreenViewState(
                 id = detailsResult.id,

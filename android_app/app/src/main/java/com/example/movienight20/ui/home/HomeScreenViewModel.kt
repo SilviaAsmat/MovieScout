@@ -63,8 +63,8 @@ class HomeScreenViewModel @Inject constructor(
             MovieCardInfoViewState(
                 id = it.id,
                 title = it.title,
-                posterPath = "http://image.tmdb.org/t/p/" + "w1280" + it.posterPath, // TODO move url creation logic to a private function
-                backdropPath = "http://image.tmdb.org/t/p/" + "w1280" + it.backdropPath
+                posterPath = createPath(it.posterPath),
+                backdropPath = createPath(it.backdropPath)
             )
         }
     }
@@ -77,11 +77,15 @@ class HomeScreenViewModel @Inject constructor(
                 MovieCardInfoViewState(
                     id = recent.id,
                     title = recent.title,
-                    posterPath = "http://image.tmdb.org/t/p/" + "w1280" + recent.posterPath.toString(),
+                    posterPath = createPath(recent.posterPath),
                     backdropPath = ""// Does not use backdrop path
                 )
             })
         }
         _recentlyViewedViewState.update { recentViewState }
+    }
+
+    fun createPath(url: String): String{
+        return "http://image.tmdb.org/t/p/w1280$url"
     }
 }

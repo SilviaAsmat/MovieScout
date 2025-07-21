@@ -121,9 +121,13 @@ dependencies {
     implementation("androidx.paging:paging-runtime:$paging_version")
     implementation("androidx.paging:paging-compose:3.4.0-alpha01")
 
+    //Shimmer
+    implementation("com.valentinilk.shimmer:compose-shimmer:1.3.3")
+
 
 //    annotationProcessor ("com.google.auto.value:auto-value:1.6.3")
 //    implementation ("com.google.auto.value:auto-value-annotations:1.6.3")
 
 
 }
+

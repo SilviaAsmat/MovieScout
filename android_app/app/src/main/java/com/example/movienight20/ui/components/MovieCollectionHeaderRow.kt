@@ -20,7 +20,7 @@ fun MovieCollectionHeaderRow(
         modifier = Modifier
             .background(Color.White)
             .fillMaxWidth()
-            .padding(16.dp, 16.dp, 16.dp, 6.dp),
+            .padding(0.dp, 16.dp, 16.dp, 6.dp),
     ) {
         HeaderLabel(header)
         SeeMoreButton(onClickMovieCollection)

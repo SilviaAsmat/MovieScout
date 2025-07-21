@@ -84,10 +84,6 @@ private fun HomeScreen(
                 movieInfo = viewState.nowPlayingMoviesInfo,
                 onClickMoviePhoto
             )
-            MovieCollectionHeaderRow(
-                header = stringResource(R.string.recently_viewed_row_header),
-                onClickMovieCollection = { onClickMovieCollection(MovieCollectionType.TOP_RATED) },// TODO: Change to recents screen
-            )
             RecentlyViewedMoviesRow(recents, onClickMoviePhoto)
             MovieCollectionHeaderRow(
                 header = stringResource(R.string.top_rated_movies_row_header),

@@ -14,7 +14,7 @@ fun HeaderLabel(header: String){
     Text(
         text = header,
         modifier = Modifier
-            .padding(0.dp, 4.dp),
+            .padding(12.dp, 4.dp),
         color = Color.Black,
         fontWeight = FontWeight.SemiBold,
         fontSize = 18.sp,

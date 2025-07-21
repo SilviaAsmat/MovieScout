@@ -1,9 +1,11 @@
 package com.example.movienight20.ui
 
-// add @immutable annotation for composable stability
+import androidx.compose.runtime.Immutable
+
+@Immutable
 class MovieCardInfoViewState(
     val id: Int,
-    val title: String?,
+    val title: String,
     val posterPath: String,
     val backdropPath: String
 ) {
