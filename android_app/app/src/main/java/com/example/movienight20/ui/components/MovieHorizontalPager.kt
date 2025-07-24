@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Icon
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
@@ -51,7 +52,7 @@ fun MovieHorizontalPager(
             val movieInfo = viewState.popMoviesInfo
             if (movieInfo.isEmpty()) return
             val pagerState = rememberPagerState(pageCount = { 10 })
-            Box(modifier = Modifier.padding(bottom = 16.dp)) {
+            Box(modifier = Modifier.padding(bottom = 24.dp)) {
                 val pageCount = 10
                 LaunchedEffect(Unit) {
                     while (true) {

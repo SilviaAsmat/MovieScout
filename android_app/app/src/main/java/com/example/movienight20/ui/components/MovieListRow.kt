@@ -36,7 +36,7 @@ fun MovieListRow(
         rows = GridCells.Fixed(1),
         modifier = Modifier
             .heightIn(max = 260.dp)
-            .padding(start = 12.dp, end = 0.dp, bottom = 16.dp, top = 0.dp),
+            .padding(start = 12.dp, end = 0.dp, bottom = 0.dp, top = 0.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(items = movieInfo) {

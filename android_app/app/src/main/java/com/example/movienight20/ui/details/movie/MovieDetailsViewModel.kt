@@ -29,6 +29,7 @@ class MovieDetailsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             val detailsResult = movieRepo.getMovieDetails(id!!)
             val creditsResult = movieRepo.getMovieCredits(id)
+            val videosResult = movieRepo.getMovieVideos(id)
             val newState = MovieDetailsScreenViewState(
                 id = detailsResult.id,
                 title = detailsResult.title,
@@ -41,7 +42,8 @@ class MovieDetailsViewModel @Inject constructor(
                 voteAvg = detailsResult.voteAvg,
                 voteCount = detailsResult.voteCount,
                 tagline = detailsResult.tagline,
-                cast = creditsResult.cast
+                cast = creditsResult.cast,
+                videos = videosResult
             )
             mutableViewState.emit(newState)
             movieRepo.storeRecentlyViewed(detailsResult)

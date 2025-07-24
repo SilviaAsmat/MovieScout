@@ -3,15 +3,11 @@ package com.example.movienight20.ui.details.movie
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
-import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.IconButton
@@ -39,8 +35,6 @@ import com.example.movienight20.R
 import com.example.movienight20.domain.Genre
 import com.example.movienight20.ui.theme.MovieDetailsViewModel
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -48,6 +42,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.ui.draw.clip
 import com.example.movienight20.domain.Cast
 import androidx.core.graphics.toColorInt
+import com.example.movienight20.ui.components.GenreLabels
+import com.example.movienight20.ui.components.MovieCast
+import com.example.movienight20.ui.components.TrailersHorizontalPager
 
 @Composable
 fun MovieDetailsScreen(
@@ -102,7 +99,10 @@ private fun MovieDetailsScreen(
                 VoteCountLabel(voteCount = viewState.voteCount)
             }
             Overview(overview = viewState.overview)
-            Genres(genres = viewState.genres)
+            GenreLabels(genres = viewState.genres)
+            TrailersHorizontalPager(
+                trailers = viewState.videos
+            )
             MovieCast(cast = viewState.cast, onClickCastPhoto = onClickCastPhoto)
         }
     }
@@ -119,7 +119,7 @@ private fun MoviePoster(
         modifier = Modifier
             .padding(16.dp, 16.dp, 16.dp, 6.dp)
             .fillMaxWidth()
-            .height(250.dp)
+            .height(230.dp)
             .clip(RoundedCornerShape(32.dp))
             .clickable {
                 onClickMovieListItem()
@@ -203,86 +203,6 @@ private fun Overview(overview: String, modifier: Modifier = Modifier) {
 
 }
 
-@Composable
-private fun Genres(genres: List<Genre>, modifier: Modifier = Modifier) {
-    LazyHorizontalGrid(
-        rows = GridCells.Fixed(1),
-        modifier = modifier
-            .heightIn(max = 50.dp)
-            .padding(16.dp, 12.dp, 16.dp, 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(6.dp)
-    ) {
-        items(items = genres) {
-            Text(
-                text = it.title.toString(),
-                fontSize = 16.sp,
-                modifier = modifier
-                    .clip(RoundedCornerShape(14.dp))
-                    .background(Color("#e46827".toColorInt()))
-                    .padding(10.dp, 4.dp),
-                color = Color.White,
-                fontWeight = FontWeight.SemiBold
-            )
-        }
-    }
-}
-
-@Composable
-private fun MovieCast(
-    cast: List<Cast>,
-    modifier: Modifier = Modifier,
-    onClickCastPhoto: (Int) -> Unit
-) {
-    LazyHorizontalGrid(
-        rows = GridCells.Fixed(1),
-        modifier = modifier
-            .heightIn(max = 260.dp)
-            .padding(16.dp, 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp)
-    ) {
-        items(items = cast) {
-            Column(
-                modifier = modifier
-                    .background(Color.White)
-                    .height(280.dp)
-            ) {
-                AsyncImage(
-                    model = ImageRequest.Builder(context = LocalContext.current)
-                        .data("http://image.tmdb.org/t/p/" + "w1280" + it.picturePath).build(),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .height(180.dp)
-                        .width(120.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .clickable { onClickCastPhoto(it.castId) },
-                    contentScale = ContentScale.Crop
-                )
-                Text(
-                    text = it.name.toString(),
-                    maxLines = 1,
-                    modifier = Modifier
-                        .padding(2.dp, 0.dp)
-                        .width(100.dp),
-                    color = Color.Black,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Text(
-                    text = it.character.toString(),
-                    maxLines = 2,
-                    modifier = Modifier
-                        .padding(2.dp, 0.dp)
-                        .width(100.dp),
-                    color = Color.Gray,
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Bold,
-
-                    )
-            }
-        }
-    }
-}
 
 
 @ExperimentalMaterial3Api
@@ -361,7 +281,8 @@ fun PreviewMovieDetailsScreen() {
                     picturePath = "",
                     character = "character name that is too long"
                 )
-            )
+            ),
+            videos = TODO()
         ),
         onClickMovieDetailsScreen = {},
         onBackClick = {},

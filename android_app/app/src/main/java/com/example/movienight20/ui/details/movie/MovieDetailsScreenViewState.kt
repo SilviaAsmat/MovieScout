@@ -2,8 +2,9 @@ package com.example.movienight20.ui.details.movie
 
 import com.example.movienight20.domain.Cast
 import com.example.movienight20.domain.Genre
+import com.example.movienight20.domain.MovieVideo
 
-data class MovieDetailsScreenViewState(
+data class  MovieDetailsScreenViewState(
     val id: Int,
     val title: String,
     val backdropPath: String,
@@ -15,7 +16,8 @@ data class MovieDetailsScreenViewState(
     val voteAvg: Number,
     val voteCount: Int,
     val tagline: String,
-    val cast: List<Cast>
+    val cast: List<Cast>,
+    val videos: List<MovieVideo>
 ) {
     companion object {
         val NONE = MovieDetailsScreenViewState(
@@ -30,7 +32,8 @@ data class MovieDetailsScreenViewState(
             voteAvg = 0,
             voteCount = 1,
             tagline = "",
-            cast = listOf()
+            cast = listOf(),
+            videos = listOf()
         )
     }
 }

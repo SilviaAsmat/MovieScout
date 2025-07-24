@@ -94,7 +94,7 @@ private fun CastPhoto(
         contentDescription = null,
         modifier = Modifier
             .padding(16.dp, 16.dp, 10.dp, 10.dp)
-            .height(220.dp)
+            .height(250.dp)
             .width(150.dp)
             .clip(RoundedCornerShape(16.dp))
             .background(Color("#581845".toColorInt())),
@@ -140,7 +140,7 @@ private fun CastBio(bio: String) {
 private fun CastMovies(movies: List<ActorRoleMovie>, modifier: Modifier, onClickMoviePhoto: (Int) -> Unit) {
     LazyHorizontalGrid(
         rows = GridCells.Fixed(1),
-        modifier = modifier.heightIn(max = 220.dp).padding(16.dp, 10.dp),
+        modifier = modifier.heightIn(max = 260.dp).padding(16.dp, 10.dp),
         horizontalArrangement = Arrangement.spacedBy(6.dp)
     ) {
         items(items = movies) {
