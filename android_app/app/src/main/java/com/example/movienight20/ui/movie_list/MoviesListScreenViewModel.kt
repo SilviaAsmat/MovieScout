@@ -22,7 +22,7 @@ class MoviesListScreenViewModel @Inject constructor(
     private val movieRepo: MoviesRepository,
     private val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val mutableViewState = MutableStateFlow<List<MovieListItemViewState>>(emptyList())
+    private val mutableViewState = MutableStateFlow<List<MovieListItemViewState.Loading>>(emptyList())
     val viewState: StateFlow<List<MovieListItemViewState>> = mutableViewState
 
     private val _topAppBarViewState = MutableStateFlow<TopAppBarViewState>(TopAppBarViewState.Companion.NONE)
@@ -32,7 +32,7 @@ class MoviesListScreenViewModel @Inject constructor(
         pagingData.map { movie ->
             val releaseYear = ""
             val url = "http://image.tmdb.org/t/p/" + "w1280" + movie.posterPath
-            MovieListItemViewState(
+            MovieListItemViewState.Data(
                 id = movie.remoteId,
                 title = movie.name,
                 url = url,

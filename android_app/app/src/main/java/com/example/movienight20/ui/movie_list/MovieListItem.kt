@@ -28,7 +28,7 @@ import coil.request.ImageRequest
 
 @Composable
 fun MovieListItem(
-    viewState: MovieListItemViewState,
+    viewState: MovieListItemViewState.Data,
     onClickMovieListItem: (Int) -> Unit,
 ) {
     Column (modifier = Modifier.height(310.dp).fillMaxWidth().background(Color.White)) {
@@ -104,15 +104,15 @@ private fun Title(title: String, modifier: Modifier = Modifier) {
         }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun Preview() {
-    MovieListItem(
-        viewState = MovieListItemViewState(
-            id = 2314,
-            title = "Some Random Movie Title",
-            url = "",
-            year = "1999",
-            rating = "21"),
-        onClickMovieListItem = {})
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun Preview() {
+//    MovieListItem(
+//        viewState = MovieListItemViewState(
+//            id = 2314,
+//            title = "Some Random Movie Title",
+//            url = "",
+//            year = "1999",
+//            rating = "21"),
+//        onClickMovieListItem = {})
+//}
