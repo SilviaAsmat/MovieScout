@@ -2,6 +2,7 @@ package com.example.movienight20.data
 
 import com.example.movienight20.data.network_response.MovieCreditsNetworkResponse
 import com.example.movienight20.data.network_response.MovieDetailsNetworkResponse
+import com.example.movienight20.data.network_response.MovieVideosNetworkResponse
 import com.example.movienight20.data.network_response.PeopleDetailsNetworkResponse
 import com.example.movienight20.data.network_response.PeopleMovieCreditsNetworkResponse
 import com.example.movienight20.data.network_response.MoviesCollectionsNetworkResponse
@@ -19,6 +20,8 @@ interface MovieDatabaseNetworkService {
     suspend fun getPeopleMovieCredits(@Path("person_id") personId: Int): Response<PeopleMovieCreditsNetworkResponse>
     @GET("/3/person/{person_id}")
     suspend fun getPeopleDetails(@Path("person_id") personId: Int): Response<PeopleDetailsNetworkResponse>
+    @GET("/3/movie/{movie_id}/videos")
+    suspend fun getMovieVideos(@Path("movie_id") movieId: Int): Response<MovieVideosNetworkResponse>
 
     @GET("/3/movie/popular")
     suspend fun getPopularMovies(

@@ -1,6 +1,5 @@
 package com.example.movienight20.data
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -20,6 +19,7 @@ import com.example.movienight20.domain.MoviesRepository
 import com.example.movienight20.domain.PeopleDetails
 import com.example.movienight20.domain.PeopleMovieCredits
 import com.example.movienight20.domain.MovieInfoBasic
+import com.example.movienight20.domain.MovieVideo
 import com.example.movienight20.ui.movie_collection_type.MovieCollectionType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -147,6 +147,21 @@ class MovieRepositoryImpl @Inject constructor(
         )
     }
 
+    override suspend fun getMovieVideos(movieId: Int): List<MovieVideo> {
+        val networkResponse = networkService.getMovieVideos(movieId = movieId)
+        val results = networkResponse.body()?.result
+        return results!!.map{
+            MovieVideo(
+                videoPath = "https://www.youtube.com/watch?v=" + it.key.toString(),
+                thumbnailPath = "http://img.youtube.com/vi/" + it.key.toString() + "/0.jpg",
+                title = it.title?:"",
+                official = it.official?:false,
+                type = it.type?:"",
+                size = it.size?:0
+            )
+        }
+    }
+
     /**** database functions ****/
 
     override suspend fun storeRecentlyViewed(movie: MovieDetails) {
@@ -176,6 +191,7 @@ class MovieRepositoryImpl @Inject constructor(
             }
             .flowOn(Dispatchers.IO)
 
+    /****  Pagination  ****/
     @OptIn(ExperimentalPagingApi::class)
     override fun moviesPagination(movieCollectionType: MovieCollectionType): Flow<PagingData<MovieInfoBasicEntity>> {
         return Pager(

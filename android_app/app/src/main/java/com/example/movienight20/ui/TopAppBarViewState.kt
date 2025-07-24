@@ -2,7 +2,7 @@ package com.example.movienight20.ui
 
 import com.example.movienight20.ui.movie_collection_type.MovieCollectionType
 
-class TopAppBarViewState (
+class  TopAppBarViewState (
     val collectionType: MovieCollectionType
 ){
     fun getStringName(): String {

@@ -109,6 +109,7 @@ dependencies {
     implementation("androidx.compose.material3:material3-window-size-class:1.3.2")
     implementation("androidx.compose.material3:material3-adaptive-navigation-suite:1.4.0-alpha16")
     implementation("androidx.compose.material:material:1.8.3")
+    implementation("androidx.compose.material:material-icons-extended:1.7.7")
 
     // Room
     val roomVersion = "2.7.2"
