@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.movienight20.ui.MovieCardInfoViewState
+import com.example.movienight20.ui.home.HomeScreenViewState
 
 @Composable
 fun MovieListRow(
@@ -34,12 +35,12 @@ fun MovieListRow(
     LazyHorizontalGrid(
         rows = GridCells.Fixed(1),
         modifier = Modifier
-            .heightIn(max = 250.dp)
-            .padding(start = 12.dp, end = 0.dp, bottom = 0.dp, top = 0.dp),
+            .heightIn(max = 260.dp)
+            .padding(start = 12.dp, end = 0.dp, bottom = 16.dp, top = 0.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(items = movieInfo) {
-            Column(modifier = Modifier.height(250.dp)) {
+            Column(modifier = Modifier.height(260.dp)) {
                 AsyncImage(
                     model = ImageRequest.Builder(context = LocalContext.current).data(it.posterPath)
                         .build(),

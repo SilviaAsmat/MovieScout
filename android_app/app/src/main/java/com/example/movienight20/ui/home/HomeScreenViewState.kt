@@ -2,20 +2,16 @@ package com.example.movienight20.ui.home
 
 import androidx.compose.runtime.Immutable
 import com.example.movienight20.ui.MovieCardInfoViewState
+import com.example.movienight20.ui.recently_viewed.RecentlyViewedViewState
 
 @Immutable
-class HomeScreenViewState(
-    val popMoviesInfo: List<MovieCardInfoViewState>,
-    val nowPlayingMoviesInfo: List<MovieCardInfoViewState>,
-    val upcomingInfo: List<MovieCardInfoViewState>,
-    val topRatedInfo: List<MovieCardInfoViewState>,
-) {
-    companion object {
-        val NONE = HomeScreenViewState(
-            popMoviesInfo = listOf(),
-            nowPlayingMoviesInfo = listOf(),
-            upcomingInfo = listOf(),
-            topRatedInfo = listOf()
-        )
-    }
+sealed class HomeScreenViewState() {
+    data class Data(
+        val popMoviesInfo: List<MovieCardInfoViewState>,
+        val nowPlayingMoviesInfo: List<MovieCardInfoViewState>,
+        val upcomingInfo: List<MovieCardInfoViewState>,
+        val topRatedInfo: List<MovieCardInfoViewState>,
+    ) : HomeScreenViewState()
+
+    data object Loading : HomeScreenViewState()
 }

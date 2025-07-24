@@ -15,9 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.example.movienight20.ui.MovieCardInfoViewState
-import com.valentinilk.shimmer.shimmer
-
 @Composable
 fun EmptyRecentlyViewedRow() {
     Row(

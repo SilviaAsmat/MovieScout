@@ -21,7 +21,7 @@ fun SeeMoreButton(onSeeMoreClicked:() -> Unit){
         text = stringResource(R.string.see_more_button),
         modifier = Modifier
             .clip(RoundedCornerShape(12.dp))
-            .padding(10.dp, 4.dp)
+            .padding(top = 0.dp, bottom = 6.dp, start = 16.dp)
             .clickable { onSeeMoreClicked() },
         color = Color.Black,
         fontFamily = FontFamily.Monospace,

@@ -197,7 +197,7 @@ private fun Overview(overview: String, modifier: Modifier = Modifier) {
         text = overview,
         fontSize = 16.sp,
         modifier = modifier
-            .padding(16.dp, 0.dp),
+            .padding(16.dp, 12.dp),
         color = Color.Black
     )
 
@@ -236,14 +236,16 @@ private fun MovieCast(
     LazyHorizontalGrid(
         rows = GridCells.Fixed(1),
         modifier = modifier
-            .heightIn(max = 220.dp)
-            .padding(16.dp, 10.dp),
+            .heightIn(max = 260.dp)
+            .padding(16.dp, 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         items(items = cast) {
-            Column(modifier = modifier
-                .background(Color.White)
-                .height(220.dp)) {
+            Column(
+                modifier = modifier
+                    .background(Color.White)
+                    .height(280.dp)
+            ) {
                 AsyncImage(
                     model = ImageRequest.Builder(context = LocalContext.current)
                         .data("http://image.tmdb.org/t/p/" + "w1280" + it.picturePath).build(),
@@ -265,6 +267,16 @@ private fun MovieCast(
                     fontSize = 14.sp,
                     fontWeight = FontWeight.Bold,
                     overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    text = it.character.toString(),
+                    maxLines = 2,
+                    modifier = Modifier
+                        .padding(2.dp, 0.dp)
+                        .width(100.dp),
+                    color = Color.Gray,
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
 
                     )
             }

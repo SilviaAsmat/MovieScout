@@ -17,7 +17,7 @@ import androidx.compose.ui.unit.dp
 import com.valentinilk.shimmer.shimmer
 
 @Composable
-fun LoadingRecentlyViewedRow() {
+fun LoadingHomeScreenRow() {
     Row(
         modifier = Modifier
             .heightIn(max = 250.dp)
