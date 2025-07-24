@@ -162,6 +162,21 @@ class MovieRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getMovieSearch(query: String): List<MovieCollectionItem> {
+        val response = networkService.getMovieSearch(query)
+        val results = response.body()!!.results
+        return results.map {
+            MovieCollectionItem(
+                id = it.id?:0,
+                title = it.title?:"",
+                backdropPath =it.backdropPath?:"", //TODO: change paths to helper function
+                posterPath = it.posterPath?:"",
+                releaseDate = it.releaseDate?:"",
+                rating = (it.voteAverage ?: "").toString()
+            )
+        }
+    }
+
     /**** database functions ****/
 
     override suspend fun storeRecentlyViewed(movie: MovieDetails) {
@@ -173,7 +188,6 @@ class MovieRepositoryImpl @Inject constructor(
                 name = movie.title,
                 backdropPath = movie.backdropPath
             )
-
         movieScoutDatabase.recentMovieIdsDao().insertMovieId(recentMovieIdEntity)
         movieScoutDatabase.movieInfoBasicDao().insertMovie(movieInfoBasic)
     }

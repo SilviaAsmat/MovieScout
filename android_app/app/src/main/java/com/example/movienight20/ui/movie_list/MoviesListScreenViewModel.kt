@@ -25,7 +25,8 @@ class MoviesListScreenViewModel @Inject constructor(
     private val mutableViewState = MutableStateFlow<List<MovieListItemViewState.Loading>>(emptyList())
     val viewState: StateFlow<List<MovieListItemViewState>> = mutableViewState
 
-    private val _topAppBarViewState = MutableStateFlow<TopAppBarViewState>(TopAppBarViewState.Companion.NONE)
+    private val _topAppBarViewState =
+        MutableStateFlow<TopAppBarViewState>(TopAppBarViewState.Companion.NONE)
     val topAppBarViewState: StateFlow<TopAppBarViewState> = _topAppBarViewState
 
     val pagedMovies = getMoviesPagination().map { pagingData ->
@@ -51,10 +52,8 @@ class MoviesListScreenViewModel @Inject constructor(
     }
 
     private fun getMoviesPagination(): Flow<PagingData<MovieInfoBasicEntity>> {
-        val savedStateValue =
-            savedStateHandle.get<String>("collectionType")
-        val collectionType =
-            MovieCollectionTypeViewState().getCollectionType(savedStateValue!!)
+        val savedStateValue = savedStateHandle.get<String>("collectionType")
+        val collectionType = MovieCollectionTypeViewState().getCollectionType(savedStateValue!!)
         return movieRepo.moviesPagination(collectionType)
     }
 }

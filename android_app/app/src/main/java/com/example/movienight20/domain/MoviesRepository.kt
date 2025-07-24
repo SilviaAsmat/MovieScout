@@ -17,6 +17,7 @@ interface MoviesRepository {
     suspend fun getUpcomingMovies(): List<MovieCollectionItem>
     suspend fun getTopRated(): List<MovieCollectionItem>
     suspend fun getMovieVideos(movieId: Int): List<MovieVideo>
+    suspend fun getMovieSearch(query: String): List<MovieCollectionItem>
     fun getRecentlyViewed(): Flow<List<MovieInfoBasic>>
     fun moviesPagination(collectionType: MovieCollectionType): Flow<PagingData<MovieInfoBasicEntity>>
 }
