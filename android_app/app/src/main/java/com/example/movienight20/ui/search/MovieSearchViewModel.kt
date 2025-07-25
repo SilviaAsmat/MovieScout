@@ -1,11 +1,14 @@
 package com.example.movienight20.ui.search
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.movienight20.domain.MoviesRepository
+import com.example.movienight20.ui.movie_list.MovieListItemViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -26,22 +29,22 @@ class MovieSearchViewModel @Inject constructor(
 //    }
 
     fun onSearchQueryChanged(query: String) {
+        Log.v("SAA", "got new term: $query")
         _searchViewState.value = SearchBarViewState(query)
+        performSearch(query)
     }
 
     fun performSearch(query: String) {
         viewModelScope.launch {
             _resultsViewState.value = SearchMovieResultsViewState.Loading
-
             val searchResults = movieRepo.getMovieSearch(query)
             val newResults = searchResults.map {
-                Results(
+                MovieListItemViewState.Data(
                     id = it.id,
                     title = it.title,
-                    backdropPath = it.backdropPath,
-                    posterPath = it.posterPath,
-                    releaseDate = it.releaseDate,
-                    rating = it.rating
+                    url ="http://image.tmdb.org/t/p/w1280${it.posterPath}",
+                    rating =it.rating,
+                    year =it.releaseDate,
                 )
             }
             _resultsViewState.value = SearchMovieResultsViewState.Data(newResults)
