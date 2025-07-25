@@ -17,6 +17,8 @@ import com.example.movienight20.ui.movie_collection_type.MovieCollectionType
 import com.example.movienight20.ui.movie_list.MoviesListScreen
 import com.example.movienight20.ui.theme.MovieDetailsViewModel
 import com.example.movienight20.ui.movie_list.MoviesListScreenViewModel
+import com.example.movienight20.ui.search.MovieSearchScreen
+import com.example.movienight20.ui.search.MovieSearchViewModel
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -30,6 +32,9 @@ data class PeopleDetails(val id: Int)
 
 @Serializable
 object MainScreen
+
+@Serializable
+object MovieSearchScreen
 
 @Composable
 fun MainNavHost(
@@ -47,6 +52,18 @@ fun MainNavHost(
                 viewModel = viewModel,
                 onClickMovieCollection = {collectionType: MovieCollectionType ->
                     navController.navigate(MoviesList(collectionType.name))},
+                onClickMoviePhoto = { id: Int ->
+                    navController.navigate(MovieDetails(id))
+                },
+                onSearchScreenClick = {
+                    navController.navigate(MovieSearchScreen)
+                }
+            )
+        }
+        composable<MovieSearchScreen> {
+            val viewModel: MovieSearchViewModel = hiltViewModel()
+            MovieSearchScreen(
+                viewModel = viewModel,
                 onClickMoviePhoto = { id: Int ->
                     navController.navigate(MovieDetails(id))
                 }
