@@ -23,7 +23,7 @@ interface MovieDatabaseNetworkService {
     @GET("/3/movie/{movie_id}/videos")
     suspend fun getMovieVideos(@Path("movie_id") movieId: Int): Response<MovieVideosNetworkResponse>
     @GET("/3/search/movie")
-    suspend fun getMovieSearch(@Path("query") query: String): Response<MoviesCollectionsNetworkResponse>
+    suspend fun getMovieSearch(@Query("query") query: String): Response<MoviesCollectionsNetworkResponse>
 
 
     @GET("/3/movie/popular")
