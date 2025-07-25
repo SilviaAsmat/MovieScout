@@ -5,12 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.BottomAppBar
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,7 +23,8 @@ fun HomeScreen(
     viewModel: HomeScreenViewModel,
     onClickMoviePhoto: (Int) -> Unit,
     onClickMovieCollection: (MovieCollectionType) -> Unit,
-    onSearchScreenClick: () -> Unit
+    onSearchScreenClick: () -> Unit,
+    onRecentsScreenClick: () -> Unit
 
 ) {
     val viewState by viewModel.viewState.collectAsState()
@@ -39,7 +34,8 @@ fun HomeScreen(
         recents = recentlyViewState,
         onClickMoviePhoto = onClickMoviePhoto,
         onClickMovieCollection = onClickMovieCollection,
-        onSearchScreenClick = onSearchScreenClick
+        onSearchScreenClick = onSearchScreenClick,
+        onRecentsScreenClick = onRecentsScreenClick
     )
 }
 
@@ -49,13 +45,11 @@ private fun HomeScreen(
     recents: RecentlyViewedViewState,
     onClickMoviePhoto: (Int) -> Unit,
     onClickMovieCollection: (MovieCollectionType) -> Unit,
-    onSearchScreenClick: () -> Unit
+    onSearchScreenClick: () -> Unit,
+    onRecentsScreenClick: () -> Unit
 ) {
     Scaffold(
-        topBar = { HomeScreenTopBar() },
-        bottomBar = {
-            BottomNavigationBar(onSearchScreenClick)
-        }
+        topBar = { HomeScreenTopBar(onSearchScreenClick) },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -64,7 +58,7 @@ private fun HomeScreen(
                 .verticalScroll(rememberScrollState())
         ) {
             MovieHorizontalPager(viewState, onClickMoviePhoto, onClickMovieCollection)
-            RecentlyViewedMoviesRow(recents, onClickMoviePhoto)
+            RecentlyViewedMoviesRow(recents, onClickMoviePhoto, onRecentsScreenClick)
             MovieCollectionListRows(
                 viewState = viewState,
                 onClickMovieCollection = onClickMovieCollection,
@@ -75,15 +69,6 @@ private fun HomeScreen(
     }
 }
 
-@Composable
-fun BottomNavigationBar(onSearchScreenClick: () -> Unit) {
-    BottomAppBar(
-        actions = {
-            IconButton(onClick = { onSearchScreenClick() }) {
-                Icon(Icons.Filled.Search, contentDescription = "Search Screen")
-            }
-        })
-}
 
 //@Preview(showBackground = true)
 //@Composable
