@@ -186,7 +186,9 @@ class MovieRepositoryImpl @Inject constructor(
                 remoteId = movie.id,
                 posterPath = movie.posterPath,
                 name = movie.title,
-                backdropPath = movie.backdropPath
+                backdropPath = movie.backdropPath,
+                releaseDate = movie.releaseDate,
+                rating = movie.voteAvg.toString()
             )
         movieScoutDatabase.recentMovieIdsDao().insertMovieId(recentMovieIdEntity)
         movieScoutDatabase.movieInfoBasicDao().insertMovie(movieInfoBasic)
@@ -199,7 +201,10 @@ class MovieRepositoryImpl @Inject constructor(
                     MovieInfoBasic(
                         id = data.remoteId,
                         title = data.name,
-                        posterPath = "http://image.tmdb.org/t/p/w1280${data.posterPath}"
+                        posterPath = "http://image.tmdb.org/t/p/w1280${data.posterPath}",
+                        backdropPath = "http://image.tmdb.org/t/p/w1280${data.backdropPath}",
+                        releaseDate = data.releaseDate,
+                        rating = data.rating
                     )
                 }
             }

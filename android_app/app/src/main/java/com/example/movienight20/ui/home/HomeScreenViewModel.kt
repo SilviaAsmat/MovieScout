@@ -6,7 +6,6 @@ import com.example.movienight20.domain.MovieInfoBasic
 import com.example.movienight20.domain.MoviesRepository
 import com.example.movienight20.domain.MovieCollectionItem
 import com.example.movienight20.ui.MovieCardInfoViewState
-import com.example.movienight20.ui.home.HomeScreenViewState
 import com.example.movienight20.ui.recently_viewed.RecentlyViewedViewState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -78,7 +77,7 @@ class HomeScreenViewModel @Inject constructor(
                     id = recent.id,
                     title = recent.title,
                     posterPath = createPath(recent.posterPath),
-                    backdropPath = ""// Does not use backdrop path
+                    backdropPath = "",
                 )
             })
         }

@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.itemKey
+import com.example.movienight20.ui.components.TopAppBar
 import com.example.movienight20.ui.theme.MovieNight20Theme
 import com.valentinilk.shimmer.shimmer
 
@@ -42,7 +43,6 @@ fun MoviesListScreen(
     Scaffold(
         topBar = {TopAppBar(topAppBarViewState.getStringName())}
     ) { innerPadding ->
-
         LazyVerticalGrid(
             columns = GridCells.Fixed(2),
             modifier = Modifier
@@ -68,7 +68,7 @@ fun MoviesListScreen(
                                 .height(310.dp)
                                 .fillMaxWidth()
                         )
-                    } // TODO: Move to pagination?
+                    } // TODO: Move to pagination
                 }
 
             }
@@ -76,23 +76,7 @@ fun MoviesListScreen(
     }
 }
 
-@ExperimentalMaterial3Api
-@Composable
-fun TopAppBar(collectionType: String) {
-    CenterAlignedTopAppBar(
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color("#134e03".toColorInt())
-        ),
-        title = {
-            Text( text = "$collectionType Movies",
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )},
-        scrollBehavior = TopAppBarDefaults.pinnedScrollBehavior()
-    )
-}
+
 
 @Preview(showBackground = true)
 @Composable

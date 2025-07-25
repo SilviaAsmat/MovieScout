@@ -107,7 +107,9 @@ class MoviesRemoteMediator(
                     remoteId = data.id!!,
                     name = data.title ?: "",
                     posterPath = "http://image.tmdb.org/t/p/w1280${data.posterPath}",
-                    backdropPath = "http://image.tmdb.org/t/p/w1280${data.backdropPath}"
+                    backdropPath = "http://image.tmdb.org/t/p/w1280${data.backdropPath}",
+                    releaseDate = data.releaseDate!!,
+                    rating = data.voteAverage.toString()
                 )
             }
 

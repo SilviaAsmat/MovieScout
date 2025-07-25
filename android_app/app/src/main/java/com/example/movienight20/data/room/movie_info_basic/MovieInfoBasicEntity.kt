@@ -16,5 +16,9 @@ data class MovieInfoBasicEntity(
     @ColumnInfo(name = "backdrop_path")
     val backdropPath: String,
     @ColumnInfo(name = "name")
-    val name: String
+    val name: String,
+    @ColumnInfo(name = "release_date")
+    val releaseDate: String,
+    @ColumnInfo(name = "rating")
+    val rating: String
 )

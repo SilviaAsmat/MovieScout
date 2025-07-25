@@ -17,6 +17,9 @@ import com.example.movienight20.ui.movie_collection_type.MovieCollectionType
 import com.example.movienight20.ui.movie_list.MoviesListScreen
 import com.example.movienight20.ui.theme.MovieDetailsViewModel
 import com.example.movienight20.ui.movie_list.MoviesListScreenViewModel
+import com.example.movienight20.ui.recently_viewed.RecentlyViewedScreen
+import com.example.movienight20.ui.recently_viewed.RecentlyViewedScreenViewModel
+import com.example.movienight20.ui.recently_viewed.RecentlyViewedScreenViewState
 import com.example.movienight20.ui.search.MovieSearchScreen
 import com.example.movienight20.ui.search.MovieSearchViewModel
 import kotlinx.serialization.Serializable
@@ -36,6 +39,9 @@ object MainScreen
 @Serializable
 object MovieSearchScreen
 
+@Serializable
+object RecentsScreen
+
 @Composable
 fun MainNavHost(
     navController: NavHostController,
@@ -50,14 +56,26 @@ fun MainNavHost(
             val viewModel: HomeScreenViewModel = hiltViewModel()
             HomeScreen(
                 viewModel = viewModel,
-                onClickMovieCollection = {collectionType: MovieCollectionType ->
-                    navController.navigate(MoviesList(collectionType.name))},
+                onClickMovieCollection = { collectionType: MovieCollectionType ->
+                    navController.navigate(MoviesList(collectionType.name))
+                },
                 onClickMoviePhoto = { id: Int ->
                     navController.navigate(MovieDetails(id))
                 },
+                onRecentsScreenClick = { navController.navigate(RecentsScreen) },
                 onSearchScreenClick = {
                     navController.navigate(MovieSearchScreen)
                 }
+            )
+        }
+        composable<RecentsScreen> {
+            val viewModel: RecentlyViewedScreenViewModel = hiltViewModel()
+            RecentlyViewedScreen(
+                onClickMovieListItem = { id: Int ->
+                    navController.navigate(MovieDetails(id))
+                },
+                viewModel = viewModel,
+                navController = navController
             )
         }
         composable<MovieSearchScreen> {

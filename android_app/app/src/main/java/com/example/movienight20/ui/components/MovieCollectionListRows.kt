@@ -29,7 +29,7 @@ fun MovieCollectionListRows(
             MovieListRow(movieInfo = viewState.topRatedInfo, onClickMoviePhoto)
 
             MovieCollectionHeaderRow(
-                header = stringResource(R.string.upcoming_movies_row_header),
+                header = stringResource(R.string.upcoming_movies_row_header),//TODO: Validate movie items, not appearing to be upcoming?
                 onClickMovieCollection = { onClickMovieCollection(MovieCollectionType.UPCOMING) },
             )
             MovieListRow(movieInfo = viewState.upcomingInfo, onClickMoviePhoto)

@@ -1,6 +1,5 @@
 package com.example.movienight20.domain
 
-
 data class MovieCollectionItem (
     val id: Int,
     val title: String,

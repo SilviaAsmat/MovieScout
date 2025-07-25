@@ -10,6 +10,6 @@ sealed class MovieListItemViewState() {
         val url: String,
         val year: String,
         val rating: String
-    )
+    ): MovieListItemViewState()
     data object Loading : MovieListItemViewState()
 }
