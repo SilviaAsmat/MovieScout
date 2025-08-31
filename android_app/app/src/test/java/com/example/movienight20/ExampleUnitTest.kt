@@ -1,4 +1,4 @@
-package com.example.movienight20
+package com.silas.movienight20
 
 import org.junit.Test
 
