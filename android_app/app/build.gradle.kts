@@ -12,13 +12,13 @@ plugins {
 }
 
 android {
-    namespace = "com.example.movienight20"
+    namespace = "com.silas.movienight20"
     compileSdk = 35
     room {
         schemaDirectory("$projectDir/schemas")
     }
     defaultConfig {
-        applicationId = "com.example.movienight20"
+        applicationId = "com.silas.movienight20"
         minSdk = 24
         //noinspection OldTargetApi
         targetSdk = 35
