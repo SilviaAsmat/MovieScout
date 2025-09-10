@@ -5,7 +5,10 @@ Beta available on Google Play
 [<img alt="Get it on Google Play" src="https://play.google.com/intl/en_us/badges/images/generic/en_badge_web_generic.png" />](https://play.google.com/store/apps/details?id=com.silas.silviaasmat.movienight20&pcampaignid=web_share)
 
 
-
+Download Instructions:
+After cloning and opening in Android studio, add 
+THE_MOVIE_DB_API_KEY = "YOUR_API_KEY"
+to your local.properties file
 
 Android App made in Android Studio using Hilt, Room, Compose, Material3, and TMDB API
 <br/><br/>
