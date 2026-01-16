@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "MovieNight2.0"
+rootProject.name = "Movie Scout"
 include(":app")
  

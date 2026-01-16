@@ -58,7 +58,8 @@ fun MoviesListScreen(
             ) { index ->
                 val item = lazyPagingItems[index]
                 when(item) {
-                    is MovieListItemViewState.Data -> MovieListItem(viewState = item, onClickMovieListItem = onClickMovieListItem)
+                    is MovieListItemViewState.Data ->
+                        MovieListItem(viewState = item, onClickMovieListItem = onClickMovieListItem)
                     is MovieListItemViewState.Loading -> {
                         Box(
                             modifier = Modifier
